@@ -17,7 +17,7 @@
   "welcomeSubtitle": { "message": "Ecco una guida rapida per padroneggiare la produttività multi-scheda." },
   "welcomeHeader1": { "message": "1. Crea la tua prima vista divisa (Modalità Scheda)" },
   "welcomeStep1_1": { "message": "Seleziona da 2 a 4 schede tenendo premuto il tasto <code>Cmd</code> (Mac) o <code>Ctrl</code> (Windows) e cliccandoci sopra." },
-  "welcomeStep1_2": { "message": "Fai clic sull'icona dell'estensione <img src='icon-48.png' class='inline-icon'> nella tua barra degli strumenti." },
+  "welcomeStep1_2": { "message": "Fai clic sull'icona dell'estensione <img src='icons/icon-48.png' class='inline-icon'> nella tua barra degli strumenti." },
   "welcomeStep1_3": { "message": "Fatto! Si aprirà una nuova scheda con le tue pagine affiancate." },
   "welcomeHeader2": { "message": "2. Gestisci la tua vista" },
   "welcomeStep2_1": { "message": "<strong>Dai un nome alla tua vista:</strong> Fai clic sul campo in cima alla vista divisa (es. \"Split - 123...\") e assegnale un nome chiaro come \"Ricerca Progetto X\"." },

@@ -17,7 +17,7 @@
   "welcomeSubtitle": { "message": "Here's a quick guide to mastering multi-tab productivity." },
   "welcomeHeader1": { "message": "1. Create Your First Split View (Tab Mode)" },
   "welcomeStep1_1": { "message": "Select 2 to 4 tabs by holding <code>Cmd</code> (Mac) or <code>Ctrl</code> (Windows) and clicking on them." },
-  "welcomeStep1_2": { "message": "Click the extension's icon <img src='icon-48.png' class='inline-icon'> in your toolbar." },
+  "welcomeStep1_2": { "message": "Click the extension's icon <img src='icons/icon-48.png' class='inline-icon'> in your toolbar." },
   "welcomeStep1_3": { "message": "That's it! A new tab opens with your pages side-by-side." },
   "welcomeHeader2": { "message": "2. Manage Your View" },
   "welcomeStep2_1": { "message": "<strong>Name Your View:</strong> Click the field at the top of the split view (e.g., \"Split - 123...\") and give it a clear name like \"Project X Research\"." },

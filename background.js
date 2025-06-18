@@ -165,7 +165,7 @@ async function recreateTabMode(tabsOrUrls, oldTabId = null, name = null) {
 function notifyUser(messageKey) {
     browser.notifications.create({
         "type": "basic",
-        "iconUrl": browser.runtime.getURL("icon-96.png"),
+        "iconUrl": browser.runtime.getURL("icons/icon-96.png"),
         "title": browser.i18n.getMessage("extensionName"),
         "message": browser.i18n.getMessage(messageKey)
     });

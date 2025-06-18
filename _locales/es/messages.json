@@ -17,7 +17,7 @@
   "welcomeSubtitle": { "message": "Aquí tienes una guía rápida para dominar la productividad con múltiples pestañas." },
   "welcomeHeader1": { "message": "1. Crea tu primera vista dividida (Modo Pestaña)" },
   "welcomeStep1_1": { "message": "Selecciona de 2 a 4 pestañas manteniendo pulsada la tecla <code>Cmd</code> (Mac) o <code>Ctrl</code> (Windows) y haciendo clic en ellas." },
-  "welcomeStep1_2": { "message": "Haz clic en el icono de la extensión <img src='icon-48.png' class='inline-icon'> en tu barra de herramientas." },
+  "welcomeStep1_2": { "message": "Haz clic en el icono de la extensión <img src='icons/icon-48.png' class='inline-icon'> en tu barra de herramientas." },
   "welcomeStep1_3": { "message": "¡Y ya está! Se abrirá una nueva pestaña con tus páginas una al lado de la otra." },
   "welcomeHeader2": { "message": "2. Gestiona tu vista" },
   "welcomeStep2_1": { "message": "<strong>Nombra tu vista:</strong> Haz clic en el campo en la parte superior de la vista dividida (ej. \"Split - 123...\") y dale un nombre claro como \"Investigación Proyecto X\"." },

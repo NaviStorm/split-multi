@@ -17,7 +17,7 @@
   "welcomeSubtitle": { "message": "Hier ist eine Kurzanleitung, um die Produktivität mit mehreren Tabs zu meistern." },
   "welcomeHeader1": { "message": "1. Erstellen Sie Ihre erste geteilte Ansicht (Tab-Modus)" },
   "welcomeStep1_1": { "message": "Wählen Sie 2 bis 4 Tabs aus, indem Sie die <code>Cmd</code>- (Mac) oder <code>Strg</code>-Taste (Windows) gedrückt halten und darauf klicken." },
-  "welcomeStep1_2": { "message": "Klicken Sie auf das Erweiterungssymbol <img src='icon-48.png' class='inline-icon'> in Ihrer Symbolleiste." },
+  "welcomeStep1_2": { "message": "Klicken Sie auf das Erweiterungssymbol <img src='icons/icon-48.png' class='inline-icon'> in Ihrer Symbolleiste." },
   "welcomeStep1_3": { "message": "Das ist alles! Ein neuer Tab öffnet sich mit Ihren Seiten nebeneinander." },
   "welcomeHeader2": { "message": "2. Verwalten Sie Ihre Ansicht" },
   "welcomeStep2_1": { "message": "<strong>Benennen Sie Ihre Ansicht:</strong> Klicken Sie auf das Feld oben in der geteilten Ansicht (z. B. \"Split - 123...\") und geben Sie ihr einen klaren Namen wie \"Projekt X Recherche\"." },

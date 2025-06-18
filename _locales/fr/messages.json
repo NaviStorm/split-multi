@@ -17,7 +17,7 @@
   "welcomeSubtitle": { "message": "Voici un guide rapide pour maîtriser la productivité multi-onglets." },
   "welcomeHeader1": { "message": "1. Créer votre première vue partagée (Mode Onglet)" },
   "welcomeStep1_1": { "message": "Sélectionnez 2 à 4 onglets en maintenant la touche <code>Cmd</code> (Mac) ou <code>Ctrl</code> (Windows) enfoncée et en cliquant sur eux." },
-  "welcomeStep1_2": { "message": "Cliquez sur l'icône <img src='icon-48.png' class='inline-icon'> de l'extension dans votre barre d'outils." },
+  "welcomeStep1_2": { "message": "Cliquez sur l'icône <img src='icons/icon-48.png' class='inline-icon'> de l'extension dans votre barre d'outils." },
   "welcomeStep1_3": { "message": "Et voilà ! Un nouvel onglet s'ouvre avec vos pages côte à côte." },
   "welcomeHeader2": { "message": "2. Gérer votre vue" },
   "welcomeStep2_1": { "message": "<strong>Nommez votre vue :</strong> Cliquez sur le champ en haut de la vue partagée (ex: \"Split - 123...\") et donnez-lui un nom clair comme \"Recherche Projet X\"." },
