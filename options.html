@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="options.css">
+</head>
+<body>
+    <h1 data-i18n="optionsTitle"></h1>
+
+    <form id="options-form">
+        <fieldset>
+            <legend data-i18n="optionsLegend"></legend>
+
+            <div>
+                <input type="radio" id="mode-window" name="mode" value="window">
+                <label for="mode-window">
+                    <strong data-i18n="optionsModeWindowLabel"></strong>
+                    <p data-i18n="optionsModeWindowDescription"></p>
+                </label>
+            </div>
+
+            <div>
+                <input type="radio" id="mode-tab" name="mode" value="tab">
+                <label for="mode-tab">
+                    <strong data-i18n="optionsModeTabLayout"></strong>
+                    <p data-i18n="optionsModeTabDescription"></p>
+                </label>
+            </div>
+        </fieldset>
+    </form>
+    
+    <div id="status"></div>
+
+    <!-- NOUVEAU LIEN VERS LA PAGE D'AIDE -->
+    <div class="help-link-container">
+        <a href="#" id="help-link" data-i18n="optionsHelpLink"></a>
+    </div>
+    
+    <!-- NOUVEL ÉLÉMENT POUR L'AVERTISSEMENT -->
+    <div class="warning-box">
+        <p data-i18n="optionsLanguageWarning"></p>
+    </div>
+
+    <script src="options.js"></script>
+</body>
+</html>

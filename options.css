@@ -1,0 +1,96 @@
+/* Fichier: options.css (Version finale complète) */
+
+body {
+    font-family: sans-serif;
+    padding: 1em 2em;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+h1 {
+    border-bottom: 2px solid #eee;
+    padding-bottom: 0.5em;
+}
+
+fieldset {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 1.5em;
+}
+
+legend {
+    font-weight: bold;
+    font-size: 1.2em;
+    padding: 0 0.5em;
+}
+
+fieldset > div {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1.5em;
+}
+
+input[type="radio"] {
+    flex-shrink: 0;
+    margin-right: 12px;
+    margin-top: 5px;
+}
+
+label strong {
+    font-size: 1.1em;
+}
+
+label p {
+    font-size: 0.9em;
+    color: #555;
+    margin: 5px 0 0 0;
+}
+
+#status {
+    margin-top: 1em;
+    color: green;
+    font-weight: bold;
+    height: 1.2em;
+}
+
+/* --- NOUVEAUX STYLES POUR LE LIEN D'AIDE --- */
+.help-link-container {
+    text-align: center;
+    margin: 2em 0;
+    padding: 1em 0;
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+#help-link {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+#help-link:hover {
+    background-color: #e9e9e9;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+/* --- FIN DES NOUVEAUX STYLES --- */
+
+.warning-box {
+    margin-top: 2em;
+    padding: 1em;
+    background-color: #fff3cd;
+    border: 1px solid #ffeeba;
+    border-radius: 8px;
+    color: #856404;
+}
+
+.warning-box p {
+    margin: 0;
+    font-size: 0.9em;
+    line-height: 1.4;
+}

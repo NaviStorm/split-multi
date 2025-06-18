@@ -1,0 +1,129 @@
+/* Fichier: split-view.css (Version finale avec hauteur corrigée) */
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background-color: #3a3a3a;
+}
+
+/* --- STYLES DU HEADER GLOBAL --- */
+#view-header {
+    flex-shrink: 0; /* Empêche le header de rétrécir */
+    padding: 6px 10px;
+    background-color: #4a4a4a;
+    border-bottom: 1px solid #222;
+    display: flex;
+    align-items: center;
+}
+
+#view-name-input {
+    flex-grow: 1;
+    background-color: #555;
+    border: 1px solid #666;
+    color: #fff;
+    border-radius: 4px;
+    padding: 5px 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+#view-name-input:focus {
+    outline: none;
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.4);
+}
+
+#close-view-button {
+    flex-shrink: 0;
+    margin-left: 10px;
+    background-color: #6c757d;
+    border: 1px solid #5a6268;
+    color: white;
+    font-weight: bold;
+    font-family: sans-serif;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    line-height: 22px;
+    text-align: center;
+    padding: 0;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#close-view-button:hover {
+    background-color: #dc3545;
+    border-color: #b02a37;
+}
+
+/* --- STYLES DU CONTENEUR PRINCIPAL --- */
+#container {
+    /* --- LA CORRECTION EST ICI --- */
+    flex-grow: 1; /* Dit au conteneur de prendre TOUT l'espace vertical restant */
+    
+    display: flex;
+    height: auto; /* La hauteur est maintenant gérée par flexbox, on peut la laisser en auto */
+}
+
+/* --- STYLES DES PANNEAUX INDIVIDUELS --- */
+.iframe-wrapper {
+  flex-grow: 1;
+  flex-shrink: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.address-bar {
+  flex-shrink: 0;
+  padding: 5px;
+  background-color: #e9ecef;
+  border-bottom: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+}
+
+.url-input {
+  flex-grow: 1;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 13px;
+}
+
+.close-panel-button {
+    flex-shrink: 0;
+    margin-left: 5px;
+    background: none;
+    border: none;
+    color: #6c757d;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0 5px;
+}
+.close-panel-button:hover {
+    color: #dc3545;
+}
+
+.iframe-wrapper iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  flex-grow: 1;
+}
+
+.resize-handle {
+  flex: 0 0 8px;
+  background-color: #ccc;
+  cursor: col-resize;
+  z-index: 10;
+}
+.resize-handle:hover {
+  background-color: #999;
+}
