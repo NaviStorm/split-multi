@@ -110,7 +110,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const iframe = document.createElement('iframe');
             iframe.src = pageUrl;
-            // NOTE: On retire l'écouteur 'load' car le content_script est plus fiable.
             targetWrapper.appendChild(iframe);
         };
 
@@ -128,7 +127,24 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         urlInput.addEventListener('keydown', async (e) => {
             if (e.key === 'Enter') {
-                const newUrlStr = e.target.value;
+                e.preventDefault(); // Empêche le comportement par défaut du formulaire (qui n'existe pas mais c'est une bonne pratique)
+
+                let newUrlStr = e.target.value.trim();
+
+                // Heuristique pour transformer la saisie en URL valide
+                // Si ça contient un espace ou pas de point, on suppose que c'est une recherche
+                if (newUrlStr.indexOf(' ') > -1 || newUrlStr.indexOf('.') === -1) {
+                    newUrlStr = `https://www.google.com/search?q=${encodeURIComponent(newUrlStr)}`;
+                }
+                // Sinon, si ça ressemble à une URL mais sans protocole, on ajoute "https://"
+                else if (!/^(https?|ftp):\/\//i.test(newUrlStr)) {
+                    newUrlStr = `https://${newUrlStr}`;
+                }
+
+                // On met à jour la barre d'adresse avec l'URL "intelligente"
+                e.target.value = newUrlStr;
+                
+                // Vide le panneau (sauf la barre d'adresse)
                 while (iframeWrapper.childElementCount > 1) {
                     iframeWrapper.lastChild.remove();
                 }
@@ -204,9 +220,21 @@ function showWarningOverlay(iframeWrapper, domain, urlToLoad) {
 
 window.addEventListener('message', (event) => {
     const extensionOrigin = browser.runtime.getURL('').slice(0, -1);
-
-    // Cas 1: Message de confiance venant de l'overlay de l'extension
-    if (event.origin === extensionOrigin) {
+    
+    if (event.data && event.data.type === 'SVD_URL_CHANGED') {
+        const newUrl = event.data.url;
+        const iframes = document.querySelectorAll('.iframe-wrapper iframe');
+        for (const iframe of iframes) {
+            if (iframe.contentWindow === event.source) {
+                const wrapper = iframe.closest('.iframe-wrapper');
+                if (wrapper) {
+                    const urlInput = wrapper.querySelector('.url-input');
+                    if (urlInput) urlInput.value = newUrl;
+                }
+                break;
+            }
+        }
+    } else if (event.origin === extensionOrigin) {
         if (event.data && event.data.type === 'SVD_HIDE_FORCE_INFO') {
             const urlToLoad = event.data.urlToLoad;
             const targetWrapper = document.querySelector(`[data-url-id="${urlToLoad}"]`);
@@ -226,24 +254,6 @@ window.addEventListener('message', (event) => {
             browser.runtime.openOptionsPage();
             const closeButton = document.getElementById('close-view-button');
             if (closeButton) closeButton.click();
-        }
-        return; // Message traité, on arrête.
-    }
-    
-    // Cas 2: Message du content_script injecté dans un iframe (origine inconnue)
-    if (event.data && event.data.type === 'SVD_URL_CHANGED') {
-        const newUrl = event.data.url;
-        const iframes = document.querySelectorAll('.iframe-wrapper iframe');
-        for (const iframe of iframes) {
-            // event.source est la fenêtre qui a envoyé le message. C'est la seule façon fiable de l'identifier.
-            if (iframe.contentWindow === event.source) {
-                const wrapper = iframe.closest('.iframe-wrapper');
-                if (wrapper) {
-                    const urlInput = wrapper.querySelector('.url-input');
-                    if (urlInput) urlInput.value = newUrl;
-                }
-                break; // On a trouvé, on sort de la boucle.
-            }
         }
     }
 });
