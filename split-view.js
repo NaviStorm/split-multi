@@ -1,4 +1,4 @@
-// split-view.js (Version finale avec gestion des mises à jour d'URL)
+// split-view.js (Version finale avec gestion des mises à jour d'URL et titre corrigé)
 
 const params = new URLSearchParams(window.location.search);
 const urls = params.get('urls').split(',');
@@ -9,7 +9,26 @@ const closeViewButton = document.getElementById('close-view-button');
 
 let panels = [];
 
+/**
+ * Extrait le nom de domaine principal d'une URL.
+ * ex: "https://www.mac4ever.com/bidule" -> "mac4ever.com"
+ * @param {string} urlString
+ * @returns {string} Le nom de domaine.
+ */
+function getDomainName(urlString) {
+    try {
+        const hostname = new URL(urlString).hostname;
+        const parts = hostname.startsWith('www.') ? hostname.substring(4).split('.') : hostname.split('.');
+        // Retourne les deux dernières parties si possible (ex: .co.uk), sinon juste le domaine.
+        return parts.slice(-2).join('.');
+    } catch (e) {
+        return "Invalid URL";
+    }
+}
+
+
 function createPanel(url) {
+    // ... le contenu de cette fonction reste inchangé ...
     const decodedUrl = decodeURIComponent(url);
     const wrapper = document.createElement('div');
     wrapper.className = 'iframe-wrapper';
@@ -21,8 +40,6 @@ function createPanel(url) {
     urlInput.type = 'text';
     urlInput.className = 'url-input';
     urlInput.value = decodedUrl;
-    // La barre d'adresse sera mise à jour par le content script, donc on la laisse en lecture seule
-    // pour éviter la confusion de l'utilisateur.
     urlInput.readOnly = true;
 
     const closePanelButton = document.createElement('button');
@@ -44,35 +61,54 @@ function createPanel(url) {
 }
 
 function renderPanels() {
-    container.innerHTML = ''; // Clear existing
+    // ... le contenu de cette fonction reste inchangé ...
+    container.innerHTML = '';
     panels.forEach((panel, index) => {
         container.appendChild(panel);
         if (index < panels.length - 1) {
             const handle = document.createElement('div');
             handle.className = 'resize-handle';
-            // Note : La logique de redimensionnement n'est pas implémentée ici, mais le handle est présent.
             container.appendChild(handle);
         }
     });
 }
 
 function removePanel(panelToRemove) {
+    // ... le contenu de cette fonction reste inchangé ...
     panels = panels.filter(p => p !== panelToRemove);
     if (panels.length > 0) {
         renderPanels();
+        // Mettre à jour le titre de l'onglet après suppression d'un panneau
+        updateTabTitle();
     } else {
-        window.close(); // Close tab if no panels are left
+        window.close();
     }
 }
 
+function updateTabTitle() {
+    const domains = panels
+        .map(panel => getDomainName(panel.querySelector('iframe').src))
+        .join(' / ');
+    document.title = domains;
+}
+
+
 // Initialization
 document.addEventListener('DOMContentLoaded', () => {
-    // Set initial view name
+    // Créer les panneaux
+    panels = urls.map(createPanel);
+    renderPanels();
+    
+    // Mettre à jour le titre de l'onglet initial
+    updateTabTitle();
+
+    // Définir le nom initial de la vue (pour le menu contextuel)
     const initialName = `Split - ${viewId.split('-')[1].substring(0, 5)}`;
     viewNameInput.value = initialName;
-    document.title = initialName;
+    // Note: Le titre de l'onglet est maintenant géré par updateTabTitle(),
+    // mais on garde le nom de la vue pour le menu contextuel.
 
-    // Register the view with the background script
+    // Enregistrer la vue auprès du script d'arrière-plan
     browser.runtime.sendMessage({
         type: 'REGISTER_VIEW',
         viewId: viewId,
@@ -80,15 +116,11 @@ document.addEventListener('DOMContentLoaded', () => {
         urls: urls.map(decodeURIComponent)
     });
 
-    // Create and render panels
-    panels = urls.map(createPanel);
-    renderPanels();
-
     // --- Event Listeners ---
     viewNameInput.addEventListener('change', () => {
         const newName = viewNameInput.value.trim();
         if (newName) {
-            document.title = newName;
+            // Mettre à jour le nom pour le menu contextuel
             browser.runtime.sendMessage({
                 type: 'UPDATE_VIEW_NAME',
                 viewId: viewId,
@@ -96,18 +128,19 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     });
-
+    
+    // ... Le reste des listeners reste inchangé ...
     closeViewButton.addEventListener('click', () => {
         window.close();
     });
 
-    // Handle being told to add a new tab from the context menu
     browser.runtime.onMessage.addListener((message) => {
         if (message.type === 'ADD_TAB_TO_VIEW' && message.viewId === viewId) {
             if(panels.length < 4) {
                  const newPanel = createPanel(encodeURIComponent(message.tab.url));
                  panels.push(newPanel);
                  renderPanels();
+                 updateTabTitle();
             } else {
                 browser.notifications.create({
                     type: 'basic',
@@ -119,28 +152,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // =======================================================================
-    // AJOUT : Écoute les messages du content_script.js pour MàJ la barre d'adresse
-    // =======================================================================
     window.addEventListener('message', (event) => {
-        // Vérification de sécurité de base : s'assurer que le message est bien celui attendu.
         if (event.data && event.data.type === 'SUPER_SPLIT_VIEW_URL_CHANGE') {
-            // Trouve quel iframe a envoyé le message
             const sourceIframe = Array.from(document.querySelectorAll('iframe'))
                                     .find(iframe => iframe.contentWindow === event.source);
-
             if (sourceIframe) {
-                // Trouve l'input de la barre d'adresse associé à cet iframe
                 const urlInput = sourceIframe.closest('.iframe-wrapper').querySelector('.url-input');
                 if (urlInput) {
                     urlInput.value = event.data.url;
                 }
+                // Mettre à jour le titre de l'onglet si l'URL change
+                updateTabTitle();
             }
         }
     });
 });
 
-// Inform background script on close
 window.addEventListener('beforeunload', () => {
     browser.runtime.sendMessage({
         type: 'UNREGISTER_VIEW',

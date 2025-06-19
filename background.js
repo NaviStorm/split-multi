@@ -2,6 +2,9 @@
 
 const VIEW_STATE_KEY = 'activeSplitViews';
 
+// ... Fonctions getActiveViews, setActiveViews, updateContextMenu, getOptions, canBeIframed ...
+// (Ces fonctions restent inchangées, je les omets pour la lisibilité)
+
 /**
  * Récupère les vues actives depuis le stockage de session.
  * @returns {Promise<Object>} Un objet contenant les vues actives.
@@ -76,10 +79,11 @@ async function canBeIframed(url) {
         }
         return true;
     } catch (e) {
-        console.warn(`Could not check headers for ${url}, assuming it can be iframed.`, e);
+        console.warn(`[Super Split View] Could not check headers for ${url}, assuming it can be iframed.`, e);
         return true; // Failsafe: assume it's allowed if the check fails.
     }
 }
+
 
 /**
  * Détermine le mode à utiliser et crée la vue partagée.
@@ -90,29 +94,37 @@ async function createSplitView(tabs, sourceWindow) {
     const options = await getOptions();
     let effectiveMode = options.mode;
     let securityFallback = false;
+    let reason = `User preference is '${options.mode}' mode.`;
 
     const forceWindowDomains = options.forceWindowDomains.split('\n').map(d => d.trim()).filter(Boolean);
 
     // Vérification 1: Un des domaines est-il dans la liste de forçage de l'utilisateur ?
-    const isForcedByList = tabs.some(tab => {
+    const forcedTab = tabs.find(tab => {
         try {
             const tabDomain = new URL(tab.url).hostname;
             return forceWindowDomains.some(domain => tabDomain.endsWith(domain));
         } catch (e) { return false; }
     });
 
-    if (isForcedByList) {
+    if (forcedTab) {
         effectiveMode = 'window';
+        reason = `Forcing 'window' mode because a site (${new URL(forcedTab.url).hostname}) is in the user's force-list.`;
     } else if (options.mode === 'tab') {
         // Vérification 2: Si le mode préféré est 'onglet', un des sites a-t-il des en-têtes de sécurité ?
         for (const tab of tabs) {
             if (!await canBeIframed(tab.url)) {
                 securityFallback = true;
                 effectiveMode = 'window';
+                reason = `Forcing 'window' mode due to security headers on ${tab.url}.`;
                 break; // Pas besoin de vérifier les autres
             }
         }
     }
+
+    console.log(`[Super Split View] Decision Log:
+    - Initial preference: '${options.mode}'
+    - Reason for mode choice: ${reason}
+    - Final decision: Opening in '${effectiveMode}' mode.`);
 
     // Création de la vue en fonction du mode final
     if (effectiveMode === 'window') {
@@ -143,6 +155,9 @@ function createTabView(tabs) {
  * @param {browser.windows.Window} sourceWindow - La fenêtre de référence pour le positionnement.
  */
 async function createWindowView(tabs, sourceWindow) {
+    // Correction pour le positionnement : Assurer que les valeurs 'left' et 'top' sont valides
+    const winLeft = sourceWindow.left ?? 0;
+    const winTop = sourceWindow.top ?? 0;
     const winWidth = Math.floor(sourceWindow.width / tabs.length);
 
     for (let i = 0; i < tabs.length; i++) {
@@ -151,8 +166,8 @@ async function createWindowView(tabs, sourceWindow) {
             type: 'normal',
             width: winWidth,
             height: sourceWindow.height,
-            left: sourceWindow.left + (i * winWidth),
-            top: sourceWindow.top
+            left: winLeft + (i * winWidth),
+            top: winTop
         });
     }
 }
@@ -161,8 +176,23 @@ async function createWindowView(tabs, sourceWindow) {
 // --- GESTIONNAIRES D'ÉVÉNEMENTS ---
 
 // À l'installation ou la mise à jour
-browser.runtime.onInstalled.addListener(details => {
+browser.runtime.onInstalled.addListener(async (details) => {
     if (details.reason === 'install') {
+        // Pré-remplir la liste des domaines à l'installation
+        const defaultDomains = [
+            'google.com',
+            'facebook.com',
+            'twitter.com',
+            'instagram.com',
+            'linkedin.com',
+            'github.com',
+            'addons.mozilla.org'
+        ].join('\n');
+
+        await browser.storage.local.set({
+            forceWindowDomains: defaultDomains
+        });
+
         browser.tabs.create({ url: 'welcome.html' });
     }
     setActiveViews({}); // Réinitialise l'état
@@ -171,9 +201,8 @@ browser.runtime.onInstalled.addListener(details => {
 
 // Clic sur l'icône de l'extension
 browser.action.onClicked.addListener(async (tab) => {
-    // Récupère les onglets surlignés et la fenêtre source
     const tabs = await browser.tabs.query({ highlighted: true, windowId: tab.windowId });
-    const sourceWindow = await browser.windows.get(tab.windowId);
+    const sourceWindow = await browser.windows.get(tab.windowId, { populate: false });
     
     const webPageTabs = tabs.filter(t => t.url && t.url.startsWith('http'));
 
@@ -189,7 +218,8 @@ browser.action.onClicked.addListener(async (tab) => {
     createSplitView(webPageTabs, sourceWindow);
 });
 
-// Clic sur un élément du menu contextuel
+
+// ... Le reste des listeners (contextMenus, onMessage, onRemoved) reste inchangé ...
 browser.contextMenus.onClicked.addListener((info, tab) => {
     if (info.menuItemId.startsWith('add-to-')) {
         const viewId = info.menuItemId.replace('add-to-', '');
@@ -201,7 +231,6 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
     }
 });
 
-// Écouteur de messages des autres scripts de l'extension
 browser.runtime.onMessage.addListener(async (message, sender) => {
     switch (message.type) {
         case 'REGISTER_VIEW': {
@@ -240,7 +269,6 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
     }
 });
 
-// Nettoie le stockage quand un onglet de vue partagée est fermé
 browser.tabs.onRemoved.addListener(async (tabId) => {
     const views = await getActiveViews();
     const viewIdToRemove = Object.keys(views).find(id => views[id].tabId === tabId);
@@ -250,6 +278,7 @@ browser.tabs.onRemoved.addListener(async (tabId) => {
         updateContextMenu();
     }
 });
+
 
 // Initialisation au démarrage
 updateContextMenu();
