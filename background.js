@@ -26,9 +26,22 @@ function createContextMenu() {
     browser.contextMenus.create({ id: "add-to-split-view", title: browser.i18n.getMessage("contextMenuTitle"), contexts: ["tab"] });
 }
 
-browser.runtime.onInstalled.addListener(() => {
+browser.runtime.onInstalled.addListener((details) => {
     createContextMenu();
-    browser.storage.local.get('hasSeenWelcome').then(r => { if (!r.hasSeenWelcome) { browser.tabs.create({ url: 'welcome.html' }); browser.storage.local.set({ hasSeenWelcome: true }); } });
+
+    // Logique à exécuter uniquement lors de la première installation de l'extension
+    if (details.reason === "install") {
+        // Définit le mode par défaut sur "Onglet Unique (Iframes)"
+        browser.storage.local.set({
+            operatingMode: 'tab',
+            showFramingWarning: true,
+            forceWindowDomains: []
+        });
+
+        // Afficher la page de bienvenue
+        browser.tabs.create({ url: 'welcome.html' });
+        // On pourrait utiliser hasSeenWelcome, mais la condition "install" est plus robuste.
+    }
 });
 
 async function addTabToView(tabUrl, viewId, authorizedDomains) {
@@ -85,16 +98,28 @@ browser.contextMenus.onShown.addListener(() => {
 });
 
 browser.browserAction.onClicked.addListener(async () => {
+    // Lire le mode de fonctionnement choisi par l'utilisateur
+    const settings = await browser.storage.local.get({ operatingMode: 'tab' }); // 'tab' est la valeur de secours
     const tabs = await browser.tabs.query({ highlighted: true, currentWindow: true });
     const selectedTabs = tabs.filter(t => t.url && !t.url.startsWith("about:") && !t.url.startsWith("moz-extension:"));
+    
     if (selectedTabs.length < 2) {
         browser.tabs.executeScript({ code: `alert("${browser.i18n.getMessage('alertSelectTabs')}");` });
         return;
     }
-    createSplitView(selectedTabs.map(t => t.url));
+
+    const urls = selectedTabs.map(t => t.url);
+    
+    if (settings.operatingMode === 'window') {
+        // Logique pour le mode Fenêtre (non fournie, mais c'est ici qu'elle irait)
+        console.log("Window Tiling Mode selected. Implement logic here.");
+    } else {
+        // Logique pour le mode Onglet (par défaut)
+        createSplitViewInTab(urls);
+    }
 });
 
-async function createSplitView(urls) {
+async function createSplitViewInTab(urls) {
     const viewId = Date.now().toString();
     splitViews[viewId] = urls;
 

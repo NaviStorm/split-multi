@@ -1,59 +1,64 @@
-const DEFAULT_PROTECTED_DOMAINS = [
-    'accounts.google.com',
-    'facebook.com',
-    'twitter.com',
-    'linkedin.com',
-    'github.com',
-    'addons.mozilla.org',
-    'www.paypal.com',
-    'paypal.com'
-].join('\n');
+// Fichier : options.js
 
-function save_options() {
+// Fonction pour sauvegarder les options sélectionnées
+function saveOptions(e) {
+    e.preventDefault();
+    
     const mode = document.querySelector('input[name="mode"]:checked').value;
     const showWarning = document.getElementById('show-framing-warning').checked;
-    const forceWindowDomains = document.getElementById('force-window-domains').value;
+    const domains = document.getElementById('force-window-domains').value.split('\n').map(d => d.trim()).filter(Boolean);
+
     browser.storage.local.set({
-        mode: mode,
+        operatingMode: mode,
         showFramingWarning: showWarning,
-        forceWindowDomains: forceWindowDomains
+        forceWindowDomains: domains
     }).then(() => {
-        let status = document.getElementById('status');
-        status.textContent = browser.i18n.getMessage("optionsSavedStatus");
-        setTimeout(() => { status.textContent = ''; }, 1500);
+        // Affiche un message de confirmation
+        const status = document.getElementById('status');
+        status.textContent = browser.i18n.getMessage('optionsSavedStatus');
+        setTimeout(() => {
+            status.textContent = '';
+        }, 1500);
     });
 }
 
-function restore_options() {
+// ===== PARTIE LA PLUS IMPORTANTE : Restaurer les options sauvegardées =====
+function restoreOptions() {
+    // On récupère les valeurs du stockage avec des valeurs par défaut
+    // La valeur par défaut pour operatingMode est maintenant 'tab'
     browser.storage.local.get({
-        mode: 'window',
+        operatingMode: 'tab', 
         showFramingWarning: true,
-        forceWindowDomains: DEFAULT_PROTECTED_DOMAINS 
-    }).then(items => {
-        document.querySelector(`input[name="mode"][value="${items.mode}"]`).checked = true;
+        forceWindowDomains: []
+    }).then((items) => {
+        // Coche le bon bouton radio
+        if (items.operatingMode === 'window') {
+            document.getElementById('mode-window').checked = true;
+        } else {
+            document.getElementById('mode-tab').checked = true;
+        }
+        
+        // Coche la case d'avertissement
         document.getElementById('show-framing-warning').checked = items.showFramingWarning;
-        document.getElementById('force-window-domains').value = items.forceWindowDomains;
+        
+        // Remplit la zone de texte des domaines
+        document.getElementById('force-window-domains').value = items.forceWindowDomains.join('\n');
     });
 }
 
-function applyTranslations() {
-    document.querySelectorAll('[data-i18n]').forEach(elem => {
-        const key = elem.getAttribute('data-i18n');
-        elem.textContent = browser.i18n.getMessage(key);
+// Fonction pour appliquer les traductions
+function i18n() {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        el.textContent = browser.i18n.getMessage(key) || key;
     });
-    document.title = browser.i18n.getMessage("optionsTitle");
 }
 
+// Événements
 document.addEventListener('DOMContentLoaded', () => {
-    applyTranslations();
-    restore_options();
-    document.getElementById('options-form').addEventListener('change', save_options);
-    document.getElementById('force-window-domains').addEventListener('input', save_options);
-    const helpLink = document.getElementById('help-link');
-    if (helpLink) {
-        helpLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            browser.tabs.create({ url: 'welcome.html' });
-        });
-    }
+    i18n();
+    restoreOptions(); // Appeler la restauration au chargement
 });
+
+// Sauvegarder automatiquement lors d'un changement
+document.getElementById('options-form').addEventListener('change', saveOptions);
