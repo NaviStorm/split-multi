@@ -24,7 +24,7 @@
     "message": "Modalità Scheda Singola (Iframes)"
   },
   "optionsModeTabDescription": {
-    "message": "Visualizza tutto in un'unica scheda. Aspetto elegante, ma il blocco della pubblicità e la cronologia della barra degli indirizzi non funzionano."
+    "message": "Visualizza tutto in un'unica scheda. Aspetto elegante, ma alcuni siti richiedono il forzamento."
   },
   "optionsSavedStatus": {
     "message": "Opzioni salvate."
@@ -64,6 +64,23 @@
   },
   "optionsForceWindowDescription": {
     "message": "Inserisci un dominio per riga (es. mozilla.org). Questi siti ignoreranno sempre l'impostazione Modalità Scheda Singola."
+  },
+  "forceInfoTitle": {
+    "message": "Forzatura della visualizzazione attivata"
+  },
+  "forceInfoMessage": {
+    "message": "Questo sito (<strong>$DOMAIN$</strong>) normalmente blocca la visualizzazione in un frame per motivi di sicurezza. Super Vista Divisa ha aggirato questa restrizione per mostrartelo.<br><br>Per disabilitare questa forzatura e aprire sempre questo sito in una finestra separata, aggiungi il seguente dominio all'elenco nelle opzioni dell'estensione:",
+    "placeholders": {
+      "domain": {
+        "content": "$1"
+      }
+    }
+  },
+  "forceInfoButton": {
+    "message": "Apri opzioni"
+  },
+  "forceShowPage": {
+    "message": "Carica comunque"
   },
   "welcomeTitle": {
     "message": "Benvenuto in Super Vista Divisa!"
@@ -117,12 +134,12 @@
     "message": "AVVISO"
   },
   "welcomeWarningP1": {
-    "message": "Alcuni siti web (banche, social network, addons.mozilla.org, ecc.) dispongono di funzionalità di sicurezza che impediscono la loro visualizzazione all'interno di un'altra pagina (in un iframe)."
+    "message": "Alcuni siti web (banche, social network, ecc.) dispongono di funzionalità di sicurezza che impediscono la loro visualizzazione all'interno di un'altra pagina (in un iframe)."
   },
   "welcomeWarningP2": {
-    "message": "Quando si tenta di dividere questi siti in 'Modalità Scheda Singola', verrà visualizzato un errore come questo:"
+    "message": "Quando si tenta di dividere questi siti in 'Modalità Scheda Singola', l'estensione forzerà la loro visualizzazione. Un messaggio informativo apparirà sopra il contenuto."
   },
   "welcomeWarningP3": {
-    "message": "Per ovviare a questo problema, <strong>Super Vista Divisa aprirà automaticamente queste viste in 'Modalità Finestre Affiancate'</strong>. È anche possibile aggiungere manualmente i domini pertinenti a un elenco nella <a href='#' class='options-link'>pagina delle opzioni</a> dell'estensione."
+    "message": "Per evitare questa forzatura, è possibile aggiungere i domini pertinenti a un elenco nella <a href='#' class='options-link'>pagina delle opzioni</a> dell'estensione. Ciò li farà sempre aprire in 'Modalità Finestre Affiancate'."
   }
 }

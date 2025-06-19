@@ -24,7 +24,7 @@
     "message": "Einzel-Tab-Modus (Iframes)"
   },
   "optionsModeTabDescription": {
-    "message": "Zeigt alles in einem einzigen Tab an. Elegantes Aussehen, aber Werbeblocker und Adressleistenverlauf funktionieren nicht."
+    "message": "Zeigt alles in einem einzigen Tab an. Elegantes Aussehen, aber einige Seiten erfordern ein Erzwingen."
   },
   "optionsSavedStatus": {
     "message": "Optionen gespeichert."
@@ -64,6 +64,23 @@
   },
   "optionsForceWindowDescription": {
     "message": "Geben Sie eine Domain pro Zeile ein (z. B. mozilla.org). Diese Websites ignorieren immer die Einstellung Einzel-Tab-Modus."
+  },
+  "forceInfoTitle": {
+    "message": "Anzeige-Erzwingung aktiviert"
+  },
+  "forceInfoMessage": {
+    "message": "Diese Website (<strong>$DOMAIN$</strong>) blockiert aus Sicherheitsgründen normalerweise die Anzeige in einem Frame. Super Geteilte Ansicht hat diese Einschränkung umgangen, um sie Ihnen anzuzeigen.<br><br>Um dieses Erzwingen zu deaktivieren und diese Website immer in einem separaten Fenster zu öffnen, fügen Sie die folgende Domain zur Liste in den Erweiterungsoptionen hinzu:",
+    "placeholders": {
+      "domain": {
+        "content": "$1"
+      }
+    }
+  },
+  "forceInfoButton": {
+    "message": "Optionen öffnen"
+  },
+  "forceShowPage": {
+    "message": "Trotzdem laden"
   },
   "welcomeTitle": {
     "message": "Willkommen bei Super Geteilte Ansicht!"
@@ -117,12 +134,12 @@
     "message": "WARNUNG"
   },
   "welcomeWarningP1": {
-    "message": "Einige Websites (Banken, soziale Netzwerke, addons.mozilla.org usw.) haben Sicherheitsfunktionen, die verhindern, dass sie innerhalb einer anderen Seite (in einem Iframe) angezeigt werden."
+    "message": "Einige Websites (Banken, soziale Netzwerke, usw.) haben Sicherheitsfunktionen, die verhindern, dass sie innerhalb einer anderen Seite (in einem Iframe) angezeigt werden."
   },
   "welcomeWarningP2": {
-    "message": "Wenn Sie versuchen, diese Websites im 'Einzel-Tab-Modus' zu teilen, wird Ihnen ein Fehler wie dieser angezeigt:"
+    "message": "Wenn Sie versuchen, diese Websites im 'Einzel-Tab-Modus' zu teilen, wird die Erweiterung ihre Anzeige erzwingen. Eine Informationsmeldung wird über dem Inhalt angezeigt."
   },
   "welcomeWarningP3": {
-    "message": "Um dies zu umgehen, <strong>wird Super Geteilte Ansicht diese Ansichten automatisch im 'Fenster-Kachel-Modus' öffnen</strong>. Sie können die relevanten Domains auch manuell zu einer Liste auf der <a href='#' class='options-link'>Optionsseite</a> der Erweiterung hinzufügen."
+    "message": "Um dieses Erzwingen zu vermeiden, können Sie die relevanten Domains zu einer Liste auf der <a href='#' class='options-link'>Optionsseite</a> der Erweiterung hinzufügen. Dadurch werden sie immer im 'Fenster-Kachel-Modus' geöffnet."
   }
 }

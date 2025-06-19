@@ -24,7 +24,7 @@
         "message": "Mode Onglet Unique (Iframes)"
     },
     "optionsModeTabDescription": {
-        "message": "Affiche tout dans un seul onglet. Look élégant, mais les bloqueurs de pubs et l'historique de la barre d'adresse ne fonctionnent pas."
+        "message": "Affiche tout dans un seul onglet. Look élégant, mais certains sites nécessitent un forçage."
     },
     "optionsSavedStatus": {
         "message": "Options sauvegardées."
@@ -64,6 +64,23 @@
     },
     "optionsForceWindowDescription": {
         "message": "Entrez un domaine par ligne (ex: mozilla.org). Ces sites ignoreront toujours le paramètre Mode Onglet Unique."
+    },
+    "forceInfoTitle": {
+        "message": "Forçage d'affichage activé"
+    },
+    "forceInfoMessage": {
+        "message": "Ce site (<strong>$DOMAIN$</strong>) interdit normalement son affichage dans un cadre pour des raisons de sécurité. Super Vue Partagée a contourné cette restriction pour vous l'afficher.<br><br>Pour désactiver ce forçage et toujours ouvrir ce site dans une fenêtre séparée, ajoutez le domaine suivant à la liste dans les options de l'extension :",
+        "placeholders": {
+            "domain": {
+                "content": "$1"
+            }
+        }
+    },
+    "forceInfoButton": {
+        "message": "Ouvrir les options"
+    },
+    "forceShowPage": {
+        "message": "Afficher quand même"
     },
     "welcomeTitle": {
         "message": "Bienvenue dans Super Vue Partagée !"
@@ -117,12 +134,12 @@
         "message": "AVERTISSEMENT"
     },
     "welcomeWarningP1": {
-        "message": "Certains sites web (banques, réseaux sociaux, addons.mozilla.org, etc.) possèdent des sécurités qui les empêchent de s'afficher à l'intérieur d'une autre page (dans un iframe)."
+        "message": "Certains sites web (banques, réseaux sociaux, etc.) possèdent des sécurités qui les empêchent de s'afficher à l'intérieur d'une autre page (dans un iframe)."
     },
     "welcomeWarningP2": {
-        "message": "Quand vous essaierez de diviser ces sites en 'Mode Onglet Unique', vous verrez une erreur semblable à celle-ci :"
+        "message": "Quand vous essaierez de diviser ces sites en 'Mode Onglet Unique', l'extension les forcera à s'afficher. Un message d'information apparaîtra par-dessus le contenu."
     },
     "welcomeWarningP3": {
-        "message": "Pour contourner ce problème, <strong>Super Vue Partagée ouvrira automatiquement ces vues en 'Mode Mosaïque de Fenêtres'</strong>. Vous pouvez aussi ajouter manuellement les domaines concernés dans une liste sur la <a href='#' class='options-link'>page d'options</a> de l'extension."
+        "message": "Pour éviter ce forçage, vous pouvez ajouter les domaines concernés dans une liste sur la <a href='#' class='options-link'>page d'options</a> de l'extension. Cela les fera toujours s'ouvrir en 'Mode Mosaïque de Fenêtres'."
     }
 }
