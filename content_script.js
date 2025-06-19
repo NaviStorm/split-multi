@@ -1,41 +1,74 @@
-// Fichier : content_script.js (Version finale et fiable)
+// content_script.js (Version finale avec sabotage)
 
-// Cette fonction s'assure que nous n'exécutons le code qu'une seule fois par page.
-if (window.hasRunSuperSplitViewContentScript !== true) {
-  window.hasRunSuperSplitViewContentScript = true;
+// Ce script s'exécute dans un "monde isolé". Pour modifier la page elle-même,
+// nous devons injecter un autre script dans le "monde principal".
 
-  /**
-   * La fonction qui envoie l'URL mise à jour à la page parente (split-view).
-   */
-  const reportUrlChange = () => {
-    // On vérifie qu'on est bien dans un iframe et non dans la fenêtre principale.
-    if (window.self !== window.top) {
-      // Envoi du message à la page split-view.
-      window.top.postMessage({
-        type: 'SUPER_SPLIT_VIEW_URL_CHANGE',
-        url: window.location.href
-      }, '*'); // La cible est une ressource de l'extension, '*' est sécuritaire.
+// Ne rien faire si on n'est pas dans un iframe.
+if (window.self === window.top) {
+    return;
+}
+
+// Fonction pour injecter notre script de sabotage.
+const injectSabotageScript = () => {
+    try {
+        const script = document.createElement('script');
+        // Ce code sera exécuté dans le contexte de la page web (ex: lemonde.fr)
+        script.textContent = `
+            // On empêche les scripts de la page de faire des vérifications d'iframe fiables.
+            // En rendant 'frameElement' indétectable, beaucoup de vérifications échouent.
+            Object.defineProperty(window, 'frameElement', {
+                get: function() { return null; },
+                configurable: true
+            });
+            // On peut aussi essayer de tromper la vérification la plus commune.
+            if (window.self !== window.top) {
+                try {
+                    window.self = window.top;
+                } catch(e) {
+                    // Ignorer les erreurs, la modification de frameElement est souvent suffisante.
+                }
+            }
+        `;
+        // On l'ajoute au tout début de la page pour qu'il s'exécute avant les scripts du site.
+        (document.head || document.documentElement).appendChild(script);
+        // On le retire immédiatement après l'avoir ajouté pour ne pas polluer le DOM.
+        // Le script a déjà été exécuté par le navigateur à ce stade.
+        script.remove();
+    } catch (e) {
+        console.warn('Super Split View: Sabotage script injection failed.', e);
     }
-  };
+};
 
-  // --- Interception de l'API History ---
-  const originalPushState = history.pushState;
-  history.pushState = function(...args) {
-    const result = originalPushState.apply(this, args);
-    reportUrlChange();
-    return result;
-  };
+// Exécuter le sabotage immédiatement.
+injectSabotageScript();
 
-  const originalReplaceState = history.replaceState;
-  history.replaceState = function(...args) {
-    const result = originalReplaceState.apply(this, args);
-    reportUrlChange();
-    return result;
-  };
 
-  // --- Gestion des événements de navigation classiques ---
-  window.addEventListener('popstate', reportUrlChange);
-
-  // --- Envoi de l'URL initiale ---
-  setTimeout(reportUrlChange, 100);
+// --- Section pour le rapport d'URL (mise à jour de la barre d'adresse) ---
+// Cette partie est distincte du sabotage et reste nécessaire.
+if (window.hasRunSuperSplitViewURLReporter !== true) {
+    window.hasRunSuperSplitViewURLReporter = true;
+  
+    const reportUrlChange = () => {
+      try {
+        window.top.postMessage({
+          type: 'SUPER_SPLIT_VIEW_URL_CHANGE',
+          url: window.location.href
+        }, browser.runtime.getURL('').slice(0, -1));
+      } catch(e) { /* Ne rien faire */ }
+    };
+  
+    const originalPushState = history.pushState;
+    history.pushState = function(...args) {
+      originalPushState.apply(this, args);
+      reportUrlChange();
+    };
+  
+    const originalReplaceState = history.replaceState;
+    history.replaceState = function(...args) {
+      originalReplaceState.apply(this, args);
+      reportUrlChange();
+    };
+  
+    window.addEventListener('popstate', reportUrlChange);
+    window.addEventListener('load', () => setTimeout(reportUrlChange, 200), { once: true });
 }

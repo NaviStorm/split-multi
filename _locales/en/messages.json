@@ -24,7 +24,7 @@
     "message": "Single Tab Mode (Iframes)"
   },
   "optionsModeTabDescription": {
-    "message": "Displays everything in a single tab. Elegant look, but ad blockers and address bar history do not work."
+    "message": "Displays everything in a single tab. Elegant look, but some sites require forcing."
   },
   "optionsSavedStatus": {
     "message": "Options saved."
@@ -64,6 +64,20 @@
   },
   "optionsForceWindowDescription": {
     "message": "Enter one domain per line (e.g., mozilla.org). These sites will always ignore the Single Tab Mode setting."
+  },
+  "forceInfoTitle": {
+    "message": "Display Forcing Activated"
+  },
+  "forceInfoMessage": {
+    "message": "This site (<strong>$DOMAIN$</strong>) normally blocks being displayed in a frame for security reasons. Super Split View has overridden this restriction to show it to you.<br><br>To disable this forcing and always open this site in a separate window, add the following domain to the list in the extension options:",
+    "placeholders": {
+      "domain": {
+        "content": "$1"
+      }
+    }
+  },
+  "forceInfoButton": {
+    "message": "Open Options"
   },
   "welcomeTitle": {
     "message": "Welcome to Super Split View!"
@@ -120,9 +134,9 @@
     "message": "Some websites (banks, social networks, addons.mozilla.org, etc.) have security features that prevent them from being displayed inside another page (in an iframe)."
   },
   "welcomeWarningP2": {
-    "message": "When you try to split these sites in 'Single Tab Mode', you will see an error like this:"
+    "message": "When you try to split these sites in 'Single Tab Mode', the extension will automatically force them to display. An informational message will appear over the content."
   },
   "welcomeWarningP3": {
-    "message": "To work around this, <strong>Super Split View will automatically open these views in 'Window Tiling Mode'</strong>. You can also manually add the relevant domains to a list on the extension's <a href='#' class='options-link'>options page</a>."
+    "message": "To avoid this forcing, you can add the relevant domains to a list on the extension's <a href='#' class='options-link'>options page</a>. This will make them always open in 'Window Tiling Mode'."
   }
 }

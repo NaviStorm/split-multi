@@ -123,3 +123,89 @@ body {
 .resize-handle:hover {
   background-color: #999;
 }
+
+
+/* NOUVEAU : Styles pour l'overlay d'avertissement généré dynamiquement */
+.warning-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(40, 40, 40, 0.85);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.warning-box {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+    border-radius: 8px;
+    padding: 1.5em 2em;
+    max-width: 450px;
+    text-align: center;
+    font-family: sans-serif;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.warning-box h1 {
+    font-size: 1.4em;
+    margin: 0 0 1em 0;
+}
+
+.warning-box p {
+    font-size: 0.9em;
+    line-height: 1.5;
+    margin: 0 0 1.5em 0;
+}
+
+.warning-box .domain-to-add {
+    background-color: #fff;
+    border: 1px dashed #ccc;
+    padding: 10px;
+    margin-bottom: 1.5em;
+}
+
+.warning-box code {
+    font-family: monospace;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #c7254e;
+}
+
+.warning-box .button-group {
+    display: flex;
+    justify-content: space-around;
+    gap: 1em;
+}
+
+.warning-box button {
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 0.9em;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.warning-box .show-anyway-btn {
+    background-color: #28a745;
+    color: white;
+}
+.warning-box .show-anyway-btn:hover {
+    background-color: #218838;
+}
+
+.warning-box .options-btn {
+    background-color: #007bff;
+    color: white;
+}
+.warning-box .options-btn:hover {
+    background-color: #0056b3;
+}

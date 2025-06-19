@@ -1,0 +1,71 @@
+body {
+    font-family: sans-serif;
+    background: rgba(255, 243, 205, 0.95); /* Fond jaune semi-transparent */
+    color: #333;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+.container {
+    background-color: white;
+    border: 2px solid #856404;
+    border-radius: 8px;
+    padding: 1.5em 2em;
+    max-width: 450px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    text-align: center;
+}
+h1 {
+    font-size: 1.4em;
+    margin: 0 0 1em 0;
+    color: #856404;
+}
+p {
+    font-size: 0.9em;
+    line-height: 1.5;
+    margin: 0;
+}
+.domain-box {
+    background-color: #f8f9fa;
+    border: 1px dashed #ccc;
+    padding: 10px;
+    margin: 1.5em 0;
+    text-align: center;
+}
+code {
+    font-family: monospace;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #c7254e;
+}
+.button-group {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 1.5em;
+}
+button {
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-weight: bold;
+}
+#show-anyway-button {
+    background-color: #28a745;
+    color: white;
+}
+#show-anyway-button:hover {
+    background-color: #218838;
+}
+#options-button {
+    background-color: #007bff;
+    color: white;
+}
+#options-button:hover {
+    background-color: #0056b3;
+}

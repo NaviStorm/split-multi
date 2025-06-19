@@ -2,45 +2,46 @@
   "manifest_version": 3,
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDescription__",
-  "version": "2.0.0",
+  "version": "1.4.0",
   "default_locale": "en",
-
   "permissions": [
     "tabs",
     "storage",
     "contextMenus",
     "notifications",
     "webRequest",
-    "webRequestBlocking"
+    "webRequestBlocking",
+    "scripting"
   ],
-
   "host_permissions": [
     "<all_urls>"
   ],
-
   "background": {
-    "scripts": ["background.js"]
+    "scripts": [
+      "background.js"
+    ]
   },
-
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["content_script.js"],
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content_script.js"
+      ],
       "run_at": "document_start",
-      "all_frames": true
+      "all_frames": true,
+      "match_about_blank": true
     }
   ],
-
   "action": {
     "default_icon": "icons/icon.png",
     "default_title": "__MSG_browserActionTitle__"
   },
-
   "options_ui": {
     "page": "options.html",
     "open_in_tab": true
   },
-
   "web_accessible_resources": [
     {
       "resources": [
@@ -49,18 +50,13 @@
         "split-view.js",
         "welcome.html",
         "welcome.css",
-        "welcome.js",
-        "need-windows.png",
-        "dialog.html",
-        "dialog.css",
-        "dialog.js"
+        "welcome.js"
       ],
       "matches": [
         "<all_urls>"
       ]
     }
   ],
-
   "icons": {
     "32": "icons/icon-32.png",
     "48": "icons/icon-48.png",
@@ -68,7 +64,6 @@
     "96": "icons/icon-96.png",
     "128": "icons/icon-128.png"
   },
-
   "browser_specific_settings": {
     "gecko": {
       "id": "super-split-view@example.com",

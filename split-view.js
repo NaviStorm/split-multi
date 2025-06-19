@@ -1,4 +1,4 @@
-// split-view.js (Version finale avec gestion des mises à jour d'URL et titre corrigé)
+// split-view.js (Version finale avec overlay sur contenu forcé)
 
 const params = new URLSearchParams(window.location.search);
 const urls = params.get('urls').split(',');
@@ -9,26 +9,51 @@ const closeViewButton = document.getElementById('close-view-button');
 
 let panels = [];
 
-/**
- * Extrait le nom de domaine principal d'une URL.
- * ex: "https://www.mac4ever.com/bidule" -> "mac4ever.com"
- * @param {string} urlString
- * @returns {string} Le nom de domaine.
- */
 function getDomainName(urlString) {
     try {
         const hostname = new URL(urlString).hostname;
-        const parts = hostname.startsWith('www.') ? hostname.substring(4).split('.') : hostname.split('.');
-        // Retourne les deux dernières parties si possible (ex: .co.uk), sinon juste le domaine.
-        return parts.slice(-2).join('.');
-    } catch (e) {
-        return "Invalid URL";
-    }
+        return hostname.startsWith('www.') ? hostname.substring(4) : hostname;
+    } catch (e) { return "URL invalide"; }
 }
 
+function showWarningOverlay(panelWrapper, domain) {
+    if (panelWrapper.querySelector('.warning-overlay')) return;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'warning-overlay';
+
+    const box = document.createElement('div');
+    box.className = 'warning-box';
+
+    const title = browser.i18n.getMessage("forceInfoTitle");
+    const message = browser.i18n.getMessage("forceInfoMessage", domain);
+    const optionsButtonText = browser.i18n.getMessage("forceInfoButton");
+    
+    box.innerHTML = `
+        <h1>${title}</h1>
+        <p>${message}</p>
+        <div class="domain-to-add">
+            <code>${domain}</code>
+        </div>
+        <div class="button-group">
+            <button class="show-anyway-btn">Afficher quand même</button>
+            <button class="options-btn">${optionsButtonText}</button>
+        </div>
+    `;
+
+    overlay.appendChild(box);
+    panelWrapper.appendChild(overlay);
+
+    box.querySelector('.show-anyway-btn').addEventListener('click', () => {
+        overlay.remove();
+    });
+
+    box.querySelector('.options-btn').addEventListener('click', () => {
+        browser.runtime.openOptionsPage();
+    });
+}
 
 function createPanel(url) {
-    // ... le contenu de cette fonction reste inchangé ...
     const decodedUrl = decodeURIComponent(url);
     const wrapper = document.createElement('div');
     wrapper.className = 'iframe-wrapper';
@@ -40,7 +65,6 @@ function createPanel(url) {
     urlInput.type = 'text';
     urlInput.className = 'url-input';
     urlInput.value = decodedUrl;
-    urlInput.readOnly = true;
 
     const closePanelButton = document.createElement('button');
     closePanelButton.className = 'close-panel-button';
@@ -55,13 +79,23 @@ function createPanel(url) {
     wrapper.appendChild(addressBar);
     wrapper.appendChild(iframe);
 
+    urlInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            let newUrl = urlInput.value.trim();
+            if (newUrl && !newUrl.startsWith('http://') && !newUrl.startsWith('https://')) {
+                newUrl = 'https://' + newUrl;
+            }
+            iframe.src = newUrl;
+        }
+    });
+
     closePanelButton.addEventListener('click', () => removePanel(wrapper));
 
     return wrapper;
 }
 
 function renderPanels() {
-    // ... le contenu de cette fonction reste inchangé ...
     container.innerHTML = '';
     panels.forEach((panel, index) => {
         container.appendChild(panel);
@@ -74,11 +108,9 @@ function renderPanels() {
 }
 
 function removePanel(panelToRemove) {
-    // ... le contenu de cette fonction reste inchangé ...
     panels = panels.filter(p => p !== panelToRemove);
     if (panels.length > 0) {
         renderPanels();
-        // Mettre à jour le titre de l'onglet après suppression d'un panneau
         updateTabTitle();
     } else {
         window.close();
@@ -92,67 +124,44 @@ function updateTabTitle() {
     document.title = domains;
 }
 
-
-// Initialization
 document.addEventListener('DOMContentLoaded', () => {
-    // Créer les panneaux
     panels = urls.map(createPanel);
     renderPanels();
-    
-    // Mettre à jour le titre de l'onglet initial
     updateTabTitle();
 
-    // Définir le nom initial de la vue (pour le menu contextuel)
     const initialName = `Split - ${viewId.split('-')[1].substring(0, 5)}`;
     viewNameInput.value = initialName;
-    // Note: Le titre de l'onglet est maintenant géré par updateTabTitle(),
-    // mais on garde le nom de la vue pour le menu contextuel.
 
-    // Enregistrer la vue auprès du script d'arrière-plan
     browser.runtime.sendMessage({
-        type: 'REGISTER_VIEW',
-        viewId: viewId,
-        name: initialName,
+        type: 'REGISTER_VIEW', viewId: viewId, name: initialName,
         urls: urls.map(decodeURIComponent)
     });
 
-    // --- Event Listeners ---
     viewNameInput.addEventListener('change', () => {
         const newName = viewNameInput.value.trim();
         if (newName) {
-            // Mettre à jour le nom pour le menu contextuel
-            browser.runtime.sendMessage({
-                type: 'UPDATE_VIEW_NAME',
-                viewId: viewId,
-                newName: newName
-            });
+            browser.runtime.sendMessage({ type: 'UPDATE_VIEW_NAME', viewId: viewId, newName: newName });
         }
     });
     
-    // ... Le reste des listeners reste inchangé ...
-    closeViewButton.addEventListener('click', () => {
-        window.close();
-    });
+    closeViewButton.addEventListener('click', () => window.close());
 
     browser.runtime.onMessage.addListener((message) => {
-        if (message.type === 'ADD_TAB_TO_VIEW' && message.viewId === viewId) {
-            if(panels.length < 4) {
-                 const newPanel = createPanel(encodeURIComponent(message.tab.url));
-                 panels.push(newPanel);
-                 renderPanels();
-                 updateTabTitle();
-            } else {
-                browser.notifications.create({
-                    type: 'basic',
-                    iconUrl: browser.runtime.getURL('icons/icon-48.png'),
-                    title: browser.i18n.getMessage('extensionName'),
-                    message: browser.i18n.getMessage('maxTabsAlert')
-                });
-            }
+        if (message.type === 'FRAME_FORCED' && message.url) {
+            setTimeout(() => {
+                const targetPanel = panels.find(p => p.querySelector('iframe')?.src === message.url);
+                if (targetPanel) {
+                    const domain = getDomainName(message.url);
+                    showWarningOverlay(targetPanel, domain);
+                }
+            }, 500);
         }
     });
 
     window.addEventListener('message', (event) => {
+        // Sécurité : n'accepter les messages que de notre propre origine
+        if (event.origin !== window.origin) return;
+
         if (event.data && event.data.type === 'SUPER_SPLIT_VIEW_URL_CHANGE') {
             const sourceIframe = Array.from(document.querySelectorAll('iframe'))
                                     .find(iframe => iframe.contentWindow === event.source);
@@ -161,7 +170,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (urlInput) {
                     urlInput.value = event.data.url;
                 }
-                // Mettre à jour le titre de l'onglet si l'URL change
                 updateTabTitle();
             }
         }
@@ -169,8 +177,5 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 window.addEventListener('beforeunload', () => {
-    browser.runtime.sendMessage({
-        type: 'UNREGISTER_VIEW',
-        viewId: viewId
-    });
+    browser.runtime.sendMessage({ type: 'UNREGISTER_VIEW', viewId: viewId });
 });
