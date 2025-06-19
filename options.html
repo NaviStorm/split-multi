@@ -6,41 +6,41 @@
 </head>
 <body>
     <h1 data-i18n="optionsTitle"></h1>
-
     <form id="options-form">
         <fieldset>
             <legend data-i18n="optionsLegend"></legend>
-
-            <div>
+            <div class="radio-option">
                 <input type="radio" id="mode-window" name="mode" value="window">
                 <label for="mode-window">
                     <strong data-i18n="optionsModeWindowLabel"></strong>
                     <p data-i18n="optionsModeWindowDescription"></p>
                 </label>
             </div>
-
-            <div>
+            <div class="radio-option">
                 <input type="radio" id="mode-tab" name="mode" value="tab">
                 <label for="mode-tab">
                     <strong data-i18n="optionsModeTabLayout"></strong>
                     <p data-i18n="optionsModeTabDescription"></p>
                 </label>
             </div>
+            <div style="border-top: 1px solid #ccc; margin-top: 2em; padding-top: 1.5em; display: flex; align-items: center;">
+                 <input type="checkbox" id="show-framing-warning" name="show-framing-warning" style="margin: 0 10px 0 0; flex-shrink: 0;">
+                 <label for="show-framing-warning" data-i18n="optionsShowDialogLabel" style="font-weight: normal; margin: 0;"></label>
+            </div>
+            <div class="textarea-container">
+                <label for="force-window-domains" data-i18n="optionsForceWindowLabel"></label>
+                <p class="description" data-i18n="optionsForceWindowDescription"></p>
+                <textarea id="force-window-domains"></textarea>
+            </div>
         </fieldset>
     </form>
-    
     <div id="status"></div>
-
-    <!-- NOUVEAU LIEN VERS LA PAGE D'AIDE -->
     <div class="help-link-container">
         <a href="#" id="help-link" data-i18n="optionsHelpLink"></a>
     </div>
-    
-    <!-- NOUVEL ÉLÉMENT POUR L'AVERTISSEMENT -->
     <div class="warning-box">
         <p data-i18n="optionsLanguageWarning"></p>
     </div>
-
     <script src="options.js"></script>
 </body>
 </html>

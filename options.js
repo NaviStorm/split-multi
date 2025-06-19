@@ -1,61 +1,59 @@
-// Fichier: options.js (Version finale avec lien vers l'aide)
+const DEFAULT_PROTECTED_DOMAINS = [
+    'accounts.google.com',
+    'facebook.com',
+    'twitter.com',
+    'linkedin.com',
+    'github.com',
+    'addons.mozilla.org',
+    'www.paypal.com',
+    'paypal.com'
+].join('\n');
 
-/**
- * Traduit la page en remplaçant le contenu des éléments
- * qui ont un attribut data-i18n.
- */
-function localizeHtmlPage() {
-    const elements = document.querySelectorAll('[data-i18n]');
-    elements.forEach(el => {
-        const messageKey = el.getAttribute('data-i18n');
-        el.textContent = browser.i18n.getMessage(messageKey);
+function save_options() {
+    const mode = document.querySelector('input[name="mode"]:checked').value;
+    const showWarning = document.getElementById('show-framing-warning').checked;
+    const forceWindowDomains = document.getElementById('force-window-domains').value;
+    browser.storage.local.set({
+        mode: mode,
+        showFramingWarning: showWarning,
+        forceWindowDomains: forceWindowDomains
+    }).then(() => {
+        let status = document.getElementById('status');
+        status.textContent = browser.i18n.getMessage("optionsSavedStatus");
+        setTimeout(() => { status.textContent = ''; }, 1500);
     });
 }
 
-/**
- * Sauvegarde le mode de fonctionnement choisi par l'utilisateur.
- */
-function saveOptions(e) {
-  e.preventDefault();
-  const mode = document.querySelector('input[name="mode"]:checked').value;
-  browser.storage.local.set({ mode: mode }).then(() => {
-    const status = document.getElementById('status');
-    status.textContent = browser.i18n.getMessage("optionsSavedStatus");
-    setTimeout(() => { status.textContent = ''; }, 1500);
-  });
+function restore_options() {
+    browser.storage.local.get({
+        mode: 'window',
+        showFramingWarning: true,
+        forceWindowDomains: DEFAULT_PROTECTED_DOMAINS 
+    }).then(items => {
+        document.querySelector(`input[name="mode"][value="${items.mode}"]`).checked = true;
+        document.getElementById('show-framing-warning').checked = items.showFramingWarning;
+        document.getElementById('force-window-domains').value = items.forceWindowDomains;
+    });
 }
 
-/**
- * Restaure les options sauvegardées au chargement de la page.
- */
-function restoreOptions() {
-  function setCurrentChoice(result) {
-    // Le mode "tab" est la valeur par défaut.
-    const mode = result.mode || 'tab';
-    document.querySelector(`input[name="mode"][value="${mode}"]`).checked = true;
-  }
-  browser.storage.local.get("mode").then(setCurrentChoice);
+function applyTranslations() {
+    document.querySelectorAll('[data-i18n]').forEach(elem => {
+        const key = elem.getAttribute('data-i18n');
+        elem.textContent = browser.i18n.getMessage(key);
+    });
+    document.title = browser.i18n.getMessage("optionsTitle");
 }
-
-// --- POINT D'ENTRÉE PRINCIPAL ---
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Traduire et afficher les options immédiatement
-    localizeHtmlPage();
-    restoreOptions();
-
-    // 2. Rendre le lien d'aide fonctionnel
+    applyTranslations();
+    restore_options();
+    document.getElementById('options-form').addEventListener('change', save_options);
+    document.getElementById('force-window-domains').addEventListener('input', save_options);
     const helpLink = document.getElementById('help-link');
     if (helpLink) {
         helpLink.addEventListener('click', (e) => {
-            e.preventDefault(); // Empêche le lien de faire quoi que ce soit par défaut
-            // Ouvre la page welcome.html dans un nouvel onglet
-            browser.tabs.create({
-                url: browser.runtime.getURL("welcome.html")
-            });
+            e.preventDefault();
+            browser.tabs.create({ url: 'welcome.html' });
         });
     }
 });
-
-// Écouteur pour la sauvegarde des options
-document.querySelector("#options-form").addEventListener('change', saveOptions);

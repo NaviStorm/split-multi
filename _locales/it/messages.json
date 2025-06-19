@@ -1,33 +1,128 @@
 {
-  "extensionName": { "message": "Super Vista Divisa" },
-  "extensionDescription": { "message": "Visualizza le schede selezionate in una vista divisa, in una nuova scheda o in nuove finestre." },
-  "browserActionTitle": { "message": "Crea una vista divisa" },
-  "optionsTitle": { "message": "Opzioni di Super Vista Divisa" },
-  "optionsLegend": { "message": "Scegli la modalità operativa:" },
-  "optionsModeWindowLabel": { "message": "Modalità Finestre Affiancate (Consigliato)" },
-  "optionsModeWindowDescription": { "message": "Crea nuove finestre del browser. Conserva tutte le funzionalità (barra degli indirizzi, blocco pubblicità, ecc.)." },
-  "optionsModeTabLayout": { "message": "Modalità Scheda Singola (Iframes)" },
-  "optionsModeTabDescription": { "message": "Visualizza tutto in un'unica scheda. Aspetto elegante, ma il blocco della pubblicità e la cronologia della barra degli indirizzi non funzionano." },
-  "optionsSavedStatus": { "message": "Opzioni salvate." },
-  "alertSelectTabs": { "message": "Seleziona almeno due schede con pagine web caricate." },
-  "optionsLanguageWarning": { "message": "Nota: è necessario riavviare il browser affinché le modifiche della lingua abbiano pieno effetto nell'estensione." },
-  "contextMenuTitle": { "message": "Aggiungi a una vista divisa esistente..." },
-  "maxTabsAlert": { "message": "Raggiunto il massimo di 4 schede. Non è possibile aggiungerne altre a questa vista." },
-  "welcomeTitle": { "message": "Benvenuto in Super Vista Divisa!" },
-  "welcomeSubtitle": { "message": "Ecco una guida rapida per padroneggiare la produttività multi-scheda." },
-  "welcomeHeader1": { "message": "1. Crea la tua prima vista divisa (Modalità Scheda)" },
-  "welcomeStep1_1": { "message": "Seleziona da 2 a 4 schede tenendo premuto il tasto <code>Cmd</code> (Mac) o <code>Ctrl</code> (Windows) e cliccandoci sopra." },
-  "welcomeStep1_2": { "message": "Fai clic sull'icona dell'estensione <img src='icons/icon-48.png' class='inline-icon'> nella tua barra degli strumenti." },
-  "welcomeStep1_3": { "message": "Fatto! Si aprirà una nuova scheda con le tue pagine affiancate." },
-  "welcomeHeader2": { "message": "2. Gestisci la tua vista" },
-  "welcomeStep2_1": { "message": "<strong>Dai un nome alla tua vista:</strong> Fai clic sul campo in cima alla vista divisa (es. \"Split - 123...\") e assegnale un nome chiaro come \"Ricerca Progetto X\"." },
-  "welcomeStep2_2": { "message": "<strong>Rimuovi un pannello:</strong> Fai clic sul piccolo pulsante <code>×</code> a destra della barra degli indirizzi di un pannello per rimuoverlo." },
-  "welcomeStep2_3": { "message": "<strong>Chiudi l'intera vista:</strong> Fai clic sul grande pulsante <code>X</code> in alto a destra." },
-  "welcomeHeader3": { "message": "3. Aggiungi una scheda a una vista esistente" },
-  "welcomeStep3_1": { "message": "Crea una vista divisa (vedi passo 1)." },
-  "welcomeStep3_2": { "message": "Vai a un'altra scheda che desideri aggiungere." },
-  "welcomeStep3_3": { "message": "Fai <strong>clic destro</strong> su quella scheda." },
-  "welcomeStep3_4": { "message": "Nel menu, vai su \"Aggiungi a una vista divisa esistente...\" e scegli la tua vista per nome." },
-  "welcomeFooter": { "message": "<strong>Suggerimento:</strong> Preferisci che le viste si aprano in finestre separate? Vai alle <a href='#' id='options-link'>opzioni dell'estensione</a> e scegli \"Modalità Finestre Affiancate\"." },
-  "optionsHelpLink": { "message": "❓ Consulta la guida per l'utente" }
+  "extensionName": {
+    "message": "Super Vista Divisa"
+  },
+  "extensionDescription": {
+    "message": "Visualizza le schede selezionate in una vista divisa, in una nuova scheda o in nuove finestre."
+  },
+  "browserActionTitle": {
+    "message": "Crea una vista divisa"
+  },
+  "optionsTitle": {
+    "message": "Opzioni di Super Vista Divisa"
+  },
+  "optionsLegend": {
+    "message": "Scegli la modalità operativa:"
+  },
+  "optionsModeWindowLabel": {
+    "message": "Modalità Finestre Affiancate (Consigliato)"
+  },
+  "optionsModeWindowDescription": {
+    "message": "Crea nuove finestre del browser. Conserva tutte le funzionalità (barra degli indirizzi, blocco pubblicità, ecc.)."
+  },
+  "optionsModeTabLayout": {
+    "message": "Modalità Scheda Singola (Iframes)"
+  },
+  "optionsModeTabDescription": {
+    "message": "Visualizza tutto in un'unica scheda. Aspetto elegante, ma il blocco della pubblicità e la cronologia della barra degli indirizzi non funzionano."
+  },
+  "optionsSavedStatus": {
+    "message": "Opzioni salvate."
+  },
+  "alertSelectTabs": {
+    "message": "Seleziona almeno due schede con pagine web caricate."
+  },
+  "optionsLanguageWarning": {
+    "message": "Nota: è necessario riavviare il browser affinché le modifiche della lingua abbiano pieno effetto nell'estensione."
+  },
+  "contextMenuTitle": {
+    "message": "Aggiungi a una vista divisa esistente..."
+  },
+  "maxTabsAlert": {
+    "message": "Raggiunto il massimo di 4 schede. Non è possibile aggiungerne altre a questa vista."
+  },
+  "optionsHelpLink": {
+    "message": "❓ Consulta la guida per l'utente"
+  },
+  "dialogTitle": {
+    "message": "Modalità di visualizzazione modificata"
+  },
+  "dialogMessage": {
+    "message": "Per motivi di sicurezza, uno dei siti web selezionati non consente la visualizzazione raggruppata in una singola scheda. Per questo motivo, Super Vista Divisa ha aperto le pagine in finestre separate."
+  },
+  "dialogCheckboxLabel": {
+    "message": "Non mostrare più questo messaggio"
+  },
+  "dialogConfirmButton": {
+    "message": "OK"
+  },
+  "optionsShowDialogLabel": {
+    "message": "Mostra avviso quando un sito web forza la Modalità Finestre"
+  },
+  "optionsForceWindowLabel": {
+    "message": "Siti da aprire sempre in Modalità Finestra"
+  },
+  "optionsForceWindowDescription": {
+    "message": "Inserisci un dominio per riga (es. mozilla.org). Questi siti ignoreranno sempre l'impostazione Modalità Scheda Singola."
+  },
+  "welcomeTitle": {
+    "message": "Benvenuto in Super Vista Divisa!"
+  },
+  "welcomeSubtitle": {
+    "message": "Ecco una guida rapida per padroneggiare la produttività multi-scheda."
+  },
+  "welcomeHeader1": {
+    "message": "1. Crea la tua prima vista divisa (Modalità Scheda)"
+  },
+  "welcomeStep1_1": {
+    "message": "Seleziona da 2 a 4 schede tenendo premuto il tasto <code>Cmd</code> (Mac) o <code>Ctrl</code> (Windows) e cliccandoci sopra."
+  },
+  "welcomeStep1_2": {
+    "message": "Fai clic sull'icona dell'estensione <img src='icons/icon-48.png' class='inline-icon'> nella tua barra degli strumenti."
+  },
+  "welcomeStep1_3": {
+    "message": "Fatto! Si aprirà una nuova scheda con le tue pagine affiancate."
+  },
+  "welcomeHeader2": {
+    "message": "2. Gestisci la tua vista"
+  },
+  "welcomeStep2_1": {
+    "message": "<strong>Dai un nome alla tua vista:</strong> Fai clic sul campo in cima alla vista divisa (es. \"Split - 123...\") e assegnale un nome chiaro come \"Ricerca Progetto X\"."
+  },
+  "welcomeStep2_2": {
+    "message": "<strong>Rimuovi un pannello:</strong> Fai clic sul piccolo pulsante <code>×</code> a destra della barra degli indirizzi di un pannello per rimuoverlo."
+  },
+  "welcomeStep2_3": {
+    "message": "<strong>Chiudi l'intera vista:</strong> Fai clic sul grande pulsante <code>X</code> in alto a destra."
+  },
+  "welcomeHeader3": {
+    "message": "3. Aggiungi una scheda a una vista esistente"
+  },
+  "welcomeStep3_1": {
+    "message": "Crea una vista divisa (vedi passo 1)."
+  },
+  "welcomeStep3_2": {
+    "message": "Vai a un'altra scheda che desideri aggiungere."
+  },
+  "welcomeStep3_3": {
+    "message": "Fai <strong>clic destro</strong> su quella scheda."
+  },
+  "welcomeStep3_4": {
+    "message": "Nel menu, vai su \"Aggiungi a una vista divisa esistente...\" e scegli la tua vista per nome."
+  },
+  "welcomeFooter": {
+    "message": "<strong>Suggerimento:</strong> Preferisci che le viste si aprano in finestre separate? Vai alle <a href='#' class='options-link'>opzioni dell'estensione</a> e scegli \"Modalità Finestre Affiancate\"."
+  },
+  "welcomeWarningTitle": {
+    "message": "AVVISO"
+  },
+  "welcomeWarningP1": {
+    "message": "Alcuni siti web (banche, social network, addons.mozilla.org, ecc.) dispongono di funzionalità di sicurezza che impediscono la loro visualizzazione all'interno di un'altra pagina (in un iframe)."
+  },
+  "welcomeWarningP2": {
+    "message": "Quando si tenta di dividere questi siti in 'Modalità Scheda Singola', verrà visualizzato un errore come questo:"
+  },
+  "welcomeWarningP3": {
+    "message": "Per ovviare a questo problema, <strong>Super Vista Divisa aprirà automaticamente queste viste in 'Modalità Finestre Affiancate'</strong>. È anche possibile aggiungere manualmente i domini pertinenti a un elenco nella <a href='#' class='options-link'>pagina delle opzioni</a> dell'estensione."
+  }
 }
