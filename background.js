@@ -116,7 +116,16 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 const urlToRemoveBase = urlToRemove.split('?')[0];
                 splitViews[viewId] = splitViews[viewId].filter(url => !url.startsWith(urlToRemoveBase));
             }
-            sendResponse(splitViews[viewId]); // Renvoie les URLs restantes
+            // Renvoie les URLs restantes pour que le front puisse recharger
+            sendResponse(splitViews[viewId]);
+            break;
+
+        // On ajoute un nouveau cas pour la mise à jour depuis la barre d'adresse
+        case "updateUrlsForView":
+            if (splitViews[request.viewId]) {
+                splitViews[request.viewId] = request.urls;
+            }
+            sendResponse({});
             break;
     }
     return true;
@@ -136,7 +145,7 @@ browser.tabs.onRemoved.addListener((tabId) => {
 browser.webRequest.onHeadersReceived.addListener(
     (details) => {
         if (details.type !== "sub_frame") return;
-        
+
         const responseHeaders = details.responseHeaders.filter(
             (header) => {
                 const name = header.name.toLowerCase();

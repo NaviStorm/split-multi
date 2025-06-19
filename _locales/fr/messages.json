@@ -69,7 +69,7 @@
         "message": "Forçage d'affichage activé"
     },
     "forceInfoMessage": {
-        "message": "Ce site (<strong>$DOMAIN$</strong>) interdit normalement son affichage dans un cadre pour des raisons de sécurité. Super Vue Partagée a contourné cette restriction pour vous l'afficher.<br><br>Pour désactiver ce forçage et toujours ouvrir ce site dans une fenêtre séparée, ajoutez le domaine suivant à la liste dans les options de l'extension :",
+        "message": "Ce site (<strong>__DOMAIN__</strong>) interdit normalement son affichage dans un cadre pour des raisons de sécurité. Super Vue Partagée a contourné cette restriction pour vous l'afficher.<br><br>Pour désactiver ce forçage et toujours ouvrir ce site dans une fenêtre séparée, ajoutez le domaine suivant à la liste dans les options de l'extension :",
         "placeholders": {
             "domain": {
                 "content": "$1"

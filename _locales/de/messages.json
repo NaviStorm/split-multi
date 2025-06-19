@@ -69,7 +69,7 @@
     "message": "Anzeige-Erzwingung aktiviert"
   },
   "forceInfoMessage": {
-    "message": "Diese Website (<strong>$DOMAIN$</strong>) blockiert aus Sicherheitsgründen normalerweise die Anzeige in einem Frame. Super Geteilte Ansicht hat diese Einschränkung umgangen, um sie Ihnen anzuzeigen.<br><br>Um dieses Erzwingen zu deaktivieren und diese Website immer in einem separaten Fenster zu öffnen, fügen Sie die folgende Domain zur Liste in den Erweiterungsoptionen hinzu:",
+    "message": "Diese Website (<strong>__DOMAIN__</strong>) blockiert aus Sicherheitsgründen normalerweise die Anzeige in einem Frame. Super Geteilte Ansicht hat diese Einschränkung umgangen, um sie Ihnen anzuzeigen.<br><br>Um dieses Erzwingen zu deaktivieren und diese Website immer in einem separaten Fenster zu öffnen, fügen Sie die folgende Domain zur Liste in den Erweiterungsoptionen hinzu:",
     "placeholders": {
       "domain": {
         "content": "$1"

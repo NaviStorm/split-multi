@@ -1,0 +1,54 @@
+// Fichier : force-info.js (Version corrigée)
+
+function i18n() {
+    // Gère les textes simples sans placeholders
+    document.querySelectorAll('[data-i18n-key]:not(#info-message)').forEach(el => {
+        const key = el.getAttribute('data-i18n-key');
+        const text = browser.i18n.getMessage(key);
+        if (text) el.textContent = text;
+    });
+}
+
+// Fichier : force-info.js (Version corrigée et simplifiée)
+
+document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const domain = urlParams.get('domain');
+    const urlToLoad = urlParams.get('urlToLoad');
+
+    // 1. Appliquer les traductions pour les textes simples
+    document.querySelectorAll('[data-i18n-key]').forEach(el => {
+        // On exclut le message complexe pour le moment
+        if (el.id === 'info-message') return;
+        
+        const key = el.getAttribute('data-i18n-key');
+        const text = browser.i18n.getMessage(key);
+        if (text) el.textContent = text;
+    });
+
+    // 2. Gérer le message complexe séparément
+    if (domain) {
+        // Affiche le domaine dans la case <code>
+        document.getElementById('domain-to-add').textContent = domain;
+
+        // Récupère le message brut depuis les traductions
+        let messageText = browser.i18n.getMessage('forceInfoMessage');
+        
+        // Remplace le placeholder personnalisé `$DOMAIN$` par le vrai domaine
+        // La balise <strong> est déjà dans la chaîne de traduction
+        messageText = messageText.replace(/__DOMAIN__/g, domain);
+        console.log('domain: ', domain, '  messageText : ', messageText);
+        
+        // Injecte le HTML final dans l'élément
+        document.getElementById('info-message').innerHTML = messageText;
+    }
+    
+    // 3. Lier les événements des boutons
+    document.getElementById('show-anyway-button').addEventListener('click', () => {
+        window.parent.postMessage({ type: 'SVD_HIDE_FORCE_INFO', urlToLoad: urlToLoad }, '*');
+    });
+
+    document.getElementById('options-button').addEventListener('click', () => {
+        window.parent.postMessage({ type: 'SVD_OPEN_OPTIONS' }, '*');
+    });
+});

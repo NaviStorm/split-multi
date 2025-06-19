@@ -69,7 +69,7 @@
     "message": "Forzado de visualización activado"
   },
   "forceInfoMessage": {
-    "message": "Este sitio (<strong>$DOMAIN$</strong>) normalmente bloquea su visualización en un marco por razones de seguridad. Súper Vista Dividida ha anulado esta restricción para mostrárselo.<br><br>Para desactivar este forzado y abrir siempre este sitio en una ventana separada, agregue el siguiente dominio a la lista en las opciones de la extensión:",
+    "message": "Este sitio (<strong>__DOMAIN__</strong>) normalmente bloquea su visualización en un marco por razones de seguridad. Súper Vista Dividida ha anulado esta restricción para mostrárselo.<br><br>Para desactivar este forzado y abrir siempre este sitio en una ventana separada, agregue el siguiente dominio a la lista en las opciones de la extensión:",
     "placeholders": {
       "domain": {
         "content": "$1"

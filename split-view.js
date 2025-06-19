@@ -47,11 +47,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
     viewId = urlParams.get('id');
 
-    // Demander les URLs finales au background script
-    const finalUrls = await browser.runtime.sendMessage({
-        action: "getUrlsForView",
-        viewId: viewId
-    });
+    const finalUrls = await browser.runtime.sendMessage({ action: "getUrlsForView", viewId: viewId });
 
     if (!finalUrls || finalUrls.length === 0) {
         browser.tabs.getCurrent().then(tab => browser.tabs.remove(tab.id));
@@ -69,9 +65,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     viewNameInput.addEventListener('change', (e) => {
-        const newName = e.target.value;
-        document.title = newName;
-        browser.storage.local.set({ [`viewName_${viewId}`]: newName });
+        browser.storage.local.set({ [`viewName_${viewId}`]: e.target.value });
+        document.title = e.target.value;
     });
 
     closeViewButton.addEventListener('click', () => {
@@ -82,34 +77,71 @@ document.addEventListener('DOMContentLoaded', async () => {
     const createPanel = (url) => {
         const iframeWrapper = document.createElement('div');
         iframeWrapper.className = 'iframe-wrapper';
-
+        
         const addressBarContainer = document.createElement('div');
         addressBarContainer.className = 'address-bar';
 
         const urlInput = document.createElement('input');
         urlInput.type = 'text';
         urlInput.className = 'url-input';
-
-        const iframe = document.createElement('iframe');
+        
         const contentUrl = new URL(url);
 
+        // ===== DÉBUT DE LA NOUVELLE LOGIQUE =====
+        
+        const loadPage = (targetWrapper, pageUrl) => {
+            // Supprime un éventuel overlay existant
+            const existingOverlay = targetWrapper.querySelector('.force-info-overlay');
+            if (existingOverlay) existingOverlay.remove();
+            
+            // Supprime un placeholder s'il y en a un
+            const placeholder = targetWrapper.querySelector('.iframe-placeholder');
+            if(placeholder) placeholder.remove();
+
+            const iframe = document.createElement('iframe');
+            iframe.src = pageUrl;
+            targetWrapper.appendChild(iframe);
+        };
+        
+        // On nettoie l'URL pour l'affichage dans la barre d'adresse
+        const cleanUrl = new URL(url);
+        cleanUrl.searchParams.delete('svd_forced');
+        cleanUrl.searchParams.delete('svd_domain');
+        urlInput.value = cleanUrl.href;
+        
         if (contentUrl.searchParams.get('svd_forced') === 'true') {
             const domain = contentUrl.searchParams.get('svd_domain');
-            showWarningOverlay(iframeWrapper, domain);
-
-            const cleanUrl = new URL(url);
-            cleanUrl.searchParams.delete('svd_forced');
-            cleanUrl.searchParams.delete('svd_domain');
             
-            iframe.src = cleanUrl.href;
-            urlInput.value = cleanUrl.href;
+            // Affiche l'overlay SANS charger la page web
+            showWarningOverlay(iframeWrapper, domain, cleanUrl.href);
+            
+            // On met un placeholder gris pour que le panneau ne soit pas vide
+            const placeholder = document.createElement('div');
+            placeholder.className = 'iframe-placeholder';
+            placeholder.style.flexGrow = '1';
+            placeholder.style.backgroundColor = '#f0f0f0';
+            iframeWrapper.appendChild(placeholder);
+
         } else {
-            iframe.src = url;
-            urlInput.value = url;
+            // Comportement normal : charger la page directement
+            loadPage(iframeWrapper, url);
         }
 
+        // Ajout de l'ID de l'URL au wrapper pour que l'overlay puisse le retrouver
+        iframeWrapper.dataset.urlId = cleanUrl.href;
+
+        // ===== FIN DE LA NOUVELLE LOGIQUE =====
+
         urlInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') iframe.src = urlInput.value;
+            if (e.key === 'Enter') {
+                // On ne peut pas savoir si la nouvelle URL est forcée, donc on recharge toute la vue
+                const currentUrls = Array.from(container.querySelectorAll('.iframe-wrapper')).map(wrapper => {
+                    if (wrapper === iframeWrapper) return e.target.value;
+                    return wrapper.querySelector('.url-input').value;
+                });
+                browser.runtime.sendMessage({action: "updateUrlsForView", viewId: viewId, urls: currentUrls})
+                    .then(() => window.location.reload());
+            }
         });
 
         const closePanelButton = document.createElement('button');
@@ -124,11 +156,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 closeViewButton.click();
             }
         };
-
+        
         addressBarContainer.appendChild(urlInput);
         addressBarContainer.appendChild(closePanelButton);
-        iframeWrapper.appendChild(addressBarContainer);
-        iframeWrapper.appendChild(iframe);
+        iframeWrapper.insertBefore(addressBarContainer, iframeWrapper.firstChild);
         container.appendChild(iframeWrapper);
     };
 
@@ -136,7 +167,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     makeResizable(container);
 });
 
-function showWarningOverlay(iframeWrapper, domain) {
+
+function showWarningOverlay(iframeWrapper, domain, urlToLoad) {
     const overlay = document.createElement('div');
     overlay.className = 'force-info-overlay';
     overlay.style.position = 'absolute';
@@ -145,36 +177,51 @@ function showWarningOverlay(iframeWrapper, domain) {
     overlay.style.width = '100%';
     overlay.style.height = 'calc(100% - 40px)';
     overlay.style.zIndex = '20';
-    overlay.style.backgroundColor = 'transparent';
 
+    // On passe l'URL à charger à l'iframe de l'overlay pour qu'il puisse nous la renvoyer
+    const infoUrl = browser.runtime.getURL(`force-info.html?domain=${encodeURIComponent(domain)}&urlToLoad=${encodeURIComponent(urlToLoad)}`);
     const infoFrame = document.createElement('iframe');
-    const infoUrl = browser.runtime.getURL(`force-info.html?domain=${encodeURIComponent(domain)}`);
     infoFrame.src = infoUrl;
     infoFrame.style.width = '100%';
     infoFrame.style.height = '100%';
     infoFrame.style.border = 'none';
+    infoFrame.style.backgroundColor = 'transparent';
 
     overlay.appendChild(infoFrame);
     iframeWrapper.appendChild(overlay);
 }
 
-// ===== DÉBUT DE LA MODIFICATION =====
 window.addEventListener('message', (event) => {
     const extensionOrigin = browser.runtime.getURL('').slice(0, -1);
     if (event.origin !== extensionOrigin) return;
 
     if (event.data && event.data.type === 'SVD_HIDE_FORCE_INFO') {
-        const overlay = document.querySelector('.force-info-overlay');
-        if (overlay) overlay.remove();
+        const urlToLoad = event.data.urlToLoad;
+        // On trouve le bon panneau grâce à l'URL
+        const targetWrapper = document.querySelector(`[data-url-id="${urlToLoad}"]`);
+        if (targetWrapper) {
+            // Supprime l'overlay
+            const overlay = targetWrapper.querySelector('.force-info-overlay');
+            if (overlay) overlay.remove();
+            
+            // Supprime le placeholder
+            const placeholder = targetWrapper.querySelector('.iframe-placeholder');
+            if (placeholder) placeholder.remove();
+
+            // Crée et charge l'iframe de la page web
+            const iframe = document.createElement('iframe');
+            iframe.src = urlToLoad;
+            iframe.style.height = '100%';
+            iframe.style.width = '100%';
+            iframe.style.border = 'none';
+            targetWrapper.appendChild(iframe);
+        }
+
     } else if (event.data && event.data.type === 'SVD_OPEN_OPTIONS') {
-        // 1. Ouvre la page des options
         browser.runtime.openOptionsPage();
-        
-        // 2. Simule un clic sur le bouton de fermeture de la vue
         const closeButton = document.getElementById('close-view-button');
         if (closeButton) {
             closeButton.click();
         }
     }
 });
-// ===== FIN DE LA MODIFICATION =====
