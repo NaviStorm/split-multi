@@ -6,7 +6,6 @@ let authorizedDomains = new Set();
 // Écouteur pour répondre aux demandes du background script
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "getAuthorizedDomains") {
-        // Renvoie la liste actuelle des domaines autorisés pour cette vue
         sendResponse({ authorizedDomains: Array.from(authorizedDomains) });
         return true;
     }
@@ -55,7 +54,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
     viewId = urlParams.get('id');
 
-    // Récupération des domaines déjà autorisés depuis l'URL (passés par background.js)
     const authorizedParam = urlParams.get('authorized');
     if (authorizedParam) {
         try {
@@ -112,14 +110,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const iframe = document.createElement('iframe');
             iframe.src = pageUrl;
-            iframe.addEventListener('load', () => {
-                try {
-                    const newNavigatedUrl = iframe.contentWindow.location.href;
-                    targetWrapper.querySelector('.url-input').value = newNavigatedUrl;
-                } catch (e) {
-                    console.warn("Could not update address bar due to cross-origin restrictions.");
-                }
-            });
+            // NOTE: On retire l'écouteur 'load' car le content_script est plus fiable.
             targetWrapper.appendChild(iframe);
         };
 
@@ -213,44 +204,46 @@ function showWarningOverlay(iframeWrapper, domain, urlToLoad) {
 
 window.addEventListener('message', (event) => {
     const extensionOrigin = browser.runtime.getURL('').slice(0, -1);
-    if (event.origin !== extensionOrigin) return;
 
-    if (event.data && event.data.type === 'SVD_HIDE_FORCE_INFO') {
-        const urlToLoad = event.data.urlToLoad;
-        const targetWrapper = document.querySelector(`[data-url-id="${urlToLoad}"]`);
-        if (targetWrapper) {
-
-            const domain = new URL(urlToLoad).hostname;
-            authorizedDomains.add(domain);
-
-            const overlay = targetWrapper.querySelector('.force-info-overlay');
-            if (overlay) overlay.remove();
-
-            const placeholder = targetWrapper.querySelector('.iframe-placeholder');
-            if (placeholder) placeholder.remove();
-
-            const iframe = document.createElement('iframe');
-            iframe.src = urlToLoad;
-            iframe.style.height = '100%';
-            iframe.style.width = '100%';
-            iframe.style.border = 'none';
-
-            iframe.addEventListener('load', () => {
-                try {
-                    const newNavigatedUrl = iframe.contentWindow.location.href;
-                    targetWrapper.querySelector('.url-input').value = newNavigatedUrl;
-                } catch (e) {
-                    console.warn("Could not update address bar due to cross-origin restrictions.");
-                }
-            });
-            targetWrapper.appendChild(iframe);
+    // Cas 1: Message de confiance venant de l'overlay de l'extension
+    if (event.origin === extensionOrigin) {
+        if (event.data && event.data.type === 'SVD_HIDE_FORCE_INFO') {
+            const urlToLoad = event.data.urlToLoad;
+            const targetWrapper = document.querySelector(`[data-url-id="${urlToLoad}"]`);
+            if (targetWrapper) {
+                const domain = new URL(urlToLoad).hostname;
+                authorizedDomains.add(domain);
+                const overlay = targetWrapper.querySelector('.force-info-overlay');
+                if (overlay) overlay.remove();
+                const placeholder = targetWrapper.querySelector('.iframe-placeholder');
+                if (placeholder) placeholder.remove();
+                const iframe = document.createElement('iframe');
+                iframe.src = urlToLoad;
+                iframe.style.cssText = 'height: 100%; width: 100%; border: none;';
+                targetWrapper.appendChild(iframe);
+            }
+        } else if (event.data && event.data.type === 'SVD_OPEN_OPTIONS') {
+            browser.runtime.openOptionsPage();
+            const closeButton = document.getElementById('close-view-button');
+            if (closeButton) closeButton.click();
         }
-
-    } else if (event.data && event.data.type === 'SVD_OPEN_OPTIONS') {
-        browser.runtime.openOptionsPage();
-        const closeButton = document.getElementById('close-view-button');
-        if (closeButton) {
-            closeButton.click();
+        return; // Message traité, on arrête.
+    }
+    
+    // Cas 2: Message du content_script injecté dans un iframe (origine inconnue)
+    if (event.data && event.data.type === 'SVD_URL_CHANGED') {
+        const newUrl = event.data.url;
+        const iframes = document.querySelectorAll('.iframe-wrapper iframe');
+        for (const iframe of iframes) {
+            // event.source est la fenêtre qui a envoyé le message. C'est la seule façon fiable de l'identifier.
+            if (iframe.contentWindow === event.source) {
+                const wrapper = iframe.closest('.iframe-wrapper');
+                if (wrapper) {
+                    const urlInput = wrapper.querySelector('.url-input');
+                    if (urlInput) urlInput.value = newUrl;
+                }
+                break; // On a trouvé, on sort de la boucle.
+            }
         }
     }
 });

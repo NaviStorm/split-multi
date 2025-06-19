@@ -1,41 +1,32 @@
-// Fichier : content_script.js (Version finale et fiable)
+// Ce script s'exécute dans toutes les pages, mais nous ne voulons agir
+// que s'il est injecté dans un iframe de notre extension.
+// La vérification window.self !== window.top garantit cela.
+if (window.self !== window.top) {
+    // Fonction pour envoyer la mise à jour de l'URL au parent (split-view.html)
+    const sendUrlUpdate = () => {
+        try {
+            // Le message contient un type unique et l'URL actuelle
+            window.parent.postMessage({
+                type: 'SVD_URL_CHANGED',
+                url: window.location.href
+            }, '*'); // L'origine du parent ne peut pas être connue à l'avance, '*' est requis.
+        } catch (e) {
+            // Peut échouer si le parent a déjà été déchargé, c'est sans gravité.
+            console.warn("Super Split View: Could not send URL update to parent.", e);
+        }
+    };
 
-// Cette fonction s'assure que nous n'exécutons le code qu'une seule fois par page.
-if (window.hasRunSuperSplitViewContentScript !== true) {
-  window.hasRunSuperSplitViewContentScript = true;
+    // Envoyer l'URL une première fois dès que le script est prêt
+    sendUrlUpdate();
 
-  /**
-   * La fonction qui envoie l'URL mise à jour à la page parente (split-view).
-   */
-  const reportUrlChange = () => {
-    // On vérifie qu'on est bien dans un iframe et non dans la fenêtre principale.
-    if (window.self !== window.top) {
-      // Envoi du message à la page split-view.
-      window.top.postMessage({
-        type: 'SUPER_SPLIT_VIEW_URL_CHANGE',
-        url: window.location.href
-      }, '*'); // La cible est une ressource de l'extension, '*' est sécuritaire.
-    }
-  };
-
-  // --- Interception de l'API History ---
-  const originalPushState = history.pushState;
-  history.pushState = function(...args) {
-    const result = originalPushState.apply(this, args);
-    reportUrlChange();
-    return result;
-  };
-
-  const originalReplaceState = history.replaceState;
-  history.replaceState = function(...args) {
-    const result = originalReplaceState.apply(this, args);
-    reportUrlChange();
-    return result;
-  };
-
-  // --- Gestion des événements de navigation classiques ---
-  window.addEventListener('popstate', reportUrlChange);
-
-  // --- Envoi de l'URL initiale ---
-  setTimeout(reportUrlChange, 100);
+    // Pour les applications modernes (Single Page Apps) qui changent l'URL sans recharger la page,
+    // on observe les changements dans le DOM. C'est une heuristique, mais elle couvre de nombreux cas.
+    let lastUrl = window.location.href;
+    new MutationObserver(() => {
+        const currentUrl = window.location.href;
+        if (currentUrl !== lastUrl) {
+            lastUrl = currentUrl;
+            sendUrlUpdate();
+        }
+    }).observe(document.body, { subtree: true, childList: true });
 }
