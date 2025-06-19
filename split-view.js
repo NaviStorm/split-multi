@@ -1,6 +1,8 @@
 // Fichier : split-view.js
 
 let viewId = null;
+// Mémorisation des domaines autorisés pour cette session de vue
+const authorizedDomains = new Set();
 
 function makeResizable(container) {
     const panels = Array.from(container.children).filter(el => el.classList.contains('iframe-wrapper'));
@@ -49,8 +51,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         browser.tabs.getCurrent().then(tab => browser.tabs.remove(tab.id));
         return;
     }
-    
-    // Récupérer et définir le titre
+
     const storedData = await browser.storage.local.get(`viewName_${viewId}`);
     if (storedData[`viewName_${viewId}`]) {
         viewNameInput.value = storedData[`viewName_${viewId}`];
@@ -70,14 +71,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     const createPanel = (url) => {
         const iframeWrapper = document.createElement('div');
         iframeWrapper.className = 'iframe-wrapper';
-        
+
         const addressBarContainer = document.createElement('div');
         addressBarContainer.className = 'address-bar';
 
         const urlInput = document.createElement('input');
         urlInput.type = 'text';
         urlInput.className = 'url-input';
-        
+
         const contentUrl = new URL(url);
         const cleanUrl = new URL(url);
         cleanUrl.searchParams.delete('svd_forced');
@@ -87,7 +88,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const loadPage = (targetWrapper, pageUrl) => {
             const existingIframe = targetWrapper.querySelector('iframe');
-            if(existingIframe) existingIframe.remove();
+            if (existingIframe) existingIframe.remove();
 
             const iframe = document.createElement('iframe');
             iframe.src = pageUrl;
@@ -102,7 +103,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             targetWrapper.appendChild(iframe);
         };
 
-        if (contentUrl.searchParams.get('svd_forced') === 'true') {
+        // On vérifie si l'URL est forcée ET si le domaine n'a pas déjà été autorisé
+        if (contentUrl.searchParams.get('svd_forced') === 'true' && !authorizedDomains.has(contentUrl.hostname)) {
             const domain = contentUrl.searchParams.get('svd_domain');
             showWarningOverlay(iframeWrapper, domain, cleanUrl.href);
             const placeholder = document.createElement('div');
@@ -111,39 +113,41 @@ document.addEventListener('DOMContentLoaded', async () => {
             placeholder.style.backgroundColor = '#f0f0f0';
             iframeWrapper.appendChild(placeholder);
         } else {
+            // Charger directement si non forcé OU si déjà autorisé
             loadPage(iframeWrapper, url);
         }
 
         urlInput.addEventListener('keydown', async (e) => {
             if (e.key === 'Enter') {
                 const newUrlStr = e.target.value;
-                const originalUrlObj = new URL(iframeWrapper.dataset.urlId);
                 const newUrlObj = new URL(newUrlStr);
 
                 // Vide le panneau (sauf la barre d'adresse)
                 while (iframeWrapper.childElementCount > 1) {
                     iframeWrapper.lastChild.remove();
                 }
-                
-                if (originalUrlObj.hostname === newUrlObj.hostname) {
-                    loadPage(iframeWrapper, newUrlStr);
-                } else {
-                    const finalUrl = await browser.runtime.sendMessage({ action: "getFinalUrl", url: newUrlStr });
-                    const finalUrlObj = new URL(finalUrl);
 
-                    if (finalUrlObj.searchParams.get('svd_forced') === 'true') {
-                        const domain = finalUrlObj.searchParams.get('svd_domain');
-                        showWarningOverlay(iframeWrapper, domain, finalUrlObj.href);
-                         const placeholder = document.createElement('div');
-                         placeholder.className = 'iframe-placeholder';
-                         placeholder.style.flexGrow = '1';
-                         placeholder.style.backgroundColor = '#f0f0f0';
-                         iframeWrapper.appendChild(placeholder);
-                    } else {
-                        loadPage(iframeWrapper, finalUrl);
-                    }
+                const finalUrl = await browser.runtime.sendMessage({ action: "getFinalUrl", url: newUrlStr });
+                const finalUrlObj = new URL(finalUrl);
+
+                const finalCleanUrl = new URL(finalUrl);
+                finalCleanUrl.searchParams.delete('svd_forced');
+                finalCleanUrl.searchParams.delete('svd_domain');
+                iframeWrapper.dataset.urlId = finalCleanUrl.href;
+                urlInput.value = finalCleanUrl.href;
+
+                // On vérifie à nouveau si le domaine est déjà autorisé
+                if (finalUrlObj.searchParams.get('svd_forced') === 'true' && !authorizedDomains.has(finalUrlObj.hostname)) {
+                    const domain = finalUrlObj.searchParams.get('svd_domain');
+                    showWarningOverlay(iframeWrapper, domain, finalCleanUrl.href);
+                    const placeholder = document.createElement('div');
+                    placeholder.className = 'iframe-placeholder';
+                    placeholder.style.flexGrow = '1';
+                    placeholder.style.backgroundColor = '#f0f0f0';
+                    iframeWrapper.appendChild(placeholder);
+                } else {
+                    loadPage(iframeWrapper, finalUrl);
                 }
-                iframeWrapper.dataset.urlId = newUrlStr;
             }
         });
 
@@ -159,7 +163,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 closeViewButton.click();
             }
         };
-        
+
         addressBarContainer.appendChild(urlInput);
         addressBarContainer.appendChild(closePanelButton);
         iframeWrapper.insertBefore(addressBarContainer, iframeWrapper.firstChild);
@@ -201,9 +205,13 @@ window.addEventListener('message', (event) => {
         const urlToLoad = event.data.urlToLoad;
         const targetWrapper = document.querySelector(`[data-url-id="${urlToLoad}"]`);
         if (targetWrapper) {
+
+            const domain = new URL(urlToLoad).hostname;
+            authorizedDomains.add(domain);
+
             const overlay = targetWrapper.querySelector('.force-info-overlay');
             if (overlay) overlay.remove();
-            
+
             const placeholder = targetWrapper.querySelector('.iframe-placeholder');
             if (placeholder) placeholder.remove();
 
@@ -212,11 +220,14 @@ window.addEventListener('message', (event) => {
             iframe.style.height = '100%';
             iframe.style.width = '100%';
             iframe.style.border = 'none';
-            // Ajout de l'écouteur ici aussi
-             iframe.addEventListener('load', () => {
+
+            iframe.addEventListener('load', () => {
                 try {
-                    targetWrapper.querySelector('.url-input').value = iframe.contentWindow.location.href;
-                } catch (e) {console.warn("Cannot update address bar: cross-origin");}
+                    const newNavigatedUrl = iframe.contentWindow.location.href;
+                    targetWrapper.querySelector('.url-input').value = newNavigatedUrl;
+                } catch (e) {
+                    console.warn("Could not update address bar due to cross-origin restrictions.");
+                }
             });
             targetWrapper.appendChild(iframe);
         }
