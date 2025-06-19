@@ -1,8 +1,16 @@
 // Fichier : split-view.js
 
 let viewId = null;
-// Mémorisation des domaines autorisés pour cette session de vue
-const authorizedDomains = new Set();
+let authorizedDomains = new Set();
+
+// Écouteur pour répondre aux demandes du background script
+browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.action === "getAuthorizedDomains") {
+        // Renvoie la liste actuelle des domaines autorisés pour cette vue
+        sendResponse({ authorizedDomains: Array.from(authorizedDomains) });
+        return true;
+    }
+});
 
 function makeResizable(container) {
     const panels = Array.from(container.children).filter(el => el.classList.contains('iframe-wrapper'));
@@ -44,7 +52,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     const viewNameInput = document.getElementById('view-name-input');
     const closeViewButton = document.getElementById('close-view-button');
 
-    viewId = new URLSearchParams(window.location.search).get('id');
+    const urlParams = new URLSearchParams(window.location.search);
+    viewId = urlParams.get('id');
+
+    // Récupération des domaines déjà autorisés depuis l'URL (passés par background.js)
+    const authorizedParam = urlParams.get('authorized');
+    if (authorizedParam) {
+        try {
+            authorizedDomains = new Set(JSON.parse(authorizedParam));
+        } catch (e) {
+            console.error("Could not parse authorized domains:", e);
+        }
+    }
+
     const finalUrls = await browser.runtime.sendMessage({ action: "getUrlsForView", viewId });
 
     if (!finalUrls || finalUrls.length === 0) {
@@ -103,7 +123,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             targetWrapper.appendChild(iframe);
         };
 
-        // On vérifie si l'URL est forcée ET si le domaine n'a pas déjà été autorisé
         if (contentUrl.searchParams.get('svd_forced') === 'true' && !authorizedDomains.has(contentUrl.hostname)) {
             const domain = contentUrl.searchParams.get('svd_domain');
             showWarningOverlay(iframeWrapper, domain, cleanUrl.href);
@@ -113,16 +132,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             placeholder.style.backgroundColor = '#f0f0f0';
             iframeWrapper.appendChild(placeholder);
         } else {
-            // Charger directement si non forcé OU si déjà autorisé
             loadPage(iframeWrapper, url);
         }
 
         urlInput.addEventListener('keydown', async (e) => {
             if (e.key === 'Enter') {
                 const newUrlStr = e.target.value;
-                const newUrlObj = new URL(newUrlStr);
-
-                // Vide le panneau (sauf la barre d'adresse)
                 while (iframeWrapper.childElementCount > 1) {
                     iframeWrapper.lastChild.remove();
                 }
@@ -136,7 +151,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 iframeWrapper.dataset.urlId = finalCleanUrl.href;
                 urlInput.value = finalCleanUrl.href;
 
-                // On vérifie à nouveau si le domaine est déjà autorisé
                 if (finalUrlObj.searchParams.get('svd_forced') === 'true' && !authorizedDomains.has(finalUrlObj.hostname)) {
                     const domain = finalUrlObj.searchParams.get('svd_domain');
                     showWarningOverlay(iframeWrapper, domain, finalCleanUrl.href);

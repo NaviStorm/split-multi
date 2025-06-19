@@ -2,17 +2,14 @@
 
 let splitViews = {};
 let viewTabs = {};
-let existingTitles = new Set(); // Garde en mémoire les titres pour éviter les doublons
+let existingTitles = new Set();
 
-// Fonction pour vérifier une URL et la modifier si elle bloque le framing
 async function getFinalUrl(url) {
     try {
-        // La requête HEAD est rapide et ne télécharge pas le corps de la page
         const response = await fetch(url, { method: 'HEAD', cache: 'no-store' });
         const xFrameOptions = response.headers.get('x-frame-options');
         const csp = response.headers.get('content-security-policy');
         const hasFrameAncestors = csp && csp.toLowerCase().includes('frame-ancestors');
-
         if (xFrameOptions || hasFrameAncestors) {
             const finalUrl = new URL(url);
             finalUrl.searchParams.set('svd_forced', 'true');
@@ -20,10 +17,9 @@ async function getFinalUrl(url) {
             return finalUrl.href;
         }
     } catch (e) {
-        // La requête HEAD peut échouer (ex: CORS), mais ce n'est pas grave.
-        // Le webRequest onHeadersReceived servira de filet de sécurité.
+        console.warn(`HEAD request for ${url} failed, fallback to webRequest listener.`, e);
     }
-    return url; // Retourne l'URL originale si pas de blocage détecté
+    return url;
 }
 
 function createContextMenu() {
@@ -35,9 +31,39 @@ browser.runtime.onInstalled.addListener(() => {
     browser.storage.local.get('hasSeenWelcome').then(r => { if (!r.hasSeenWelcome) { browser.tabs.create({ url: 'welcome.html' }); browser.storage.local.set({ hasSeenWelcome: true }); } });
 });
 
+async function addTabToView(tabUrl, viewId, authorizedDomains) {
+    if (splitViews[viewId] && splitViews[viewId].length >= 4) {
+        browser.notifications.create({ type: 'basic', iconUrl: browser.runtime.getURL('icons/icon-48.png'), title: 'Super Split View', message: browser.i18n.getMessage('maxTabsAlert') });
+        return;
+    }
+    if (splitViews[viewId]) {
+        splitViews[viewId].push(tabUrl);
+        const viewTabId = Object.keys(viewTabs).find(id => viewTabs[id] === viewId);
+        if (viewTabId) {
+            let newUrl = browser.runtime.getURL('split-view.html') + `?id=${viewId}`;
+            if (authorizedDomains && authorizedDomains.length > 0) {
+                newUrl += `&authorized=${encodeURIComponent(JSON.stringify(authorizedDomains))}`;
+            }
+            await browser.tabs.update(parseInt(viewTabId), { url: newUrl });
+        }
+    }
+}
+
 browser.contextMenus.onClicked.addListener((info, tab) => {
     if (info.menuItemId.startsWith("add-to-split-view-")) {
-        addTabToView(tab, info.menuItemId.replace("add-to-split-view-", ""));
+        const viewId = info.menuItemId.replace("add-to-split-view-", "");
+        const viewTabId = Object.keys(viewTabs).find(id => viewTabs[id] === viewId);
+        if (viewTabId) {
+            browser.tabs.sendMessage(parseInt(viewTabId), { action: "getAuthorizedDomains" })
+                .then(response => {
+                    const domains = response ? response.authorizedDomains : [];
+                    addTabToView(tab.url, viewId, domains);
+                })
+                .catch(e => {
+                    console.warn("Could not get authorized domains from view, continuing without them.", e);
+                    addTabToView(tab.url, viewId, []);
+                });
+        }
     }
 });
 
@@ -72,7 +98,6 @@ async function createSplitView(urls) {
     const viewId = Date.now().toString();
     splitViews[viewId] = urls;
 
-    // Logique de création du titre par défaut
     let defaultTitle = urls.map(u => new URL(u).hostname.replace('www.', '')).join(' / ');
     let finalTitle = defaultTitle;
     let counter = 2;
@@ -82,26 +107,11 @@ async function createSplitView(urls) {
     }
     existingTitles.add(finalTitle);
 
-    // Stocker le titre pour que split-view.js puisse le récupérer
     await browser.storage.local.set({ [`viewName_${viewId}`]: finalTitle });
 
     const viewUrl = browser.runtime.getURL('split-view.html') + `?id=${viewId}`;
     const newTab = await browser.tabs.create({ url: viewUrl, active: true });
     viewTabs[newTab.id] = viewId;
-}
-
-async function addTabToView(tab, viewId) {
-    if (splitViews[viewId] && splitViews[viewId].length >= 4) {
-        browser.notifications.create({ type: 'basic', iconUrl: browser.runtime.getURL('icons/icon-48.png'), title: 'Super Split View', message: browser.i18n.getMessage('maxTabsAlert') });
-        return;
-    }
-    if (splitViews[viewId]) {
-        splitViews[viewId].push(tab.url);
-        const viewTabId = Object.keys(viewTabs).find(id => viewTabs[id] === viewId);
-        if (viewTabId) {
-            browser.tabs.reload(parseInt(viewTabId));
-        }
-    }
 }
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -111,7 +121,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             Promise.all(originalUrls.map(url => getFinalUrl(url))).then(sendResponse);
             return true;
 
-        case "getFinalUrl": // Nouveau cas pour la vérification à la volée
+        case "getFinalUrl":
             getFinalUrl(request.url).then(sendResponse);
             return true;
 
@@ -135,7 +145,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             }
             sendResponse(splitViews[viewId]);
             break;
-        
+
         case "updateUrlsForView":
              if(splitViews[request.viewId]) {
                 splitViews[request.viewId] = request.urls;
@@ -158,7 +168,6 @@ browser.tabs.onRemoved.addListener((tabId) => {
     }
 });
 
-// Filet de sécurité pour garantir l'affichage du contenu forcé
 browser.webRequest.onHeadersReceived.addListener(
     (details) => {
         if (details.type !== "sub_frame") return;
