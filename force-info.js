@@ -1,15 +1,4 @@
-// Fichier : force-info.js (Version corrigée)
-
-function i18n() {
-    // Gère les textes simples sans placeholders
-    document.querySelectorAll('[data-i18n-key]:not(#info-message)').forEach(el => {
-        const key = el.getAttribute('data-i18n-key');
-        const text = browser.i18n.getMessage(key);
-        if (text) el.textContent = text;
-    });
-}
-
-// Fichier : force-info.js (Version corrigée et simplifiée)
+// Fichier : force-info.js
 
 document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -18,9 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 1. Appliquer les traductions pour les textes simples
     document.querySelectorAll('[data-i18n-key]').forEach(el => {
-        // On exclut le message complexe pour le moment
         if (el.id === 'info-message') return;
-        
         const key = el.getAttribute('data-i18n-key');
         const text = browser.i18n.getMessage(key);
         if (text) el.textContent = text;
@@ -28,18 +15,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. Gérer le message complexe séparément
     if (domain) {
-        // Affiche le domaine dans la case <code>
         document.getElementById('domain-to-add').textContent = domain;
 
-        // Récupère le message brut depuis les traductions
         let messageText = browser.i18n.getMessage('forceInfoMessage');
+        // Remplacement du placeholder personnalisé
+        messageText = messageText.replace(/__DOMAIN__/g, `<strong>${domain}</strong>`);
         
-        // Remplace le placeholder personnalisé `$DOMAIN$` par le vrai domaine
-        // La balise <strong> est déjà dans la chaîne de traduction
-        messageText = messageText.replace(/__DOMAIN__/g, domain);
-        console.log('domain: ', domain, '  messageText : ', messageText);
-        
-        // Injecte le HTML final dans l'élément
         document.getElementById('info-message').innerHTML = messageText;
     }
     

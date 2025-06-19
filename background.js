@@ -2,10 +2,12 @@
 
 let splitViews = {};
 let viewTabs = {};
+let existingTitles = new Set(); // Garde en mémoire les titres pour éviter les doublons
 
 // Fonction pour vérifier une URL et la modifier si elle bloque le framing
 async function getFinalUrl(url) {
     try {
+        // La requête HEAD est rapide et ne télécharge pas le corps de la page
         const response = await fetch(url, { method: 'HEAD', cache: 'no-store' });
         const xFrameOptions = response.headers.get('x-frame-options');
         const csp = response.headers.get('content-security-policy');
@@ -18,7 +20,7 @@ async function getFinalUrl(url) {
             return finalUrl.href;
         }
     } catch (e) {
-        // La requête HEAD peut échouer (ex: CORS), mais on continue.
+        // La requête HEAD peut échouer (ex: CORS), mais ce n'est pas grave.
         // Le webRequest onHeadersReceived servira de filet de sécurité.
     }
     return url; // Retourne l'URL originale si pas de blocage détecté
@@ -68,7 +70,21 @@ browser.browserAction.onClicked.addListener(async () => {
 
 async function createSplitView(urls) {
     const viewId = Date.now().toString();
-    splitViews[viewId] = urls; // On stocke les URLs originales
+    splitViews[viewId] = urls;
+
+    // Logique de création du titre par défaut
+    let defaultTitle = urls.map(u => new URL(u).hostname.replace('www.', '')).join(' / ');
+    let finalTitle = defaultTitle;
+    let counter = 2;
+    while (existingTitles.has(finalTitle)) {
+        finalTitle = `${defaultTitle} (${counter})`;
+        counter++;
+    }
+    existingTitles.add(finalTitle);
+
+    // Stocker le titre pour que split-view.js puisse le récupérer
+    await browser.storage.local.set({ [`viewName_${viewId}`]: finalTitle });
+
     const viewUrl = browser.runtime.getURL('split-view.html') + `?id=${viewId}`;
     const newTab = await browser.tabs.create({ url: viewUrl, active: true });
     viewTabs[newTab.id] = viewId;
@@ -83,7 +99,6 @@ async function addTabToView(tab, viewId) {
         splitViews[viewId].push(tab.url);
         const viewTabId = Object.keys(viewTabs).find(id => viewTabs[id] === viewId);
         if (viewTabId) {
-            // Recharger la vue qui va redemander les URLs
             browser.tabs.reload(parseInt(viewTabId));
         }
     }
@@ -92,18 +107,20 @@ async function addTabToView(tab, viewId) {
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     switch (request.action) {
         case "getUrlsForView":
-            // C'EST LA PARTIE CRUCIALE
             const originalUrls = splitViews[request.viewId] || [];
-            // Pour chaque URL, on la vérifie et on la modifie si besoin
-            Promise.all(originalUrls.map(url => getFinalUrl(url)))
-                .then(finalUrls => {
-                    sendResponse(finalUrls);
-                });
-            return true; // Indique une réponse asynchrone
+            Promise.all(originalUrls.map(url => getFinalUrl(url))).then(sendResponse);
+            return true;
+
+        case "getFinalUrl": // Nouveau cas pour la vérification à la volée
+            getFinalUrl(request.url).then(sendResponse);
+            return true;
 
         case "closeSplitView":
             const tabIdToClose = Object.keys(viewTabs).find(id => viewTabs[id] === request.viewId);
             if (tabIdToClose) {
+                browser.storage.local.get(`viewName_${request.viewId}`).then(result => {
+                    if (result[`viewName_${request.viewId}`]) existingTitles.delete(result[`viewName_${request.viewId}`]);
+                });
                 delete splitViews[request.viewId];
                 delete viewTabs[tabIdToClose];
                 browser.storage.local.remove(`viewName_${request.viewId}`);
@@ -116,17 +133,15 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 const urlToRemoveBase = urlToRemove.split('?')[0];
                 splitViews[viewId] = splitViews[viewId].filter(url => !url.startsWith(urlToRemoveBase));
             }
-            // Renvoie les URLs restantes pour que le front puisse recharger
             sendResponse(splitViews[viewId]);
             break;
-
-        // On ajoute un nouveau cas pour la mise à jour depuis la barre d'adresse
+        
         case "updateUrlsForView":
-            if (splitViews[request.viewId]) {
+             if(splitViews[request.viewId]) {
                 splitViews[request.viewId] = request.urls;
-            }
-            sendResponse({});
-            break;
+             }
+             sendResponse({});
+             break;
     }
     return true;
 });
@@ -134,18 +149,20 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
 browser.tabs.onRemoved.addListener((tabId) => {
     if (viewTabs[tabId]) {
         const viewId = viewTabs[tabId];
+        browser.storage.local.get(`viewName_${viewId}`).then(result => {
+            if (result[`viewName_${viewId}`]) existingTitles.delete(result[`viewName_${viewId}`]);
+        });
         delete splitViews[viewId];
         delete viewTabs[tabId];
         browser.storage.local.remove(`viewName_${viewId}`);
     }
 });
 
-// Le webRequest onHeadersReceived est maintenant un FILET DE SÉCURITÉ
-// au cas où la requête HEAD aurait échoué. Il assure que le contenu s'affiche.
+// Filet de sécurité pour garantir l'affichage du contenu forcé
 browser.webRequest.onHeadersReceived.addListener(
     (details) => {
         if (details.type !== "sub_frame") return;
-
+        
         const responseHeaders = details.responseHeaders.filter(
             (header) => {
                 const name = header.name.toLowerCase();
