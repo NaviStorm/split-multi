@@ -1,5 +1,3 @@
-/* Fichier: options.css (Version finale complète) */
-
 body {
     font-family: sans-serif;
     padding: 1em 2em;
@@ -24,23 +22,26 @@ legend {
     padding: 0 0.5em;
 }
 
-fieldset > div {
-    display: flex;
-    align-items: flex-start;
+fieldset>div {
     margin-bottom: 1.5em;
 }
 
-input[type="radio"] {
+.radio-option {
+    display: flex;
+    align-items: flex-start;
+}
+
+.radio-option input[type="radio"] {
     flex-shrink: 0;
     margin-right: 12px;
     margin-top: 5px;
 }
 
-label strong {
+.radio-option label strong {
     font-size: 1.1em;
 }
 
-label p {
+.radio-option label p {
     font-size: 0.9em;
     color: #555;
     margin: 5px 0 0 0;
@@ -53,7 +54,35 @@ label p {
     height: 1.2em;
 }
 
-/* --- NOUVEAUX STYLES POUR LE LIEN D'AIDE --- */
+.textarea-container {
+    border-top: 1px solid #ccc;
+    margin-top: 2em;
+    padding-top: 1.5em;
+}
+
+.textarea-container label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5em;
+}
+
+.textarea-container p.description {
+    font-size: 0.9em;
+    color: #555;
+    margin: 0 0 10px 0;
+}
+
+#force-window-domains {
+    width: 100%;
+    min-height: 120px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px;
+    font-family: monospace;
+    font-size: 0.9em;
+}
+
 .help-link-container {
     text-align: center;
     margin: 2em 0;
@@ -76,9 +105,8 @@ label p {
 
 #help-link:hover {
     background-color: #e9e9e9;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
-/* --- FIN DES NOUVEAUX STYLES --- */
 
 .warning-box {
     margin-top: 2em;

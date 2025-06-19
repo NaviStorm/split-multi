@@ -1,59 +1,77 @@
-// Fichier: welcome.js (Version finale avec gestion des onglets de langue)
-
-document.addEventListener('DOMContentLoaded', () => {
-    const langSwitcher = document.querySelector('.lang-switcher');
+// Fichier: welcome.js (Version finale qui utilise les fichiers messages.json)
+document.addEventListener('DOMContentLoaded', async () => {
     const langTabs = document.querySelectorAll('.lang-tab');
-    const contentPanels = document.querySelectorAll('.language-content');
-    const optionsLinks = document.querySelectorAll('.options-link');
+    const contentBlocks = document.querySelectorAll('.language-content');
+    const languages = ['en', 'fr', 'de', 'es', 'it'];
+    let translations = {};
 
-    /**
-     * Affiche le contenu pour une langue spécifique et met à jour les boutons.
-     * @param {string} targetLang - Le code de la langue à afficher (ex: "en", "fr").
-     */
+    // Étape 1: Charger toutes les traductions en mémoire
+    for (const lang of languages) {
+        try {
+            const response = await fetch(`_locales/${lang}/messages.json`);
+            translations[lang] = await response.json();
+        } catch (e) {
+            console.error(`Could not load translations for ${lang}`, e);
+            translations[lang] = {};
+        }
+    }
+
+    // Le modèle HTML unique pour tous les contenus
+    const templateHTML = `
+        <header><img src="icons/icon-96.png" alt="Extension Icon"><h1 data-i18n="welcomeTitle"></h1><p data-i18n="welcomeSubtitle"></p></header>
+        <section class="step"><h2 data-i18n="welcomeHeader1"></h2><ol><li data-i18n="welcomeStep1_1"></li><li data-i18n="welcomeStep1_2"></li><li data-i18n="welcomeStep1_3"></li></ol></section>
+        <section class="step"><h2 data-i18n="welcomeHeader2"></h2><ul><li data-i18n="welcomeStep2_1"></li><li data-i18n="welcomeStep2_2"></li><li data-i18n="welcomeStep2_3"></li></ul></section>
+        <section class="step"><h2 data-i18n="welcomeHeader3"></h2><ol><li data-i18n="welcomeStep3_1"></li><li data-i18n="welcomeStep3_2"></li><li data-i18n="welcomeStep3_3"></li><li data-i18n="welcomeStep3_4"></li></ol></section>
+        <section class="warning-section"><h3 data-i18n="welcomeWarningTitle"></h3><p data-i18n="welcomeWarningP1"></p><p data-i18n="welcomeWarningP2"></p><img src="need-windows.png" alt="Error message screenshot"><p data-i18n="welcomeWarningP3"></p></section>
+        <footer><p data-i18n="welcomeFooter"></p></footer>
+    `;
+
+    // Étape 2: Remplir chaque bloc de langue avec le contenu traduit
+    contentBlocks.forEach(block => {
+        const lang = block.dataset.lang;
+        block.innerHTML = templateHTML; // Insérer le modèle
+        // Remplir le modèle avec les traductions chargées
+        block.querySelectorAll('[data-i18n]').forEach(elem => {
+            const key = elem.dataset.i18n;
+            if (translations[lang] && translations[lang][key]) {
+                elem.innerHTML = translations[lang][key].message;
+            }
+        });
+    });
+
+    // Fonction pour changer de langue
     function switchLanguage(targetLang) {
-        // Met à jour l'état actif des boutons
+        contentBlocks.forEach(content => {
+            content.classList.toggle('active', content.dataset.lang === targetLang);
+        });
         langTabs.forEach(tab => {
             tab.classList.toggle('active', tab.dataset.lang === targetLang);
         });
-
-        // Met à jour la visibilité des panneaux de contenu
-        contentPanels.forEach(panel => {
-            panel.classList.toggle('active', panel.dataset.lang === targetLang);
-        });
-        
-        // Met à jour le titre de l'onglet du navigateur
-        const activeTitle = document.querySelector(`.language-content[data-lang="${targetLang}"] h1`);
-        if (activeTitle) {
-            document.title = activeTitle.textContent;
+        const visibleContent = document.querySelector(`.language-content[data-lang="${targetLang}"]`);
+        if (visibleContent) {
+            visibleContent.querySelectorAll('.options-link').forEach(link => {
+                const newLink = link.cloneNode(true);
+                link.parentNode.replaceChild(newLink, link);
+                newLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    browser.runtime.openOptionsPage();
+                });
+            });
         }
+        browser.storage.local.set({ preferredLanguage: targetLang });
     }
 
-    // Gère le clic sur les boutons de langue
-    langSwitcher.addEventListener('click', (e) => {
-        if (e.target.matches('.lang-tab')) {
-            const lang = e.target.dataset.lang;
-            switchLanguage(lang);
-        }
-    });
-
-    // Gère le clic sur tous les liens vers la page d'options
-    optionsLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            browser.runtime.openOptionsPage();
-        });
-    });
-
-    // --- Détection de la langue par défaut au chargement ---
-    const userLang = browser.i18n.getUILanguage().substring(0, 2);
-    // On vérifie s'il existe un bouton pour la langue de l'utilisateur
-    const defaultTab = document.querySelector(`.lang-tab[data-lang="${userLang}"]`);
-
-    if (defaultTab) {
-        // S'il existe, on l'active
-        switchLanguage(userLang);
-    } else {
-        // Sinon, on active l'anglais par défaut
-        switchLanguage('en');
+    // Étape 3: Déterminer la langue initiale et l'afficher
+    const result = await browser.storage.local.get('preferredLanguage');
+    let initialLang = result.preferredLanguage;
+    if (!languages.includes(initialLang)) {
+        const uiLang = browser.i18n.getUILanguage();
+        initialLang = languages.find(l => uiLang.startsWith(l)) || 'en';
     }
+    switchLanguage(initialLang);
+
+    // Étape 4: Ajouter les écouteurs sur les onglets
+    langTabs.forEach(tab => {
+        tab.addEventListener('click', () => switchLanguage(tab.dataset.lang));
+    });
 });

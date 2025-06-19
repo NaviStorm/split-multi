@@ -1,33 +1,128 @@
 {
-  "extensionName": { "message": "Súper Vista Dividida" },
-  "extensionDescription": { "message": "Muestra las pestañas seleccionadas en una vista dividida, ya sea en una nueva pestaña o en nuevas ventanas." },
-  "browserActionTitle": { "message": "Crear una vista dividida" },
-  "optionsTitle": { "message": "Opciones de Súper Vista Dividida" },
-  "optionsLegend": { "message": "Elija el modo de operación:" },
-  "optionsModeWindowLabel": { "message": "Modo Mosaico de Ventanas (Recomendado)" },
-  "optionsModeWindowDescription": { "message": "Crea nuevas ventanas del navegador. Conserva todas las funciones (barra de direcciones, bloqueadores de anuncios, etc.)." },
-  "optionsModeTabLayout": { "message": "Modo Pestaña Única (Iframes)" },
-  "optionsModeTabDescription": { "message": "Muestra todo en una sola pestaña. Aspecto elegante, pero los bloqueadores de anuncios y el historial de la barra de direcciones no funcionan." },
-  "optionsSavedStatus": { "message": "Opciones guardadas." },
-  "alertSelectTabs": { "message": "Por favor, seleccione al menos dos pestañas con páginas web cargadas." },
-  "optionsLanguageWarning": { "message": "Nota: Es necesario reiniciar el navegador para que los cambios de idioma surtan pleno efecto en la extensión." },
-  "contextMenuTitle": { "message": "Añadir a una vista dividida existente..." },
-  "maxTabsAlert": { "message": "Se ha alcanzado el máximo de 4 pestañas. No puede añadir más a esta vista." },
-  "welcomeTitle": { "message": "¡Bienvenido a Súper Vista Dividida!" },
-  "welcomeSubtitle": { "message": "Aquí tienes una guía rápida para dominar la productividad con múltiples pestañas." },
-  "welcomeHeader1": { "message": "1. Crea tu primera vista dividida (Modo Pestaña)" },
-  "welcomeStep1_1": { "message": "Selecciona de 2 a 4 pestañas manteniendo pulsada la tecla <code>Cmd</code> (Mac) o <code>Ctrl</code> (Windows) y haciendo clic en ellas." },
-  "welcomeStep1_2": { "message": "Haz clic en el icono de la extensión <img src='icons/icon-48.png' class='inline-icon'> en tu barra de herramientas." },
-  "welcomeStep1_3": { "message": "¡Y ya está! Se abrirá una nueva pestaña con tus páginas una al lado de la otra." },
-  "welcomeHeader2": { "message": "2. Gestiona tu vista" },
-  "welcomeStep2_1": { "message": "<strong>Nombra tu vista:</strong> Haz clic en el campo en la parte superior de la vista dividida (ej. \"Split - 123...\") y dale un nombre claro como \"Investigación Proyecto X\"." },
-  "welcomeStep2_2": { "message": "<strong>Elimina un panel:</strong> Haz clic en el pequeño botón <code>×</code> a la derecha de la barra de direcciones de un panel para eliminarlo." },
-  "welcomeStep2_3": { "message": "<strong>Cierra la vista completa:</strong> Haz clic en el botón grande <code>X</code> en la parte superior derecha." },
-  "welcomeHeader3": { "message": "3. Añade una pestaña a una vista existente" },
-  "welcomeStep3_1": { "message": "Crea una vista dividida (ver paso 1)." },
-  "welcomeStep3_2": { "message": "Ve a otra pestaña que desees añadir." },
-  "welcomeStep3_3": { "message": "Haz <strong>clic derecho</strong> en esa pestaña." },
-  "welcomeStep3_4": { "message": "En el menú, ve a \"Añadir a una vista dividida existente...\" y elige tu vista por su nombre." },
-  "welcomeFooter": { "message": "<strong>Consejo:</strong> ¿Prefieres que las vistas se abran en ventanas separadas? Ve a las <a href='#' id='options-link'>opciones de la extensión</a> y elige \"Modo Mosaico de Ventanas\"." },
-  "optionsHelpLink": { "message": "❓ Ver la guía del usuario" }
+  "extensionName": {
+    "message": "Súper Vista Dividida"
+  },
+  "extensionDescription": {
+    "message": "Muestra las pestañas seleccionadas en una vista dividida, ya sea en una nueva pestaña o en nuevas ventanas."
+  },
+  "browserActionTitle": {
+    "message": "Crear una vista dividida"
+  },
+  "optionsTitle": {
+    "message": "Opciones de Súper Vista Dividida"
+  },
+  "optionsLegend": {
+    "message": "Elija el modo de operación:"
+  },
+  "optionsModeWindowLabel": {
+    "message": "Modo Mosaico de Ventanas (Recomendado)"
+  },
+  "optionsModeWindowDescription": {
+    "message": "Crea nuevas ventanas del navegador. Conserva todas las funciones (barra de direcciones, bloqueadores de anuncios, etc.)."
+  },
+  "optionsModeTabLayout": {
+    "message": "Modo Pestaña Única (Iframes)"
+  },
+  "optionsModeTabDescription": {
+    "message": "Muestra todo en una sola pestaña. Aspecto elegante, pero los bloqueadores de anuncios y el historial de la barra de direcciones no funcionan."
+  },
+  "optionsSavedStatus": {
+    "message": "Opciones guardadas."
+  },
+  "alertSelectTabs": {
+    "message": "Por favor, seleccione al menos dos pestañas con páginas web cargadas."
+  },
+  "optionsLanguageWarning": {
+    "message": "Nota: Es necesario reiniciar el navegador para que los cambios de idioma surtan pleno efecto en la extensión."
+  },
+  "contextMenuTitle": {
+    "message": "Añadir a una vista dividida existente..."
+  },
+  "maxTabsAlert": {
+    "message": "Se ha alcanzado el máximo de 4 pestañas. No puede añadir más a esta vista."
+  },
+  "optionsHelpLink": {
+    "message": "❓ Ver la guía del usuario"
+  },
+  "dialogTitle": {
+    "message": "Modo de vista cambiado"
+  },
+  "dialogMessage": {
+    "message": "Por razones de seguridad, uno de los sitios web seleccionados no permite ser mostrado agrupado en una sola pestaña. Por esta razón, Súper Vista Dividida ha abierto las páginas en ventanas separadas."
+  },
+  "dialogCheckboxLabel": {
+    "message": "No volver a mostrar este mensaje"
+  },
+  "dialogConfirmButton": {
+    "message": "Entendido"
+  },
+  "optionsShowDialogLabel": {
+    "message": "Mostrar advertencia cuando un sitio web fuerce el Modo Ventana"
+  },
+  "optionsForceWindowLabel": {
+    "message": "Sitios que siempre se abrirán en Modo Ventana"
+  },
+  "optionsForceWindowDescription": {
+    "message": "Introduzca un dominio por línea (p. ej., mozilla.org). Estos sitios siempre ignorarán la configuración del Modo Pestaña Única."
+  },
+  "welcomeTitle": {
+    "message": "¡Bienvenido a Súper Vista Dividida!"
+  },
+  "welcomeSubtitle": {
+    "message": "Aquí tienes una guía rápida para dominar la productividad con múltiples pestañas."
+  },
+  "welcomeHeader1": {
+    "message": "1. Crea tu primera vista dividida (Modo Pestaña)"
+  },
+  "welcomeStep1_1": {
+    "message": "Selecciona de 2 a 4 pestañas manteniendo pulsada la tecla <code>Cmd</code> (Mac) o <code>Ctrl</code> (Windows) y haciendo clic en ellas."
+  },
+  "welcomeStep1_2": {
+    "message": "Haz clic en el icono de la extensión <img src='icons/icon-48.png' class='inline-icon'> en tu barra de herramientas."
+  },
+  "welcomeStep1_3": {
+    "message": "¡Y ya está! Se abrirá una nueva pestaña con tus páginas una al lado de la otra."
+  },
+  "welcomeHeader2": {
+    "message": "2. Gestiona tu vista"
+  },
+  "welcomeStep2_1": {
+    "message": "<strong>Nombra tu vista:</strong> Haz clic en el campo en la parte superior de la vista dividida (ej. \"Split - 123...\") y dale un nombre claro como \"Investigación Proyecto X\"."
+  },
+  "welcomeStep2_2": {
+    "message": "<strong>Elimina un panel:</strong> Haz clic en el pequeño botón <code>×</code> a la derecha de la barra de direcciones de un panel para eliminarlo."
+  },
+  "welcomeStep2_3": {
+    "message": "<strong>Cierra la vista completa:</strong> Haz clic en el botón grande <code>X</code> en la parte superior derecha."
+  },
+  "welcomeHeader3": {
+    "message": "3. Añade una pestaña a una vista existente"
+  },
+  "welcomeStep3_1": {
+    "message": "Crea una vista dividida (ver paso 1)."
+  },
+  "welcomeStep3_2": {
+    "message": "Ve a otra pestaña que desees añadir."
+  },
+  "welcomeStep3_3": {
+    "message": "Haz <strong>clic derecho</strong> en esa pestaña."
+  },
+  "welcomeStep3_4": {
+    "message": "En el menú, ve a \"Añadir a una vista dividida existente...\" y elige tu vista por su nombre."
+  },
+  "welcomeFooter": {
+    "message": "<strong>Consejo:</strong> ¿Prefieres que las vistas se abran en ventanas separadas? Ve a las <a href='#' class='options-link'>opciones de la extensión</a> y elige \"Modo Mosaico de Ventanas\"."
+  },
+  "welcomeWarningTitle": {
+    "message": "ADVERTENCIA"
+  },
+  "welcomeWarningP1": {
+    "message": "Algunos sitios web (bancos, redes sociales, addons.mozilla.org, etc.) tienen características de seguridad que impiden que se muestren dentro de otra página (en un iframe)."
+  },
+  "welcomeWarningP2": {
+    "message": "Cuando intente dividir estos sitios en 'Modo de Pestaña Única', verá un error como este:"
+  },
+  "welcomeWarningP3": {
+    "message": "Para solucionar esto, <strong>Súper Vista Dividida abrirá automáticamente estas vistas en 'Modo Mosaico de Ventanas'</strong>. También puede agregar manually los dominios relevantes a una lista en la <a href='#' class='options-link'>página de opciones</a> de la extensión."
+  }
 }

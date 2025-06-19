@@ -1,33 +1,128 @@
 {
-  "extensionName": { "message": "Super Geteilte Ansicht" },
-  "extensionDescription": { "message": "Zeigt ausgewählte Tabs in einer geteilten Ansicht an, entweder in einem neuen Tab oder in neuen Fenstern." },
-  "browserActionTitle": { "message": "Geteilte Ansicht erstellen" },
-  "optionsTitle": { "message": "Optionen für Super Geteilte Ansicht" },
-  "optionsLegend": { "message": "Wählen Sie den Betriebsmodus:" },
-  "optionsModeWindowLabel": { "message": "Fenster-Kachel-Modus (Empfohlen)" },
-  "optionsModeWindowDescription": { "message": "Erstellt neue Browser-Fenster. Behält alle Funktionen bei (Adressleiste, Werbeblocker, etc.)." },
-  "optionsModeTabLayout": { "message": "Einzel-Tab-Modus (Iframes)" },
-  "optionsModeTabDescription": { "message": "Zeigt alles in einem einzigen Tab an. Elegantes Aussehen, aber Werbeblocker und Adressleistenverlauf funktionieren nicht." },
-  "optionsSavedStatus": { "message": "Optionen gespeichert." },
-  "alertSelectTabs": { "message": "Bitte wählen Sie mindestens zwei Tabs mit geladenen Webseiten aus." },
-  "optionsLanguageWarning": { "message": "Hinweis: Ein Neustart des Browsers ist erforderlich, damit Sprachänderungen in der Erweiterung vollständig wirksam werden." },
-  "contextMenuTitle": { "message": "Zu einer bestehenden geteilten Ansicht hinzufügen..." },
-  "maxTabsAlert": { "message": "Maximum von 4 Tabs erreicht. Sie können dieser Ansicht keine weiteren hinzufügen." },
-  "welcomeTitle": { "message": "Willkommen bei Super Geteilte Ansicht!" },
-  "welcomeSubtitle": { "message": "Hier ist eine Kurzanleitung, um die Produktivität mit mehreren Tabs zu meistern." },
-  "welcomeHeader1": { "message": "1. Erstellen Sie Ihre erste geteilte Ansicht (Tab-Modus)" },
-  "welcomeStep1_1": { "message": "Wählen Sie 2 bis 4 Tabs aus, indem Sie die <code>Cmd</code>- (Mac) oder <code>Strg</code>-Taste (Windows) gedrückt halten und darauf klicken." },
-  "welcomeStep1_2": { "message": "Klicken Sie auf das Erweiterungssymbol <img src='icons/icon-48.png' class='inline-icon'> in Ihrer Symbolleiste." },
-  "welcomeStep1_3": { "message": "Das ist alles! Ein neuer Tab öffnet sich mit Ihren Seiten nebeneinander." },
-  "welcomeHeader2": { "message": "2. Verwalten Sie Ihre Ansicht" },
-  "welcomeStep2_1": { "message": "<strong>Benennen Sie Ihre Ansicht:</strong> Klicken Sie auf das Feld oben in der geteilten Ansicht (z. B. \"Split - 123...\") und geben Sie ihr einen klaren Namen wie \"Projekt X Recherche\"." },
-  "welcomeStep2_2": { "message": "<strong>Entfernen Sie ein Panel:</strong> Klicken Sie auf die kleine <code>×</code>-Schaltfläche rechts neben der Adressleiste eines Panels, um es zu entfernen." },
-  "welcomeStep2_3": { "message": "<strong>Schließen Sie die gesamte Ansicht:</strong> Klicken Sie auf die große <code>X</code>-Schaltfläche oben rechts." },
-  "welcomeHeader3": { "message": "3. Fügen Sie einen Tab zu einer bestehenden Ansicht hinzu" },
-  "welcomeStep3_1": { "message": "Erstellen Sie eine geteilte Ansicht (siehe Schritt 1)." },
-  "welcomeStep3_2": { "message": "Gehen Sie zu einem anderen Tab, den Sie hinzufügen möchten." },
-  "welcomeStep3_3": { "message": "Machen Sie einen <strong>Rechtsklick</strong> auf diesen Tab." },
-  "welcomeStep3_4": { "message": "Gehen Sie im Menü zu \"Zu einer bestehenden geteilten Ansicht hinzufügen...\" und wählen Sie Ihre Ansicht nach ihrem Namen aus." },
-  "welcomeFooter": { "message": "<strong>Tipp:</strong> Bevorzugen Sie, dass Ansichten in separaten Fenstern geöffnet werden? Gehen Sie zu den <a href='#' id='options-link'>Erweiterungsoptionen</a> und wählen Sie den \"Fenster-Kachel-Modus\"." },
-  "optionsHelpLink": { "message": "❓ Benutzerhandbuch ansehen" }
+  "extensionName": {
+    "message": "Super Geteilte Ansicht"
+  },
+  "extensionDescription": {
+    "message": "Zeigt ausgewählte Tabs in einer geteilten Ansicht an, entweder in einem neuen Tab oder in neuen Fenstern."
+  },
+  "browserActionTitle": {
+    "message": "Geteilte Ansicht erstellen"
+  },
+  "optionsTitle": {
+    "message": "Optionen für Super Geteilte Ansicht"
+  },
+  "optionsLegend": {
+    "message": "Wählen Sie den Betriebsmodus:"
+  },
+  "optionsModeWindowLabel": {
+    "message": "Fenster-Kachel-Modus (Empfohlen)"
+  },
+  "optionsModeWindowDescription": {
+    "message": "Erstellt neue Browser-Fenster. Behält alle Funktionen bei (Adressleiste, Werbeblocker, etc.)."
+  },
+  "optionsModeTabLayout": {
+    "message": "Einzel-Tab-Modus (Iframes)"
+  },
+  "optionsModeTabDescription": {
+    "message": "Zeigt alles in einem einzigen Tab an. Elegantes Aussehen, aber Werbeblocker und Adressleistenverlauf funktionieren nicht."
+  },
+  "optionsSavedStatus": {
+    "message": "Optionen gespeichert."
+  },
+  "alertSelectTabs": {
+    "message": "Bitte wählen Sie mindestens zwei Tabs mit geladenen Webseiten aus."
+  },
+  "optionsLanguageWarning": {
+    "message": "Hinweis: Ein Neustart des Browsers ist erforderlich, damit Sprachänderungen in der Erweiterung vollständig wirksam werden."
+  },
+  "contextMenuTitle": {
+    "message": "Zu einer bestehenden geteilten Ansicht hinzufügen..."
+  },
+  "maxTabsAlert": {
+    "message": "Maximum von 4 Tabs erreicht. Sie können dieser Ansicht keine weiteren hinzufügen."
+  },
+  "optionsHelpLink": {
+    "message": "❓ Benutzerhandbuch ansehen"
+  },
+  "dialogTitle": {
+    "message": "Ansichtsmodus geändert"
+  },
+  "dialogMessage": {
+    "message": "Aus Sicherheitsgründen erlaubt eine der ausgewählten Websites nicht, in einem einzigen Tab gruppiert angezeigt zu werden. Aus diesem Grund hat Super Geteilte Ansicht die Seiten in separaten Fenstern geöffnet."
+  },
+  "dialogCheckboxLabel": {
+    "message": "Diese Nachricht nicht erneut anzeigen"
+  },
+  "dialogConfirmButton": {
+    "message": "OK"
+  },
+  "optionsShowDialogLabel": {
+    "message": "Warnung anzeigen, wenn eine Website den Fenstermodus erzwingt"
+  },
+  "optionsForceWindowLabel": {
+    "message": "Websites, die immer im Fenstermodus geöffnet werden sollen"
+  },
+  "optionsForceWindowDescription": {
+    "message": "Geben Sie eine Domain pro Zeile ein (z. B. mozilla.org). Diese Websites ignorieren immer die Einstellung Einzel-Tab-Modus."
+  },
+  "welcomeTitle": {
+    "message": "Willkommen bei Super Geteilte Ansicht!"
+  },
+  "welcomeSubtitle": {
+    "message": "Hier ist eine Kurzanleitung, um die Produktivität mit mehreren Tabs zu meistern."
+  },
+  "welcomeHeader1": {
+    "message": "1. Erstellen Sie Ihre erste geteilte Ansicht (Tab-Modus)"
+  },
+  "welcomeStep1_1": {
+    "message": "Wählen Sie 2 bis 4 Tabs aus, indem Sie die <code>Cmd</code>- (Mac) oder <code>Strg</code>-Taste (Windows) gedrückt halten und darauf klicken."
+  },
+  "welcomeStep1_2": {
+    "message": "Klicken Sie auf das Erweiterungssymbol <img src='icons/icon-48.png' class='inline-icon'> in Ihrer Symbolleiste."
+  },
+  "welcomeStep1_3": {
+    "message": "Das ist alles! Ein neuer Tab öffnet sich mit Ihren Seiten nebeneinander."
+  },
+  "welcomeHeader2": {
+    "message": "2. Verwalten Sie Ihre Ansicht"
+  },
+  "welcomeStep2_1": {
+    "message": "<strong>Benennen Sie Ihre Ansicht:</strong> Klicken Sie auf das Feld oben in der geteilten Ansicht (z. B. \"Split - 123...\") und geben Sie ihr einen klaren Namen wie \"Projekt X Recherche\"."
+  },
+  "welcomeStep2_2": {
+    "message": "<strong>Entfernen Sie ein Panel:</strong> Klicken Sie auf die kleine <code>×</code>-Schaltfläche rechts neben der Adressleiste eines Panels, um es zu entfernen."
+  },
+  "welcomeStep2_3": {
+    "message": "<strong>Schließen Sie die gesamte Ansicht:</strong> Klicken Sie auf die große <code>X</code>-Schaltfläche oben rechts."
+  },
+  "welcomeHeader3": {
+    "message": "3. Fügen Sie einen Tab zu einer bestehenden Ansicht hinzu"
+  },
+  "welcomeStep3_1": {
+    "message": "Erstellen Sie eine geteilte Ansicht (siehe Schritt 1)."
+  },
+  "welcomeStep3_2": {
+    "message": "Gehen Sie zu einem anderen Tab, den Sie hinzufügen möchten."
+  },
+  "welcomeStep3_3": {
+    "message": "Machen Sie einen <strong>Rechtsklick</strong> auf diesen Tab."
+  },
+  "welcomeStep3_4": {
+    "message": "Gehen Sie im Menü zu \"Zu einer bestehenden geteilten Ansicht hinzufügen...\" und wählen Sie Ihre Ansicht nach ihrem Namen aus."
+  },
+  "welcomeFooter": {
+    "message": "<strong>Tipp:</strong> Bevorzugen Sie, dass Ansichten in separaten Fenstern geöffnet werden? Gehen Sie zu den <a href='#' class='options-link'>Erweiterungsoptionen</a> und wählen Sie den \"Fenster-Kachel-Modus\"."
+  },
+  "welcomeWarningTitle": {
+    "message": "WARNUNG"
+  },
+  "welcomeWarningP1": {
+    "message": "Einige Websites (Banken, soziale Netzwerke, addons.mozilla.org usw.) haben Sicherheitsfunktionen, die verhindern, dass sie innerhalb einer anderen Seite (in einem Iframe) angezeigt werden."
+  },
+  "welcomeWarningP2": {
+    "message": "Wenn Sie versuchen, diese Websites im 'Einzel-Tab-Modus' zu teilen, wird Ihnen ein Fehler wie dieser angezeigt:"
+  },
+  "welcomeWarningP3": {
+    "message": "Um dies zu umgehen, <strong>wird Super Geteilte Ansicht diese Ansichten automatisch im 'Fenster-Kachel-Modus' öffnen</strong>. Sie können die relevanten Domains auch manuell zu einer Liste auf der <a href='#' class='options-link'>Optionsseite</a> der Erweiterung hinzufügen."
+  }
 }
