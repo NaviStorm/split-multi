@@ -1,59 +1,60 @@
-const DEFAULT_PROTECTED_DOMAINS = [
-    'accounts.google.com',
-    'facebook.com',
-    'twitter.com',
-    'linkedin.com',
-    'github.com',
-    'addons.mozilla.org',
-    'www.paypal.com',
-    'paypal.com'
-].join('\n');
+// options.js
 
-function save_options() {
+// Applies translations to the page
+function i18n() {
+    const elements = document.querySelectorAll('[data-i18n]');
+    elements.forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        const translation = browser.i18n.getMessage(key);
+        if (translation) {
+            // Use innerHTML to support simple tags like <strong> in translations
+            el.innerHTML = translation;
+        }
+    });
+}
+
+// Saves options to browser.storage.local
+function saveOptions(e) {
+    e.preventDefault();
     const mode = document.querySelector('input[name="mode"]:checked').value;
     const showWarning = document.getElementById('show-framing-warning').checked;
-    const forceWindowDomains = document.getElementById('force-window-domains').value;
+    const domains = document.getElementById('force-window-domains').value;
+
     browser.storage.local.set({
         mode: mode,
         showFramingWarning: showWarning,
-        forceWindowDomains: forceWindowDomains
+        forceWindowDomains: domains
     }).then(() => {
-        let status = document.getElementById('status');
-        status.textContent = browser.i18n.getMessage("optionsSavedStatus");
-        setTimeout(() => { status.textContent = ''; }, 1500);
+        const status = document.getElementById('status');
+        status.textContent = browser.i18n.getMessage('optionsSavedStatus');
+        setTimeout(() => {
+            status.textContent = '';
+        }, 1500);
     });
 }
 
-function restore_options() {
-    browser.storage.local.get({
+// Restores options from browser.storage.local
+function restoreOptions() {
+    const defaults = {
         mode: 'window',
         showFramingWarning: true,
-        forceWindowDomains: DEFAULT_PROTECTED_DOMAINS 
-    }).then(items => {
-        document.querySelector(`input[name="mode"][value="${items.mode}"]`).checked = true;
-        document.getElementById('show-framing-warning').checked = items.showFramingWarning;
-        document.getElementById('force-window-domains').value = items.forceWindowDomains;
+        forceWindowDomains: ''
+    };
+    browser.storage.local.get(defaults).then(result => {
+        document.querySelector(`input[name="mode"][value="${result.mode}"]`).checked = true;
+        document.getElementById('show-framing-warning').checked = result.showFramingWarning;
+        document.getElementById('force-window-domains').value = result.forceWindowDomains;
     });
-}
-
-function applyTranslations() {
-    document.querySelectorAll('[data-i18n]').forEach(elem => {
-        const key = elem.getAttribute('data-i18n');
-        elem.textContent = browser.i18n.getMessage(key);
-    });
-    document.title = browser.i18n.getMessage("optionsTitle");
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    applyTranslations();
-    restore_options();
-    document.getElementById('options-form').addEventListener('change', save_options);
-    document.getElementById('force-window-domains').addEventListener('input', save_options);
+    i18n();
+    restoreOptions();
+    document.getElementById('options-form').addEventListener('change', saveOptions);
+    
     const helpLink = document.getElementById('help-link');
-    if (helpLink) {
-        helpLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            browser.tabs.create({ url: 'welcome.html' });
-        });
-    }
+    helpLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        browser.runtime.sendMessage({ type: 'OPEN_WELCOME_PAGE' });
+    });
 });

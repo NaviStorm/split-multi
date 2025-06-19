@@ -1,114 +1,229 @@
-// Fichier : background.js (Version finale complète et corrigée)
+// background.js (MV3 Compliant)
 
-// --- Initialisation ---
-browser.runtime.onInstalled.addListener(details => {
+// --- State Management ---
+// MV3 background scripts are non-persistent. We use browser.storage.session
+// to store the state of active split views. This storage is cleared when the browser closes.
+const VIEW_STATE_KEY = 'activeSplitViews';
+
+async function getActiveViews() {
+    const result = await browser.storage.session.get(VIEW_STATE_KEY);
+    return result[VIEW_STATE_KEY] || {};
+}
+
+async function setActiveViews(views) {
+    await browser.storage.session.set({ [VIEW_STATE_KEY]: views });
+}
+
+// --- Context Menu ---
+async function updateContextMenu() {
+    await browser.contextMenus.removeAll();
+    const views = await getActiveViews();
+    const viewIds = Object.keys(views);
+
+    if (viewIds.length > 0) {
+        browser.contextMenus.create({
+            id: 'add-to-split-view-parent',
+            title: browser.i18n.getMessage('contextMenuTitle'),
+            contexts: ['tab']
+        });
+
+        for (const viewId of viewIds) {
+            const view = views[viewId];
+            browser.contextMenus.create({
+                id: `add-to-${viewId}`,
+                parentId: 'add-to-split-view-parent',
+                title: view.name,
+                contexts: ['tab']
+            });
+        }
+    }
+}
+
+// --- Core Logic ---
+async function getOptions() {
+    const defaults = {
+        mode: 'window',
+        showFramingWarning: true,
+        forceWindowDomains: ''
+    };
+    return browser.storage.local.get(defaults);
+}
+
+// Checks if a URL is likely to block iframe embedding.
+async function canBeIframed(url) {
+    try {
+        const response = await fetch(url, { method: 'HEAD', cache: 'no-cache' });
+        const csp = response.headers.get('content-security-policy');
+        if (csp) {
+            const frameAncestors = csp.split(';').find(policy => policy.trim().startsWith('frame-ancestors'));
+            if (frameAncestors && frameAncestors.includes("'none'")) {
+                return false; // Explicitly forbidden
+            }
+        }
+        const xfo = response.headers.get('x-frame-options');
+        if (xfo && (xfo.toLowerCase() === 'deny' || xfo.toLowerCase() === 'sameorigin')) {
+            return false;
+        }
+        return true;
+    } catch (e) {
+        console.warn(`Could not check headers for ${url}:`, e);
+        return true; // Assume it can be iframed if the check fails
+    }
+}
+
+async function createSplitView(tabs) {
+    const options = await getOptions();
+    let effectiveMode = options.mode;
+
+    const forceWindowDomains = options.forceWindowDomains.split('\n').map(d => d.trim()).filter(Boolean);
+    let forceWindow = false;
+    let securityFallback = false;
+
+    for (const tab of tabs) {
+        const tabDomain = new URL(tab.url).hostname;
+        if (forceWindowDomains.some(domain => tabDomain.endsWith(domain))) {
+            forceWindow = true;
+            break;
+        }
+        if (options.mode === 'tab') {
+            if (!await canBeIframed(tab.url)) {
+                securityFallback = true;
+                forceWindow = true;
+                break;
+            }
+        }
+    }
+
+    if (forceWindow) {
+        effectiveMode = 'window';
+    }
+
+    if (effectiveMode === 'window') {
+        createWindowView(tabs);
+        if (securityFallback && options.showFramingWarning) {
+             browser.tabs.create({ url: 'dialog.html' });
+        }
+    } else {
+        createTabView(tabs);
+    }
+}
+
+function createTabView(tabs) {
+    const urls = tabs.map(tab => encodeURIComponent(tab.url)).join(',');
+    const viewId = `split-${Date.now()}`;
+    browser.tabs.create({
+        url: `split-view.html?urls=${urls}&viewId=${viewId}`
+    });
+}
+
+async function createWindowView(tabs) {
+    const totalWidth = screen.width;
+    const totalHeight = screen.height;
+    const winWidth = Math.floor(totalWidth / tabs.length);
+
+    for (let i = 0; i < tabs.length; i++) {
+        await browser.windows.create({
+            url: tabs[i].url,
+            type: 'normal',
+            width: winWidth,
+            height: totalHeight,
+            left: i * winWidth,
+            top: 0
+        });
+    }
+}
+
+
+// --- Event Listeners ---
+
+// On Install/Update
+browser.runtime.onInstalled.addListener(async (details) => {
     if (details.reason === 'install') {
         browser.tabs.create({ url: 'welcome.html' });
     }
-    createContextMenu();
+    await setActiveViews({}); // Clean slate on install/update
+    updateContextMenu();
 });
 
-let activeSplitViews = {};
+// Browser Action Click
+browser.action.onClicked.addListener(async () => {
+    const tabs = await browser.tabs.query({ highlighted: true, currentWindow: true });
+    const webPageTabs = tabs.filter(tab => tab.url && tab.url.startsWith('http'));
 
-// --- Fonctions utilitaires ---
-function shouldForceWindowMode(tabUrls, forceDomainsSetting) {
-    if (!forceDomainsSetting) return false;
-    const forceDomains = forceDomainsSetting.split('\n').map(d => d.trim().toLowerCase()).filter(d => d);
-    if (forceDomains.length === 0) return false;
-    return tabUrls.some(url => {
-        try {
-            const hostname = new URL(url).hostname.replace(/^www\./, '');
-            return forceDomains.some(forcedDomain => hostname === forcedDomain || hostname.endsWith('.' + forcedDomain));
-        } catch (e) { return false; }
-    });
-}
-
-// --- Fonctions de création de vue ---
-function createTabView(urls) {
-    const hostnames = urls.map(url => { try { return new URL(url).hostname.replace(/^www\./, ''); } catch (e) { return 'invalid-url'; } });
-    const viewTitle = hostnames.join(' / ');
-    const viewUrl = browser.runtime.getURL('split-view.html') + '?urls=' + encodeURIComponent(JSON.stringify(urls)) + '&title=' + encodeURIComponent(viewTitle);
-    browser.tabs.create({ url: viewUrl }).then(tab => {
-        const initialName = `Split - ${tab.id}`;
-        activeSplitViews[tab.id] = { name: initialName, urls: urls };
-        updateContextMenu();
-    });
-}
-
-async function createWindowsView(tabs) {
-    const originalWindow = await browser.windows.getCurrent();
-    const startLeft = originalWindow.left ?? 0;
-    const startTop = originalWindow.top ?? 0;
-    const availableWidth = originalWindow.width;
-    const availableHeight = originalWindow.height;
-    const windowWidth = Math.floor(availableWidth / tabs.length);
-    const originalTabIds = tabs.map(t => t.id);
-
-    for (let i = 0; i < tabs.length; i++) {
-        const tab = tabs[i];
-        const newLeft = startLeft + (i * windowWidth);
-        const newWindow = await browser.windows.create({ url: tab.url });
-        await browser.windows.update(newWindow.id, {
-            left: newLeft,
-            top: startTop,
-            width: windowWidth,
-            height: availableHeight,
-            state: "normal"
+    if (webPageTabs.length < 2) {
+        browser.notifications.create({
+            type: 'basic',
+            iconUrl: browser.runtime.getURL('icons/icon-48.png'),
+            title: browser.i18n.getMessage('extensionName'),
+            message: browser.i18n.getMessage('alertSelectTabs')
         });
-    }
-    try {
-        await browser.tabs.remove(originalTabIds);
-    } catch (e) {
-        console.warn("Could not remove original tabs.", e);
-    }
-}
-
-// --- Écouteurs principaux ---
-browser.browserAction.onClicked.addListener(async () => {
-    const selectedTabs = await browser.tabs.query({ highlighted: true, currentWindow: true });
-    const validTabs = selectedTabs.filter(tab => tab.url && !tab.url.startsWith('about:'));
-    if (validTabs.length < 2) {
-        browser.notifications.create({ type: 'basic', iconUrl: browser.runtime.getURL('icons/icon-48.png'), title: browser.i18n.getMessage('extensionName'), message: browser.i18n.getMessage('alertSelectTabs') });
         return;
     }
-    const urls = validTabs.map(tab => tab.url);
-    const settings = await browser.storage.local.get({ mode: 'window', forceWindowDomains: '' });
-    const forceWindow = shouldForceWindowMode(urls, settings.forceWindowDomains);
-    if (settings.mode === 'tab' && !forceWindow) { createTabView(urls); } else { createWindowsView(validTabs); }
+    createSplitView(webPageTabs);
 });
 
-browser.webRequest.onHeadersReceived.addListener(
-    details => ({ responseHeaders: details.responseHeaders.filter(h => !['x-frame-options', 'content-security-policy'].includes(h.name.toLowerCase())) }),
-    { urls: ["<all_urls>"], types: ["sub_frame"] },
-    ["blocking", "responseHeaders"]
-);
-
-// --- Menu Contextuel et gestion des messages ---
-function createContextMenu() { browser.contextMenus.create({ id: "add-to-split-view-parent", title: browser.i18n.getMessage("contextMenuTitle"), contexts: ["tab"], enabled: false }); }
-function updateContextMenu() {
-    browser.contextMenus.removeAll().then(() => {
-        createContextMenu();
-        const viewEntries = Object.entries(activeSplitViews);
-        if (viewEntries.length > 0) {
-            browser.contextMenus.update("add-to-split-view-parent", { enabled: true });
-            viewEntries.forEach(([tabId, view]) => { browser.contextMenus.create({ id: `add-to-${tabId}`, parentId: "add-to-split-view-parent", title: view.name, contexts: ["tab"] }); });
-        }
-    });
-}
-browser.contextMenus.onClicked.addListener((info, tab) => {
+// Context Menu Click
+browser.contextMenus.onClicked.addListener(async (info, tab) => {
     if (info.menuItemId.startsWith('add-to-')) {
-        const targetTabId = parseInt(info.menuItemId.replace('add-to-', ''), 10);
-        if (activeSplitViews[targetTabId]) { browser.tabs.sendMessage(targetTabId, { action: 'addTab', url: tab.url }).catch(err => console.error("Could not send message to split view tab:", err)); }
+        const viewId = info.menuItemId.replace('add-to-', '');
+        browser.runtime.sendMessage({
+            type: 'ADD_TAB_TO_VIEW',
+            viewId: viewId,
+            tab: { url: tab.url, title: tab.title }
+        });
     }
 });
-browser.tabs.onRemoved.addListener(tabId => { if (activeSplitViews[tabId]) { delete activeSplitViews[tabId]; updateContextMenu(); } });
-browser.runtime.onMessage.addListener((message, sender) => {
-    if (message.action === 'updateViewInfo') {
-        const tabId = sender.tab.id;
-        if (activeSplitViews[tabId]) {
-            if (message.name) activeSplitViews[tabId].name = message.name;
-            if (message.urls) activeSplitViews[tabId].urls = message.urls;
+
+
+// Message Listener from UI scripts
+browser.runtime.onMessage.addListener(async (message, sender) => {
+    switch (message.type) {
+        case 'REGISTER_VIEW': {
+            const views = await getActiveViews();
+            views[message.viewId] = {
+                name: message.name,
+                tabId: sender.tab.id,
+                urls: message.urls
+            };
+            await setActiveViews(views);
             updateContextMenu();
+            break;
         }
+        case 'UNREGISTER_VIEW': {
+            const views = await getActiveViews();
+            delete views[message.viewId];
+            await setActiveViews(views);
+            updateContextMenu();
+            break;
+        }
+        case 'UPDATE_VIEW_NAME': {
+            const views = await getActiveViews();
+            if (views[message.viewId]) {
+                views[message.viewId].name = message.newName;
+                await setActiveViews(views);
+                updateContextMenu();
+            }
+            break;
+        }
+        case 'OPEN_WELCOME_PAGE':
+             browser.tabs.create({ url: browser.runtime.getURL("welcome.html") });
+             break;
+        case 'OPEN_OPTIONS_PAGE':
+             browser.runtime.openOptionsPage();
+             break;
     }
 });
+
+// Clean up storage when a split view tab is closed
+browser.tabs.onRemoved.addListener(async (tabId) => {
+    const views = await getActiveViews();
+    const viewIdToRemove = Object.keys(views).find(id => views[id].tabId === tabId);
+    if (viewIdToRemove) {
+        delete views[viewIdToRemove];
+        await setActiveViews(views);
+        updateContextMenu();
+    }
+});
+
+// Initial setup
+updateContextMenu();

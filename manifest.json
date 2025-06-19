@@ -1,8 +1,8 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDescription__",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "default_locale": "en",
 
   "permissions": [
@@ -11,7 +11,10 @@
     "contextMenus",
     "notifications",
     "webRequest",
-    "webRequestBlocking",
+    "webRequestBlocking"
+  ],
+
+  "host_permissions": [
     "<all_urls>"
   ],
 
@@ -28,28 +31,35 @@
     }
   ],
 
-  "browser_action": {
+  "action": {
     "default_icon": "icons/icon.png",
     "default_title": "__MSG_browserActionTitle__"
   },
-  
+
   "options_ui": {
     "page": "options.html",
-    "browser_style": true
+    "open_in_tab": true
   },
 
   "web_accessible_resources": [
-    "split-view.html",
-    "split-view.css",
-    "split-view.js",
-    "welcome.html",
-    "welcome.css",
-    "welcome.js",
-    "need-windows.png",
-    "dialog.html",
-    "dialog.css",
-    "dialog.js"
-    ],
+    {
+      "resources": [
+        "split-view.html",
+        "split-view.css",
+        "split-view.js",
+        "welcome.html",
+        "welcome.css",
+        "welcome.js",
+        "need-windows.png",
+        "dialog.html",
+        "dialog.css",
+        "dialog.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
 
   "icons": {
     "32": "icons/icon-32.png",
@@ -57,5 +67,12 @@
     "64": "icons/icon-64.png",
     "96": "icons/icon-96.png",
     "128": "icons/icon-128.png"
+  },
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "super-split-view@example.com",
+      "strict_min_version": "127.0"
+    }
   }
 }
