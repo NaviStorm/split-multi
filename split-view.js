@@ -2,7 +2,42 @@
 
 let viewId = null;
 
-function makeResizable(container) { /* ... fonction inchangée ... */ }
+// Gère le redimensionnement des panneaux
+function makeResizable(container) {
+    const panels = Array.from(container.children).filter(el => el.classList.contains('iframe-wrapper'));
+    if (panels.length <= 1) return;
+
+    for (let i = 0; i < panels.length - 1; i++) {
+        const resizer = document.createElement('div');
+        resizer.className = 'resize-handle';
+        container.insertBefore(resizer, panels[i + 1]);
+
+        let x = 0;
+        let leftWidth = 0;
+
+        const mouseDownHandler = function (e) {
+            x = e.clientX;
+            const leftPanel = panels[i];
+            leftWidth = leftPanel.getBoundingClientRect().width;
+            document.addEventListener('mousemove', mouseMoveHandler);
+            document.addEventListener('mouseup', mouseUpHandler);
+        };
+
+        const mouseMoveHandler = function (e) {
+            const dx = e.clientX - x;
+            const newLeftWidth = ((leftWidth + dx) * 100) / container.getBoundingClientRect().width;
+            panels[i].style.flex = `0 1 ${newLeftWidth}%`;
+        };
+
+        const mouseUpHandler = function () {
+            document.removeEventListener('mousemove', mouseMoveHandler);
+            document.removeEventListener('mouseup', mouseUpHandler);
+        };
+
+        resizer.addEventListener('mousedown', mouseDownHandler);
+    }
+}
+
 
 document.addEventListener('DOMContentLoaded', async () => {
     const container = document.getElementById('container');
@@ -12,14 +47,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
     viewId = urlParams.get('id');
 
-    // NOUVELLE LOGIQUE : Demander les URLs finales au background script
+    // Demander les URLs finales au background script
     const finalUrls = await browser.runtime.sendMessage({
         action: "getUrlsForView",
         viewId: viewId
     });
 
     if (!finalUrls || finalUrls.length === 0) {
-        // La vue est peut-être périmée, on la ferme.
         browser.tabs.getCurrent().then(tab => browser.tabs.remove(tab.id));
         return;
     }
@@ -58,11 +92,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const iframe = document.createElement('iframe');
         const contentUrl = new URL(url);
-        
-        console.log(`[split-view] Checking URL: ${url}`);
-        console.log(`[split-view] contentUrl.searchParams.get('svd_forced'): `, contentUrl.searchParams.get('svd_forced'));
 
-        // CETTE CONDITION DEVRAIT MAINTENANT ÊTRE VRAIE
         if (contentUrl.searchParams.get('svd_forced') === 'true') {
             const domain = contentUrl.searchParams.get('svd_domain');
             showWarningOverlay(iframeWrapper, domain);
@@ -89,7 +119,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         closePanelButton.onclick = async () => {
             const remainingUrls = await browser.runtime.sendMessage({ action: "removePanelFromView", viewId: viewId, urlToRemove: url });
             if (remainingUrls && remainingUrls.length > 0) {
-                window.location.reload(); // Le plus simple est de recharger la vue
+                window.location.reload();
             } else {
                 closeViewButton.click();
             }
@@ -128,6 +158,7 @@ function showWarningOverlay(iframeWrapper, domain) {
     iframeWrapper.appendChild(overlay);
 }
 
+// ===== DÉBUT DE LA MODIFICATION =====
 window.addEventListener('message', (event) => {
     const extensionOrigin = browser.runtime.getURL('').slice(0, -1);
     if (event.origin !== extensionOrigin) return;
@@ -136,8 +167,14 @@ window.addEventListener('message', (event) => {
         const overlay = document.querySelector('.force-info-overlay');
         if (overlay) overlay.remove();
     } else if (event.data && event.data.type === 'SVD_OPEN_OPTIONS') {
+        // 1. Ouvre la page des options
         browser.runtime.openOptionsPage();
-        const overlay = document.querySelector('.force-info-overlay');
-        if (overlay) overlay.remove();
+        
+        // 2. Simule un clic sur le bouton de fermeture de la vue
+        const closeButton = document.getElementById('close-view-button');
+        if (closeButton) {
+            closeButton.click();
+        }
     }
 });
+// ===== FIN DE LA MODIFICATION =====
