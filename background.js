@@ -4,6 +4,40 @@ let splitViews = {};
 let viewTabs = {};
 let existingTitles = new Set();
 
+// ===== GESTION DE L'HISTORIQUE PERSONNALISÉ =====
+const HISTORY_KEY = 'svd_history';
+const MAX_HISTORY_ENTRIES = 500; // Limite pour ne pas saturer le stockage
+
+async function getHistory() {
+    const result = await browser.storage.local.get({ [HISTORY_KEY]: [] });
+    return result[HISTORY_KEY];
+}
+
+async function addToHistory(entry) {
+    // Ne pas enregistrer les entrées invalides ou les pages internes
+    if (!entry || !entry.url || entry.url.startsWith('about:') || entry.url.startsWith('moz-extension:')) {
+        return;
+    }
+    let history = await getHistory();
+    // Retirer l'entrée existante si elle existe pour la remonter en haut de la liste
+    const existingIndex = history.findIndex(item => item.url === entry.url);
+    if (existingIndex > -1) {
+        history.splice(existingIndex, 1);
+    }
+    // Ajoute la nouvelle entrée au début (plus récente)
+    history.unshift({
+        url: entry.url,
+        title: entry.title || new URL(entry.url).hostname,
+        timestamp: Date.now()
+    });
+    // Limite la taille de l'historique
+    if (history.length > MAX_HISTORY_ENTRIES) {
+        history = history.slice(0, MAX_HISTORY_ENTRIES);
+    }
+    await browser.storage.local.set({ [HISTORY_KEY]: history });
+}
+// =================================================
+
 async function getFinalUrl(url) {
     try {
         const response = await fetch(url, { method: 'HEAD', cache: 'no-store' });
@@ -28,19 +62,13 @@ function createContextMenu() {
 
 browser.runtime.onInstalled.addListener((details) => {
     createContextMenu();
-
-    // Logique à exécuter uniquement lors de la première installation de l'extension
     if (details.reason === "install") {
-        // Définit le mode par défaut sur "Onglet Unique (Iframes)"
         browser.storage.local.set({
             operatingMode: 'tab',
             showFramingWarning: true,
             forceWindowDomains: []
         });
-
-        // Afficher la page de bienvenue
         browser.tabs.create({ url: 'welcome.html' });
-        // On pourrait utiliser hasSeenWelcome, mais la condition "install" est plus robuste.
     }
 });
 
@@ -98,23 +126,17 @@ browser.contextMenus.onShown.addListener(() => {
 });
 
 browser.browserAction.onClicked.addListener(async () => {
-    // Lire le mode de fonctionnement choisi par l'utilisateur
-    const settings = await browser.storage.local.get({ operatingMode: 'tab' }); // 'tab' est la valeur de secours
+    const settings = await browser.storage.local.get({ operatingMode: 'tab' });
     const tabs = await browser.tabs.query({ highlighted: true, currentWindow: true });
     const selectedTabs = tabs.filter(t => t.url && !t.url.startsWith("about:") && !t.url.startsWith("moz-extension:"));
-    
     if (selectedTabs.length < 2) {
         browser.tabs.executeScript({ code: `alert("${browser.i18n.getMessage('alertSelectTabs')}");` });
         return;
     }
-
     const urls = selectedTabs.map(t => t.url);
-    
     if (settings.operatingMode === 'window') {
-        // Logique pour le mode Fenêtre (non fournie, mais c'est ici qu'elle irait)
-        console.log("Window Tiling Mode selected. Implement logic here.");
+        console.log("Window Tiling Mode not implemented in this version.");
     } else {
-        // Logique pour le mode Onglet (par défaut)
         createSplitViewInTab(urls);
     }
 });
@@ -145,11 +167,9 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             const originalUrls = splitViews[request.viewId] || [];
             Promise.all(originalUrls.map(url => getFinalUrl(url))).then(sendResponse);
             return true;
-
         case "getFinalUrl":
             getFinalUrl(request.url).then(sendResponse);
             return true;
-
         case "closeSplitView":
             const tabIdToClose = Object.keys(viewTabs).find(id => viewTabs[id] === request.viewId);
             if (tabIdToClose) {
@@ -161,7 +181,6 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 browser.storage.local.remove(`viewName_${request.viewId}`);
             }
             break;
-
         case "removePanelFromView":
             const { viewId, urlToRemove } = request;
             if (splitViews[viewId]) {
@@ -170,13 +189,18 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             }
             sendResponse(splitViews[viewId]);
             break;
-
         case "updateUrlsForView":
              if(splitViews[request.viewId]) {
                 splitViews[request.viewId] = request.urls;
              }
              sendResponse({});
              break;
+        case "addToHistory":
+            addToHistory(request.entry);
+            break;
+        case "getHistory":
+            getHistory().then(sendResponse);
+            return true;
     }
     return true;
 });
@@ -196,13 +220,7 @@ browser.tabs.onRemoved.addListener((tabId) => {
 browser.webRequest.onHeadersReceived.addListener(
     (details) => {
         if (details.type !== "sub_frame") return;
-        
-        const responseHeaders = details.responseHeaders.filter(
-            (header) => {
-                const name = header.name.toLowerCase();
-                return name !== "x-frame-options" && name !== "content-security-policy";
-            }
-        );
+        const responseHeaders = details.responseHeaders.filter(h => h.name.toLowerCase() !== "x-frame-options" && h.name.toLowerCase() !== "content-security-policy");
         return { responseHeaders };
     },
     { urls: ["<all_urls>"] },
