@@ -148,5 +148,8 @@
     },
     "welcomeWarningP3": {
         "message": "Para evitar este forçamento, você pode adicionar os domínios relevantes a uma lista na <a href='#' class='options-link'>página de opções</a> da extensão. Isso fará com que eles sempre abram no 'Modo de Mosaico de Janelas'."
+    },
+    "linkGitHubText": {
+        "message": "Esta extensão é de código aberto. O código-fonte está disponível no <a href='https://github.com/NaviStorm/split-multi' target='_blank' rel='noopener'>GitHub</a>."
     }
 }

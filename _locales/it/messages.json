@@ -148,5 +148,8 @@
   },
   "welcomeWarningP3": {
     "message": "Per evitare questa forzatura, è possibile aggiungere i domini pertinenti a un elenco nella <a href='#' class='options-link'>pagina delle opzioni</a> dell'estensione. Ciò li farà sempre aprire in 'Modalità Finestre Affiancate'."
+  },
+  "linkGitHubText": {
+    "message": "Questa estensione è open source. Il codice sorgente è disponibile su <a href='https://github.com/NaviStorm/split-multi' target='_blank' rel='noopener'>GitHub</a>."
   }
 }

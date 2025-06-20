@@ -148,5 +148,8 @@
   },
   "welcomeWarningP3": {
     "message": "To avoid this forcing, you can add the relevant domains to a list on the extension's <a href='#' class='options-link'>options page</a>. This will make them always open in 'Window Tiling Mode'."
+  },
+  "linkGitHubText": {
+    "message": "This extension is open source. The source code is available on <a href='https://github.com/NaviStorm/split-multi' target='_blank' rel='noopener'>GitHub</a>."
   }
 }

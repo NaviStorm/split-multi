@@ -148,5 +148,8 @@
     },
     "welcomeWarningP3": {
         "message": "为避免此强制，您可以将相关域名添加到扩展<a href='#' class='options-link'>选项页面</a>的列表中。这将使它们始终在“窗口平铺模式”下打开。"
+    },
+    "linkGitHubText": {
+        "message": "本扩展是开源的。源代码可在 <a href='https://github.com/NaviStorm/split-multi' target='_blank' rel='noopener'>GitHub</a> 上获取。"
     }
 }

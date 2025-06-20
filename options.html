@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="options.css">
 </head>
+
 <body>
     <h1 data-i18n="optionsTitle"></h1>
     <form id="options-form">
@@ -23,9 +25,12 @@
                     <p data-i18n="optionsModeTabDescription"></p>
                 </label>
             </div>
-            <div style="border-top: 1px solid #ccc; margin-top: 2em; padding-top: 1.5em; display: flex; align-items: center;">
-                 <input type="checkbox" id="show-framing-warning" name="show-framing-warning" style="margin: 0 10px 0 0; flex-shrink: 0;">
-                 <label for="show-framing-warning" data-i18n="optionsShowDialogLabel" style="font-weight: normal; margin: 0;"></label>
+            <div
+                style="border-top: 1px solid #ccc; margin-top: 2em; padding-top: 1.5em; display: flex; align-items: center;">
+                <input type="checkbox" id="show-framing-warning" name="show-framing-warning"
+                    style="margin: 0 10px 0 0; flex-shrink: 0;">
+                <label for="show-framing-warning" data-i18n="optionsShowDialogLabel"
+                    style="font-weight: normal; margin: 0;"></label>
             </div>
             <div class="textarea-container">
                 <label for="force-window-domains" data-i18n="optionsForceWindowLabel"></label>
@@ -35,12 +40,21 @@
         </fieldset>
     </form>
     <div id="status"></div>
+    <!-- ===== Page Aide -->
     <div class="help-link-container">
         <a href="#" id="help-link" data-i18n="optionsHelpLink"></a>
     </div>
+
+     <!-- ===== Lien GIT -->
+     <div class="github-link-container">
+        <p data-i18n="linkGitHubText"></p>
+    </div>
+
+    <!-- ===== Changement Langue, redémarrer -->
     <div class="warning-box">
         <p data-i18n="optionsLanguageWarning"></p>
     </div>
     <script src="options.js"></script>
 </body>
+
 </html>

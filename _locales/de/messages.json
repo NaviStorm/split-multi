@@ -148,5 +148,8 @@
   },
   "welcomeWarningP3": {
     "message": "Um dieses Erzwingen zu vermeiden, können Sie die relevanten Domains zu einer Liste auf der <a href='#' class='options-link'>Optionsseite</a> der Erweiterung hinzufügen. Dadurch werden sie immer im 'Fenster-Kachel-Modus' geöffnet."
+  },
+  "linkGitHubText": {
+    "message": "Diese Erweiterung ist Open Source. Der Quellcode ist auf <a href='https://github.com/NaviStorm/split-multi' target='_blank' rel='noopener'>GitHub</a> verfügbar."
   }
 }

@@ -148,5 +148,8 @@
     },
     "welcomeWarningP3": {
         "message": "Pour éviter ce forçage, vous pouvez ajouter les domaines concernés dans une liste sur la <a href='#' class='options-link'>page d'options</a> de l'extension. Cela les fera toujours s'ouvrir en 'Mode Mosaïque de Fenêtres'."
+    },
+    "linkGitHubText": {
+        "message": "Cette extension est open source. Le code source est disponible sur <a href='https://github.com/NaviStorm/split-multi' target='_blank' rel='noopener'>GitHub</a>."
     }
 }

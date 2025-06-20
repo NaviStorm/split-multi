@@ -148,5 +148,8 @@
     },
     "welcomeWarningP3": {
         "message": "Om dit forceren te vermijden, kunt u de relevante domeinen toevoegen aan een lijst op de <a href='#' class='options-link'>optiepagina</a> van de extensie. Hierdoor worden ze altijd in 'Venster-tegelmodus' geopend."
+    },
+    "linkGitHubText": {
+        "message": "Deze extensie is open source. De broncode is beschikbaar op <a href='https://github.com/NaviStorm/split-multi' target='_blank' rel='noopener'>GitHub</a>."
     }
 }

@@ -122,3 +122,21 @@ fieldset>div {
     font-size: 0.9em;
     line-height: 1.4;
 }
+
+.github-link-container {
+    text-align: center;
+    margin-top: 2em;
+    padding-top: 1.5em;
+    border-top: 1px solid #eee;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.github-link-container a {
+    color: #0366d6;
+    text-decoration: none;
+}
+
+.github-link-container a:hover {
+    text-decoration: underline;
+}
