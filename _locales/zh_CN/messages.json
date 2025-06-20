@@ -1,0 +1,155 @@
+{
+    "extensionName": {
+        "message": "Multi Split View"
+    },
+    "extensionDescription": {
+        "message": "在新标签页或新窗口中，以分屏视图显示选定的标签页。"
+    },
+    "browserActionTitle": {
+        "message": "创建分屏视图"
+    },
+    "optionsTitle": {
+        "message": "Multi Split View 选项"
+    },
+    "optionsLegend": {
+        "message": "选择操作模式："
+    },
+    "optionsModeWindowLabel": {
+        "message": "窗口平铺模式（推荐）"
+    },
+    "optionsModeWindowDescription": {
+        "message": "创建新的浏览器窗口。保留所有功能（地址栏等）。其他扩展（如广告拦截器）可正常工作。"
+    },
+    "optionsModeTabLayout": {
+        "message": "单标签页模式 (Iframes)"
+    },
+    "optionsModeTabDescription": {
+        "message": "在单个标签页中显示所有内容。外观优雅，但某些网站需要强制显示。注意：其他扩展（如广告拦截器）在此模式下将无法工作。"
+    },
+    "optionsSavedStatus": {
+        "message": "选项已保存。"
+    },
+    "alertSelectTabs": {
+        "message": "请至少选择两个已加载网页的标签页。"
+    },
+    "optionsLanguageWarning": {
+        "message": "注意：需要重启浏览器才能使语言更改在扩展中完全生效。"
+    },
+    "contextMenuTitle": {
+        "message": "添加到现有分屏视图..."
+    },
+    "maxTabsAlert": {
+        "message": "已达到4个标签页的上限。您无法向此视图添加更多标签页。"
+    },
+    "optionsHelpLink": {
+        "message": "❓ 查看用户指南"
+    },
+    "dialogTitle": {
+        "message": "视图模式已更改"
+    },
+    "dialogMessage": {
+        "message": "出于安全原因，所选网站之一不允许在单个标签页中分组显示。因此，Multi Split View已在单独的窗口中打开了这些页面。"
+    },
+    "dialogCheckboxLabel": {
+        "message": "不再显示此消息"
+    },
+    "dialogConfirmButton": {
+        "message": "好的"
+    },
+    "optionsShowDialogLabel": {
+        "message": "当网站强制使用窗口模式时显示警告"
+    },
+    "optionsForceWindowLabel": {
+        "message": "始终在窗口模式下打开的网站"
+    },
+    "optionsForceWindowDescription": {
+        "message": "每行输入一个域名（例如 mozilla.org）。这些网站将始终忽略单标签页模式的设置。"
+    },
+    "forceInfoTitle": {
+        "message": "强制显示已激活"
+    },
+    "forceInfoMessage": {
+        "message": "此网站（__DOMAIN__）通常出于安全原因阻止在框架中显示。Multi Split View已覆盖此限制以向您显示它。<br><br>要禁用此强制并在单独的窗口中始终打开此网站，请将以下域名添加到扩展选项的列表中："
+    },
+    "forceInfoButton": {
+        "message": "打开选项"
+    },
+    "forceShowPage": {
+        "message": "仍然加载"
+    },
+    "welcomeTitle": {
+        "message": "欢迎使用Multi Split View！"
+    },
+    "welcomeSubtitle": {
+        "message": "这里是掌握多标签页生产力的快速指南。"
+    },
+    "welcomeHeader1": {
+        "message": "1. 创建您的第一个分屏视图（标签页模式）"
+    },
+    "welcomeStep1_1": {
+        "message": "按住<code>Cmd</code>（Mac）或<code>Ctrl</code>（Windows）键并单击，选择2到4个标签页。"
+    },
+    "welcomeStep1_2": {
+        "message": "单击工具栏中的扩展图标<img src='icons/icon-48.png' class='inline-icon'>。"
+    },
+    "welcomeStep1_3": {
+        "message": "就是这样！一个新的标签页将打开，您的页面并排显示。"
+    },
+    "welcomeHeader2": {
+        "message": "2. 管理您的视图"
+    },
+    "welcomeStep2_1": {
+        "message": "<strong>为您的视图命名：</strong>单击分屏视图顶部的字段（例如“Split - 123...”），并给它一个清晰的名称，如“项目X研究”。"
+    },
+    "welcomeStep2_2": {
+        "message": "<strong>移除一个面板：</strong>单击面板地址栏右侧的小<code>×</code>按钮以移除它。"
+    },
+    "welcomeStep2_3": {
+        "message": "<strong>关闭整个视图：</strong>单击右上角的大<code>X</code>按钮。"
+    },
+    "welcomeHeader3": {
+        "message": "3. 将标签页添加到现有视图"
+    },
+    "welcomeStep3_1": {
+        "message": "创建一个分屏视图（见步骤1）。"
+    },
+    "welcomeStep3_2": {
+        "message": "转到您希望添加的另一个标签页。"
+    },
+    "welcomeStep3_3": {
+        "message": "在该标签页上<strong>右键单击</strong>。"
+    },
+    "welcomeStep3_4": {
+        "message": "在菜单中，转到“添加到现有分屏视图...”并按名称选择您的视图。"
+    },
+    "welcomeHeader4": {
+        "message": "4. 限制"
+    },
+    "welcomeP4_1": {
+        "message": "出于浏览器强制的安全原因，当您使用<strong>单标签页模式 (Iframes)</strong>时，其他扩展（如广告拦截器、密码管理器等）无法与分屏面板的内容进行交互。"
+    },
+    "welcomeP4_2": {
+        "message": "要享受所有扩展的全部功能，我们建议使用<strong>窗口平铺模式</strong>。"
+    },
+    "welcomeFooter": {
+        "message": "<strong>提示：</strong>希望视图在单独的窗口中打开？请转到<a href='#' class='options-link'>扩展选项</a>并选择“窗口平铺模式”。"
+    },
+    "welcomeWarningTitle": {
+        "message": "警告"
+    },
+    "welcomeWarningP1": {
+        "message": "某些网站（银行、社交网络等）具有安全功能，可防止它们在另一个页面（iframe中）内显示。"
+    },
+    "welcomeWarningImage": {
+        "message": "<img src='need-windows.png' alt='Firefox 无法打开此页面消息'>"
+    },
+    "welcomeWarningP2": {
+        "message": "当您尝试在“单标签页模式”下分割这些网站时，扩展将强制显示它们。内容上方将显示一条信息性消息。"
+    },
+    "welcomeWarningP3": {
+        "message": "为避免此强制，您可以将相关域名添加到扩展<a href='#' class='options-link'>选项页面</a>的列表中。这将使它们始终在“窗口平铺模式”下打开。"
+    },
+    "linkGitHubText": {
+        "message": "本扩展是开源的。源代码可在 <a href='https://github.com/NaviStorm/split-multi' target='_blank' rel='noopener'>GitHub</a> 上获取。"
+    }
+}

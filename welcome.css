@@ -158,3 +158,9 @@ a:hover {
     margin: 1em 0;
     border: 1px solid #ddd;
 }
+
+footer .github-link-footer {
+    margin-top: 1em;
+    font-size: 0.9em;
+    color: #555;
+}

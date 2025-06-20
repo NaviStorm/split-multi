@@ -18,13 +18,13 @@
     "message": "Window Tiling Mode (Recommended)"
   },
   "optionsModeWindowDescription": {
-    "message": "Creates new browser windows. Preserves all features (address bar, ad blockers, etc.)."
+    "message": "Creates new browser windows. Preserves all features (address bar, ad blockers, etc.). Other extensions work normally."
   },
   "optionsModeTabLayout": {
     "message": "Single Tab Mode (Iframes)"
   },
   "optionsModeTabDescription": {
-    "message": "Displays everything in a single tab. Elegant look, but ad blockers and address bar history do not work."
+    "message": "Displays everything in a single tab. Elegant look, but some sites require forcing. Note: Other extensions (e.g., ad blockers) will not work in this mode."
   },
   "optionsSavedStatus": {
     "message": "Options saved."
@@ -64,6 +64,18 @@
   },
   "optionsForceWindowDescription": {
     "message": "Enter one domain per line (e.g., mozilla.org). These sites will always ignore the Single Tab Mode setting."
+  },
+  "forceInfoTitle": {
+    "message": "Display Forcing Activated"
+  },
+  "forceInfoMessage": {
+    "message": "This site (<strong>__DOMAIN__</strong>) normally blocks being displayed in a frame for security reasons. Super Split View has overridden this restriction to show it to you.<br><br>To disable this forcing and always open this site in a separate window, add the following domain to the list in the extension options:"
+  },
+  "forceInfoButton": {
+    "message": "Open Options"
+  },
+  "forceShowPage": {
+    "message": "Load Anyway"
   },
   "welcomeTitle": {
     "message": "Welcome to Super Split View!"
@@ -110,19 +122,34 @@
   "welcomeStep3_4": {
     "message": "In the menu, go to \"Add to an existing Split View...\" and choose your view by its name."
   },
+  "welcomeHeader4": {
+    "message": "4. Limitations"
+  },
+  "welcomeP4_1": {
+    "message": "For security reasons imposed by browsers, when you use the <strong>Single Tab Mode (Iframes)</strong>, other extensions (like ad blockers, password managers, etc.) cannot interact with the content of the split panels."
+  },
+  "welcomeP4_2": {
+    "message": "To enjoy the full functionality of all your extensions, we recommend using the <strong>Window Tiling Mode</strong>."
+  },
   "welcomeFooter": {
     "message": "<strong>Tip:</strong> Prefer views to open in separate windows? Go to the <a href='#' class='options-link'>extension options</a> and choose \"Window Tiling Mode\"."
   },
   "welcomeWarningTitle": {
     "message": "WARNING"
   },
+  "welcomeWarningImage": {
+    "message": "<img src='need-windows.png' alt='Firefox cannot open this page message'>"
+  },
   "welcomeWarningP1": {
     "message": "Some websites (banks, social networks, addons.mozilla.org, etc.) have security features that prevent them from being displayed inside another page (in an iframe)."
   },
   "welcomeWarningP2": {
-    "message": "When you try to split these sites in 'Single Tab Mode', you will see an error like this:"
+    "message": "When you try to split these sites in 'Single Tab Mode', the extension will automatically force them to display. An informational message will appear over the content."
   },
   "welcomeWarningP3": {
-    "message": "To work around this, <strong>Super Split View will automatically open these views in 'Window Tiling Mode'</strong>. You can also manually add the relevant domains to a list on the extension's <a href='#' class='options-link'>options page</a>."
+    "message": "To avoid this forcing, you can add the relevant domains to a list on the extension's <a href='#' class='options-link'>options page</a>. This will make them always open in 'Window Tiling Mode'."
+  },
+  "linkGitHubText": {
+    "message": "This extension is open source. The source code is available on <a href='https://github.com/NaviStorm/split-multi' target='_blank' rel='noopener'>GitHub</a>."
   }
 }

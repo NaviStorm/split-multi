@@ -1,117 +1,264 @@
-// Fichier: split-view.js (Version finale complète et vérifiée)
+// Fichier : split-view.js
 
-document.addEventListener('DOMContentLoaded', () => {
+let viewId = null;
+let authorizedDomains = new Set();
+let history = [];
+
+// Écouteur pour répondre aux demandes du background script
+browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.action === "getAuthorizedDomains") {
+        sendResponse({ authorizedDomains: Array.from(authorizedDomains) });
+        return true;
+    }
+});
+
+function makeResizable(container) {
+    const panels = Array.from(container.children).filter(el => el.classList.contains('iframe-wrapper'));
+    if (panels.length <= 1) return;
+    for (let i = 0; i < panels.length - 1; i++) {
+        const resizer = document.createElement('div');
+        resizer.className = 'resize-handle';
+        container.insertBefore(resizer, panels[i + 1]);
+        let x = 0, leftWidth = 0;
+        const mouseDownHandler = function (e) {
+            x = e.clientX;
+            leftWidth = panels[i].getBoundingClientRect().width;
+            document.addEventListener('mousemove', mouseMoveHandler);
+            document.addEventListener('mouseup', mouseUpHandler);
+        };
+        const mouseMoveHandler = function (e) {
+            const dx = e.clientX - x;
+            panels[i].style.flex = `0 1 ${((leftWidth + dx) * 100) / container.getBoundingClientRect().width}%`;
+        };
+        const mouseUpHandler = function () {
+            document.removeEventListener('mousemove', mouseMoveHandler);
+            document.removeEventListener('mouseup', mouseUpHandler);
+        };
+        resizer.addEventListener('mousedown', mouseDownHandler);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
     const container = document.getElementById('container');
     const viewNameInput = document.getElementById('view-name-input');
     const closeViewButton = document.getElementById('close-view-button');
-    
-    const params = new URLSearchParams(window.location.search);
-    const urlsString = params.get('urls');
-    let initialUrls = urlsString ? JSON.parse(decodeURIComponent(urlsString)) : [];
 
-    // --- CORRECTION DU TITRE INITIAL ---
-    const titleFromUrl = decodeURIComponent(params.get('title') || '');
-    if (titleFromUrl) {
-        document.title = titleFromUrl;
-        viewNameInput.value = titleFromUrl; // Utilise le titre pour le champ de saisie
+    const urlParams = new URLSearchParams(window.location.search);
+    viewId = urlParams.get('id');
+    history = await browser.runtime.sendMessage({ action: "getHistory" });
+
+    const authorizedParam = urlParams.get('authorized');
+    if (authorizedParam) {
+        try { authorizedDomains = new Set(JSON.parse(authorizedParam)); } catch (e) { console.error("Could not parse authorized domains:", e); }
     }
 
-    // Informer le background script du nom initial
-    browser.tabs.getCurrent().then(tab => {
-        const nameToSend = viewNameInput.value || `Split - ${tab.id}`;
-        if (!viewNameInput.value) { viewNameInput.value = nameToSend; }
-        
-        browser.runtime.sendMessage({
-            action: 'updateViewInfo',
-            name: nameToSend,
-            urls: initialUrls
-        });
-    });
-
-    function createPanel(url) {
-        if (container.children.length >= 4) return;
-        if (container.children.length > 0) {
-            const handle = document.createElement('div');
-            handle.className = 'resize-handle';
-            container.appendChild(handle);
-        }
-        const wrapper = document.createElement('div');
-        wrapper.className = 'iframe-wrapper';
-        const addressBar = document.createElement('div');
-        addressBar.className = 'address-bar';
-        const urlInput = document.createElement('input');
-        urlInput.className = 'url-input';
-        urlInput.type = 'text';
-        urlInput.value = url; 
-        const iframe = document.createElement('iframe');
-        iframe.src = url;
-        urlInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                let newUrl = urlInput.value;
-                if (!newUrl.startsWith('http://') && !newUrl.startsWith('https://')) {
-                    newUrl = 'https://' + newUrl;
-                }
-                iframe.src = newUrl;
-            }
-        });
-        const closeButton = document.createElement('button');
-        closeButton.className = 'close-panel-button';
-        closeButton.innerHTML = '×';
-        closeButton.onclick = () => {
-            const panelIndex = Array.from(container.children).indexOf(wrapper);
-            if (panelIndex > 0) {
-                 container.removeChild(container.children[panelIndex - 1]);
-            }
-            container.removeChild(wrapper);
-            updateUrlsAndNotify();
-        };
-        addressBar.appendChild(urlInput);
-        addressBar.appendChild(closeButton);
-        wrapper.appendChild(addressBar);
-        wrapper.appendChild(iframe);
-        container.appendChild(wrapper);
-        updateUrlsAndNotify();
+    const finalUrls = await browser.runtime.sendMessage({ action: "getUrlsForView", viewId });
+    if (!finalUrls || finalUrls.length === 0) {
+        browser.tabs.getCurrent().then(tab => browser.tabs.remove(tab.id));
+        return;
     }
 
-    function updateUrlsAndNotify() {
-        const currentUrls = Array.from(document.querySelectorAll('.url-input')).map(input => input.value);
-        browser.runtime.sendMessage({ action: 'updateViewInfo', urls: currentUrls });
+    const storedData = await browser.storage.local.get(`viewName_${viewId}`);
+    if (storedData[`viewName_${viewId}`]) {
+        viewNameInput.value = storedData[`viewName_${viewId}`];
+        document.title = storedData[`viewName_${viewId}`];
     }
 
-    initialUrls.forEach(url => createPanel(url));
-
-    viewNameInput.addEventListener('input', () => {
-        document.title = viewNameInput.value;
-        browser.runtime.sendMessage({ action: 'updateViewInfo', name: viewNameInput.value });
+    viewNameInput.addEventListener('change', e => {
+        browser.storage.local.set({ [`viewName_${viewId}`]: e.target.value });
+        document.title = e.target.value;
     });
     closeViewButton.addEventListener('click', () => {
+        browser.runtime.sendMessage({ action: "closeSplitView", viewId: viewId });
         browser.tabs.getCurrent().then(tab => browser.tabs.remove(tab.id));
     });
-    browser.runtime.onMessage.addListener((message) => {
-        if (message.action === 'addTab') {
-            createPanel(message.url);
-        }
-    });
 
-    // --- LOGIQUE DE RÉCEPTION ---
-    window.addEventListener('message', (event) => {
-        if (event.data && event.data.type === 'SUPER_SPLIT_VIEW_URL_CHANGE') {
-            const newUrl = event.data.url;
-            const sourceIframeWindow = event.source;
-            const allIframes = document.querySelectorAll('iframe');
-            for (const iframe of allIframes) {
-                if (iframe.contentWindow === sourceIframeWindow) {
-                    const wrapper = iframe.closest('.iframe-wrapper');
-                    if (wrapper) {
-                        const urlInput = wrapper.querySelector('.url-input');
-                        if (urlInput && urlInput.value !== newUrl) {
-                            urlInput.value = newUrl;
-                            updateUrlsAndNotify();
-                        }
-                    }
-                    break; 
+    const createPanel = (url) => {
+        const iframeWrapper = document.createElement('div');
+        iframeWrapper.className = 'iframe-wrapper';
+        const addressBarContainer = document.createElement('div');
+        addressBarContainer.className = 'address-bar';
+        const urlInput = document.createElement('input');
+        urlInput.type = 'text';
+        urlInput.className = 'url-input';
+        const datalistId = `history-list-${Math.random()}`;
+        urlInput.setAttribute('list', datalistId);
+        const datalist = document.createElement('datalist');
+        datalist.id = datalistId;
+
+        const contentUrl = new URL(url);
+        const cleanUrl = new URL(url);
+        cleanUrl.searchParams.delete('svd_forced');
+        cleanUrl.searchParams.delete('svd_domain');
+        urlInput.value = cleanUrl.href;
+        iframeWrapper.dataset.urlId = cleanUrl.href;
+
+        const loadPage = (targetWrapper, pageUrl) => {
+            const existingIframe = targetWrapper.querySelector('iframe');
+            if (existingIframe) existingIframe.remove();
+            const iframe = document.createElement('iframe');
+            iframe.src = pageUrl;
+            targetWrapper.appendChild(iframe);
+        };
+        
+        const handleUrlSubmit = async (urlToSubmit) => {
+            let newUrlStr = (urlToSubmit || urlInput.value).trim();
+            
+            // On ne transforme en recherche Google que si la saisie ne contient pas de point.
+            if (newUrlStr.indexOf('.') === -1 && !/^(https?|ftp):\/\//i.test(newUrlStr)) {
+                newUrlStr = `https://www.google.com/search?q=${encodeURIComponent(newUrlStr)}`;
+            } 
+            // Sinon, si ce n'est pas une recherche, on s'assure qu'il y a un protocole.
+            else if (!/^(https?|ftp):\/\//i.test(newUrlStr)) {
+                newUrlStr = `https://${newUrlStr}`;
+            }
+
+            urlInput.value = newUrlStr;
+            while (iframeWrapper.childElementCount > 1) { iframeWrapper.lastChild.remove(); }
+            
+            const finalUrl = await browser.runtime.sendMessage({ action: "getFinalUrl", url: newUrlStr });
+            const finalUrlObj = new URL(finalUrl);
+            const finalCleanUrl = new URL(finalUrl);
+            finalCleanUrl.searchParams.delete('svd_forced');
+            finalCleanUrl.searchParams.delete('svd_domain');
+            iframeWrapper.dataset.urlId = finalCleanUrl.href;
+            urlInput.value = finalCleanUrl.href;
+            
+            if (finalUrlObj.searchParams.get('svd_forced') === 'true' && !authorizedDomains.has(finalUrlObj.hostname)) {
+                showWarningOverlay(iframeWrapper, finalUrlObj.searchParams.get('svd_domain'), finalCleanUrl.href);
+                const placeholder = document.createElement('div');
+                placeholder.className = 'iframe-placeholder';
+                placeholder.style.flexGrow = '1';
+                placeholder.style.backgroundColor = '#f0f0f0';
+                iframeWrapper.appendChild(placeholder);
+            } else {
+                loadPage(iframeWrapper, finalUrl);
+            }
+        };
+
+        if (contentUrl.searchParams.get('svd_forced') === 'true' && !authorizedDomains.has(contentUrl.hostname)) {
+            const domain = contentUrl.searchParams.get('svd_domain');
+            showWarningOverlay(iframeWrapper, domain, cleanUrl.href);
+            const placeholder = document.createElement('div');
+            placeholder.className = 'iframe-placeholder';
+            placeholder.style.flexGrow = '1';
+            placeholder.style.backgroundColor = '#f0f0f0';
+            iframeWrapper.appendChild(placeholder);
+        } else {
+            loadPage(iframeWrapper, url);
+        }
+
+        urlInput.addEventListener('input', (e) => {
+            const query = e.target.value.trim().toLowerCase();
+            
+            // Si la valeur de l'input est une URL complète issue d'une sélection, on soumet.
+            if (history.some(item => item.url === e.target.value)) {
+                handleUrlSubmit(e.target.value);
+                return;
+            }
+
+            if (query.length < 2) {
+                datalist.innerHTML = '';
+                return;
+            }
+
+            // ===== LOGIQUE DE RECHERCHE SIMPLE ET FIABLE =====
+            // On ne filtre que sur l'URL. Pas de recherche Google ici.
+            const filteredResults = history
+                .filter(item => item.url.toLowerCase().includes(query))
+                .slice(0, 10);
+            
+            // La `value` de l'option EST l'URL. Le navigateur filtre sur cette valeur.
+            // Le texte visible est le titre, pour l'ergonomie.
+            datalist.innerHTML = filteredResults.map(item => 
+                `<option value="${item.url}">${item.title}</option>`
+            ).join('');
+        });
+
+        urlInput.addEventListener('blur', () => { setTimeout(() => { datalist.innerHTML = ''; }, 200); });
+        
+        urlInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handleUrlSubmit(); // Appelle sans argument, utilisera la valeur actuelle de l'input.
+            }
+        });
+
+        const closePanelButton = document.createElement('button');
+        closePanelButton.className = 'close-panel-button';
+        closePanelButton.innerHTML = '×';
+        closePanelButton.title = 'Remove this panel';
+        closePanelButton.onclick = async () => {
+            const remainingUrls = await browser.runtime.sendMessage({ action: "removePanelFromView", viewId: viewId, urlToRemove: url });
+            if (remainingUrls && remainingUrls.length > 0) { window.location.reload(); } else { closeViewButton.click(); }
+        };
+
+        addressBarContainer.appendChild(urlInput);
+        addressBarContainer.appendChild(datalist);
+        addressBarContainer.appendChild(closePanelButton);
+        iframeWrapper.insertBefore(addressBarContainer, iframeWrapper.firstChild);
+        container.appendChild(iframeWrapper);
+    };
+
+    finalUrls.forEach(url => createPanel(url));
+    makeResizable(container);
+});
+
+function showWarningOverlay(iframeWrapper, domain, urlToLoad) {
+    const overlay = document.createElement('div');
+    overlay.className = 'force-info-overlay';
+    overlay.style.position = 'absolute';
+    overlay.style.top = '40px';
+    overlay.style.left = '0';
+    overlay.style.width = '100%';
+    overlay.style.height = 'calc(100% - 40px)';
+    overlay.style.zIndex = '20';
+    const infoUrl = browser.runtime.getURL(`force-info.html?domain=${encodeURIComponent(domain)}&urlToLoad=${encodeURIComponent(urlToLoad)}`);
+    const infoFrame = document.createElement('iframe');
+    infoFrame.src = infoUrl;
+    infoFrame.style.cssText = 'width: 100%; height: 100%; border: none; background-color: transparent;';
+    overlay.appendChild(infoFrame);
+    iframeWrapper.appendChild(overlay);
+}
+
+window.addEventListener('message', async (event) => {
+    const extensionOrigin = browser.runtime.getURL('').slice(0, -1);
+    
+    if (event.data && event.data.type === 'SVD_URL_CHANGED') {
+        const newUrl = event.data.url;
+        const iframes = document.querySelectorAll('.iframe-wrapper iframe');
+        for (const iframe of iframes) {
+            if (iframe.contentWindow === event.source) {
+                const wrapper = iframe.closest('.iframe-wrapper');
+                if (wrapper) {
+                    const urlInput = wrapper.querySelector('.url-input');
+                    if (urlInput) urlInput.value = newUrl;
+                    await browser.runtime.sendMessage({ action: "addToHistory", entry: { url: newUrl, title: event.data.title } });
+                    history = await browser.runtime.sendMessage({ action: "getHistory" });
                 }
+                break;
             }
         }
-    });
+    } else if (event.origin === extensionOrigin) {
+        if (event.data && event.data.type === 'SVD_HIDE_FORCE_INFO') {
+            const urlToLoad = event.data.urlToLoad;
+            const targetWrapper = document.querySelector(`[data-url-id="${urlToLoad}"]`);
+            if (targetWrapper) {
+                const domain = new URL(urlToLoad).hostname;
+                authorizedDomains.add(domain);
+                const overlay = targetWrapper.querySelector('.force-info-overlay');
+                if (overlay) overlay.remove();
+                const placeholder = targetWrapper.querySelector('.iframe-placeholder');
+                if (placeholder) placeholder.remove();
+                const iframe = document.createElement('iframe');
+                iframe.src = urlToLoad;
+                iframe.style.cssText = 'height: 100%; width: 100%; border: none;';
+                targetWrapper.appendChild(iframe);
+            }
+        } else if (event.data && event.data.type === 'SVD_OPEN_OPTIONS') {
+            browser.runtime.openOptionsPage();
+            const closeButton = document.getElementById('close-view-button');
+            if (closeButton) closeButton.click();
+        }
+    }
 });

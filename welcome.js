@@ -1,77 +1,77 @@
-// Fichier: welcome.js (Version finale qui utilise les fichiers messages.json)
+// Fichier : welcome.js
+
 document.addEventListener('DOMContentLoaded', async () => {
     const langTabs = document.querySelectorAll('.lang-tab');
-    const contentBlocks = document.querySelectorAll('.language-content');
-    const languages = ['en', 'fr', 'de', 'es', 'it'];
-    let translations = {};
+    const contentContainer = document.querySelector('.content-container');
+    const allTranslations = {};
 
-    // Étape 1: Charger toutes les traductions en mémoire
-    for (const lang of languages) {
+    // 1. Charger toutes les traductions en mémoire
+    const langs = Array.from(langTabs).map(tab => tab.dataset.lang);
+    for (const lang of langs) {
         try {
-            const response = await fetch(`_locales/${lang}/messages.json`);
-            translations[lang] = await response.json();
+            const response = await fetch(`/_locales/${lang}/messages.json`);
+            const messages = await response.json();
+            allTranslations[lang] = messages;
         } catch (e) {
             console.error(`Could not load translations for ${lang}`, e);
-            translations[lang] = {};
         }
     }
 
-    // Le modèle HTML unique pour tous les contenus
-    const templateHTML = `
-        <header><img src="icons/icon-96.png" alt="Extension Icon"><h1 data-i18n="welcomeTitle"></h1><p data-i18n="welcomeSubtitle"></p></header>
-        <section class="step"><h2 data-i18n="welcomeHeader1"></h2><ol><li data-i18n="welcomeStep1_1"></li><li data-i18n="welcomeStep1_2"></li><li data-i18n="welcomeStep1_3"></li></ol></section>
-        <section class="step"><h2 data-i18n="welcomeHeader2"></h2><ul><li data-i18n="welcomeStep2_1"></li><li data-i18n="welcomeStep2_2"></li><li data-i18n="welcomeStep2_3"></li></ul></section>
-        <section class="step"><h2 data-i18n="welcomeHeader3"></h2><ol><li data-i18n="welcomeStep3_1"></li><li data-i18n="welcomeStep3_2"></li><li data-i18n="welcomeStep3_3"></li><li data-i18n="welcomeStep3_4"></li></ol></section>
-        <section class="warning-section"><h3 data-i18n="welcomeWarningTitle"></h3><p data-i18n="welcomeWarningP1"></p><p data-i18n="welcomeWarningP2"></p><img src="need-windows.png" alt="Error message screenshot"><p data-i18n="welcomeWarningP3"></p></section>
-        <footer><p data-i18n="welcomeFooter"></p></footer>
-    `;
+    // Fonction pour appliquer une langue spécifique
+    function applyLanguage(lang) {
+        const translations = allTranslations[lang];
+        if (!translations) return;
 
-    // Étape 2: Remplir chaque bloc de langue avec le contenu traduit
-    contentBlocks.forEach(block => {
-        const lang = block.dataset.lang;
-        block.innerHTML = templateHTML; // Insérer le modèle
-        // Remplir le modèle avec les traductions chargées
-        block.querySelectorAll('[data-i18n]').forEach(elem => {
-            const key = elem.dataset.i18n;
-            if (translations[lang] && translations[lang][key]) {
-                elem.innerHTML = translations[lang][key].message;
+        contentContainer.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (translations[key]) {
+                el.innerHTML = translations[key].message;
             }
         });
-    });
-
-    // Fonction pour changer de langue
-    function switchLanguage(targetLang) {
-        contentBlocks.forEach(content => {
-            content.classList.toggle('active', content.dataset.lang === targetLang);
+        
+        document.title = translations['welcomeTitle'] ? translations['welcomeTitle'].message : 'Welcome';
+        
+        // Gérer les liens vers les options
+        contentContainer.querySelectorAll('.options-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                browser.runtime.openOptionsPage();
+            });
         });
+    }
+
+    // Fonction pour gérer le changement d'onglet
+    function switchLanguage(targetLang) {
+        // Mettre à jour l'UI des onglets
         langTabs.forEach(tab => {
             tab.classList.toggle('active', tab.dataset.lang === targetLang);
         });
-        const visibleContent = document.querySelector(`.language-content[data-lang="${targetLang}"]`);
-        if (visibleContent) {
-            visibleContent.querySelectorAll('.options-link').forEach(link => {
-                const newLink = link.cloneNode(true);
-                link.parentNode.replaceChild(newLink, link);
-                newLink.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    browser.runtime.openOptionsPage();
-                });
-            });
-        }
-        browser.storage.local.set({ preferredLanguage: targetLang });
+        
+        // Appliquer la langue sélectionnée au contenu
+        applyLanguage(targetLang);
+        
+        localStorage.setItem('svd_welcome_lang', targetLang);
     }
 
-    // Étape 3: Déterminer la langue initiale et l'afficher
-    const result = await browser.storage.local.get('preferredLanguage');
-    let initialLang = result.preferredLanguage;
-    if (!languages.includes(initialLang)) {
-        const uiLang = browser.i18n.getUILanguage();
-        initialLang = languages.find(l => uiLang.startsWith(l)) || 'en';
-    }
-    switchLanguage(initialLang);
-
-    // Étape 4: Ajouter les écouteurs sur les onglets
     langTabs.forEach(tab => {
-        tab.addEventListener('click', () => switchLanguage(tab.dataset.lang));
+        tab.addEventListener('click', () => {
+            switchLanguage(tab.dataset.lang);
+        });
     });
+
+    // 4. Déterminer et afficher la langue par défaut au chargement
+    const lastLang = localStorage.getItem('svd_welcome_lang');
+    let defaultLang = browser.i18n.getUILanguage(); // ex: "fr-FR", "en-US"
+
+    // Essayer de trouver une correspondance exacte ou partielle
+    let initialLang = 'en'; // Langue de secours
+    if (langs.includes(lastLang)) {
+        initialLang = lastLang;
+    } else if (langs.includes(defaultLang)) {
+        initialLang = defaultLang;
+    } else if (langs.includes(defaultLang.split('-')[0])) {
+        initialLang = defaultLang.split('-')[0];
+    }
+    
+    switchLanguage(initialLang);
 });

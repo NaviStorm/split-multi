@@ -1,6 +1,6 @@
 {
   "extensionName": {
-    "message": "Super Vista Divisa"
+    "message": "Multi Split View"
   },
   "extensionDescription": {
     "message": "Visualizza le schede selezionate in una vista divisa, in una nuova scheda o in nuove finestre."
@@ -9,7 +9,7 @@
     "message": "Crea una vista divisa"
   },
   "optionsTitle": {
-    "message": "Opzioni di Super Vista Divisa"
+    "message": "Opzioni di Multi Split View"
   },
   "optionsLegend": {
     "message": "Scegli la modalità operativa:"
@@ -18,13 +18,13 @@
     "message": "Modalità Finestre Affiancate (Consigliato)"
   },
   "optionsModeWindowDescription": {
-    "message": "Crea nuove finestre del browser. Conserva tutte le funzionalità (barra degli indirizzi, blocco pubblicità, ecc.)."
+    "message": "Crea nuove finestre del browser. Conserva tutte le funzionalità (barra degli indirizzi, ecc.). Le altre estensioni (es. blocco pubblicità) funzionano normalmente."
   },
   "optionsModeTabLayout": {
     "message": "Modalità Scheda Singola (Iframes)"
   },
   "optionsModeTabDescription": {
-    "message": "Visualizza tutto in un'unica scheda. Aspetto elegante, ma il blocco della pubblicità e la cronologia della barra degli indirizzi non funzionano."
+    "message": "Visualizza tutto in un'unica scheda. Aspetto elegante, ma alcuni siti richiedono il forzamento. Nota: le altre estensioni (es. blocco pubblicità) non funzioneranno in questa modalità."
   },
   "optionsSavedStatus": {
     "message": "Opzioni salvate."
@@ -48,7 +48,7 @@
     "message": "Modalità di visualizzazione modificata"
   },
   "dialogMessage": {
-    "message": "Per motivi di sicurezza, uno dei siti web selezionati non consente la visualizzazione raggruppata in una singola scheda. Per questo motivo, Super Vista Divisa ha aperto le pagine in finestre separate."
+    "message": "Per motivi di sicurezza, uno dei siti web selezionati non consente la visualizzazione raggruppata in una singola scheda. Per questo motivo, Multi Split View ha aperto le pagine in finestre separate."
   },
   "dialogCheckboxLabel": {
     "message": "Non mostrare più questo messaggio"
@@ -65,8 +65,20 @@
   "optionsForceWindowDescription": {
     "message": "Inserisci un dominio per riga (es. mozilla.org). Questi siti ignoreranno sempre l'impostazione Modalità Scheda Singola."
   },
+  "forceInfoTitle": {
+    "message": "Forzatura della visualizzazione attivata"
+  },
+  "forceInfoMessage": {
+    "message": "Questo sito (__DOMAIN__) normalmente blocca la visualizzazione in un frame per motivi di sicurezza. Multi Split View ha aggirato questa restrizione per mostrartelo.<br><br>Per disabilitare questa forzatura e aprire sempre questo sito in una finestra separata, aggiungi il seguente dominio all'elenco nelle opzioni dell'estensione:"
+  },
+  "forceInfoButton": {
+    "message": "Apri opzioni"
+  },
+  "forceShowPage": {
+    "message": "Carica comunque"
+  },
   "welcomeTitle": {
-    "message": "Benvenuto in Super Vista Divisa!"
+    "message": "Benvenuto in Multi Split View!"
   },
   "welcomeSubtitle": {
     "message": "Ecco una guida rapida per padroneggiare la produttività multi-scheda."
@@ -110,6 +122,15 @@
   "welcomeStep3_4": {
     "message": "Nel menu, vai su \"Aggiungi a una vista divisa esistente...\" e scegli la tua vista per nome."
   },
+  "welcomeHeader4": {
+    "message": "4. Limitazioni"
+  },
+  "welcomeP4_1": {
+    "message": "Per motivi di sicurezza imposti dai browser, quando si utilizza la <strong>Modalità Scheda Singola (Iframes)</strong>, le altre estensioni (come blocco pubblicità, gestori di password, ecc.) non possono interagire con il contenuto dei pannelli divisi."
+  },
+  "welcomeP4_2": {
+    "message": "Per usufruire della piena funzionalità di tutte le tue estensioni, ti consigliamo di utilizzare la <strong>Modalità Finestre Affiancate</strong>."
+  },
   "welcomeFooter": {
     "message": "<strong>Suggerimento:</strong> Preferisci che le viste si aprano in finestre separate? Vai alle <a href='#' class='options-link'>opzioni dell'estensione</a> e scegli \"Modalità Finestre Affiancate\"."
   },
@@ -117,12 +138,18 @@
     "message": "AVVISO"
   },
   "welcomeWarningP1": {
-    "message": "Alcuni siti web (banche, social network, addons.mozilla.org, ecc.) dispongono di funzionalità di sicurezza che impediscono la loro visualizzazione all'interno di un'altra pagina (in un iframe)."
+    "message": "Alcuni siti web (banche, social network, ecc.) dispongono di funzionalità di sicurezza che impediscono la loro visualizzazione all'interno di un'altra pagina (in un iframe)."
+  },
+  "welcomeWarningImage": {
+    "message": "<img src='need-windows.png' alt='Messaggio Firefox non può aprire questa pagina'>"
   },
   "welcomeWarningP2": {
-    "message": "Quando si tenta di dividere questi siti in 'Modalità Scheda Singola', verrà visualizzato un errore come questo:"
+    "message": "Quando si tenta di dividere questi siti in 'Modalità Scheda Singola', l'estensione forzerà la loro visualizzazione. Un messaggio informativo apparirà sopra il contenuto."
   },
   "welcomeWarningP3": {
-    "message": "Per ovviare a questo problema, <strong>Super Vista Divisa aprirà automaticamente queste viste in 'Modalità Finestre Affiancate'</strong>. È anche possibile aggiungere manualmente i domini pertinenti a un elenco nella <a href='#' class='options-link'>pagina delle opzioni</a> dell'estensione."
+    "message": "Per evitare questa forzatura, è possibile aggiungere i domini pertinenti a un elenco nella <a href='#' class='options-link'>pagina delle opzioni</a> dell'estensione. Ciò li farà sempre aprire in 'Modalità Finestre Affiancate'."
+  },
+  "linkGitHubText": {
+    "message": "Questa estensione è open source. Il codice sorgente è disponibile su <a href='https://github.com/NaviStorm/split-multi' target='_blank' rel='noopener'>GitHub</a>."
   }
 }

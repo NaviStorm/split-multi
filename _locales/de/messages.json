@@ -1,6 +1,6 @@
 {
   "extensionName": {
-    "message": "Super Geteilte Ansicht"
+    "message": "Multi Split View"
   },
   "extensionDescription": {
     "message": "Zeigt ausgewählte Tabs in einer geteilten Ansicht an, entweder in einem neuen Tab oder in neuen Fenstern."
@@ -9,7 +9,7 @@
     "message": "Geteilte Ansicht erstellen"
   },
   "optionsTitle": {
-    "message": "Optionen für Super Geteilte Ansicht"
+    "message": "Optionen für Multi Split View"
   },
   "optionsLegend": {
     "message": "Wählen Sie den Betriebsmodus:"
@@ -18,13 +18,13 @@
     "message": "Fenster-Kachel-Modus (Empfohlen)"
   },
   "optionsModeWindowDescription": {
-    "message": "Erstellt neue Browser-Fenster. Behält alle Funktionen bei (Adressleiste, Werbeblocker, etc.)."
+    "message": "Erstellt neue Browser-Fenster. Behält alle Funktionen bei (Adressleiste, etc.). Andere Erweiterungen (z.B. Werbeblocker) funktionieren normal."
   },
   "optionsModeTabLayout": {
     "message": "Einzel-Tab-Modus (Iframes)"
   },
   "optionsModeTabDescription": {
-    "message": "Zeigt alles in einem einzigen Tab an. Elegantes Aussehen, aber Werbeblocker und Adressleistenverlauf funktionieren nicht."
+    "message": "Zeigt alles in einem einzigen Tab an. Elegantes Aussehen, aber einige Seiten erfordern ein Erzwingen. Hinweis: Andere Erweiterungen (z.B. Werbeblocker) funktionieren in diesem Modus nicht."
   },
   "optionsSavedStatus": {
     "message": "Optionen gespeichert."
@@ -48,7 +48,7 @@
     "message": "Ansichtsmodus geändert"
   },
   "dialogMessage": {
-    "message": "Aus Sicherheitsgründen erlaubt eine der ausgewählten Websites nicht, in einem einzigen Tab gruppiert angezeigt zu werden. Aus diesem Grund hat Super Geteilte Ansicht die Seiten in separaten Fenstern geöffnet."
+    "message": "Aus Sicherheitsgründen erlaubt eine der ausgewählten Websites nicht, in einem einzigen Tab gruppiert angezeigt zu werden. Aus diesem Grund hat Multi Split View die Seiten in separaten Fenstern geöffnet."
   },
   "dialogCheckboxLabel": {
     "message": "Diese Nachricht nicht erneut anzeigen"
@@ -65,8 +65,20 @@
   "optionsForceWindowDescription": {
     "message": "Geben Sie eine Domain pro Zeile ein (z. B. mozilla.org). Diese Websites ignorieren immer die Einstellung Einzel-Tab-Modus."
   },
+  "forceInfoTitle": {
+    "message": "Anzeige-Erzwingung aktiviert"
+  },
+  "forceInfoMessage": {
+    "message": "Diese Website (__DOMAIN__) blockiert aus Sicherheitsgründen normalerweise die Anzeige in einem Frame. Multi Split View hat diese Einschränkung umgangen, um sie Ihnen anzuzeigen.<br><br>Um dieses Erzwingen zu deaktivieren und diese Website immer in einem separaten Fenster zu öffnen, fügen Sie die folgende Domain zur Liste in den Erweiterungsoptionen hinzu:"
+  },
+  "forceInfoButton": {
+    "message": "Optionen öffnen"
+  },
+  "forceShowPage": {
+    "message": "Trotzdem laden"
+  },
   "welcomeTitle": {
-    "message": "Willkommen bei Super Geteilte Ansicht!"
+    "message": "Willkommen bei Multi Split View!"
   },
   "welcomeSubtitle": {
     "message": "Hier ist eine Kurzanleitung, um die Produktivität mit mehreren Tabs zu meistern."
@@ -110,6 +122,15 @@
   "welcomeStep3_4": {
     "message": "Gehen Sie im Menü zu \"Zu einer bestehenden geteilten Ansicht hinzufügen...\" und wählen Sie Ihre Ansicht nach ihrem Namen aus."
   },
+  "welcomeHeader4": {
+    "message": "4. Einschränkungen"
+  },
+  "welcomeP4_1": {
+    "message": "Aus Sicherheitsgründen, die von Browsern auferlegt werden, können andere Erweiterungen (wie Werbeblocker, Passwort-Manager usw.) nicht mit dem Inhalt der geteilten Panels interagieren, wenn Sie den <strong>Einzel-Tab-Modus (Iframes)</strong> verwenden."
+  },
+  "welcomeP4_2": {
+    "message": "Um die volle Funktionalität all Ihrer Erweiterungen zu genießen, empfehlen wir die Verwendung des <strong>Fenster-Kachel-Modus</strong>."
+  },
   "welcomeFooter": {
     "message": "<strong>Tipp:</strong> Bevorzugen Sie, dass Ansichten in separaten Fenstern geöffnet werden? Gehen Sie zu den <a href='#' class='options-link'>Erweiterungsoptionen</a> und wählen Sie den \"Fenster-Kachel-Modus\"."
   },
@@ -117,12 +138,18 @@
     "message": "WARNUNG"
   },
   "welcomeWarningP1": {
-    "message": "Einige Websites (Banken, soziale Netzwerke, addons.mozilla.org usw.) haben Sicherheitsfunktionen, die verhindern, dass sie innerhalb einer anderen Seite (in einem Iframe) angezeigt werden."
+    "message": "Einige Websites (Banken, soziale Netzwerke, usw.) haben Sicherheitsfunktionen, die verhindern, dass sie innerhalb einer anderen Seite (in einem Iframe) angezeigt werden."
+  },
+  "welcomeWarningImage": {
+    "message": "<img src='need-windows.png' alt='Firefox kann diese Seite nicht öffnen Nachricht'>"
   },
   "welcomeWarningP2": {
-    "message": "Wenn Sie versuchen, diese Websites im 'Einzel-Tab-Modus' zu teilen, wird Ihnen ein Fehler wie dieser angezeigt:"
+    "message": "Wenn Sie versuchen, diese Websites im 'Einzel-Tab-Modus' zu teilen, wird die Erweiterung ihre Anzeige erzwingen. Eine Informationsmeldung wird über dem Inhalt angezeigt."
   },
   "welcomeWarningP3": {
-    "message": "Um dies zu umgehen, <strong>wird Super Geteilte Ansicht diese Ansichten automatisch im 'Fenster-Kachel-Modus' öffnen</strong>. Sie können die relevanten Domains auch manuell zu einer Liste auf der <a href='#' class='options-link'>Optionsseite</a> der Erweiterung hinzufügen."
+    "message": "Um dieses Erzwingen zu vermeiden, können Sie die relevanten Domains zu einer Liste auf der <a href='#' class='options-link'>Optionsseite</a> der Erweiterung hinzufügen. Dadurch werden sie immer im 'Fenster-Kachel-Modus' geöffnet."
+  },
+  "linkGitHubText": {
+    "message": "Diese Erweiterung ist Open Source. Der Quellcode ist auf <a href='https://github.com/NaviStorm/split-multi' target='_blank' rel='noopener'>GitHub</a> verfügbar."
   }
 }
