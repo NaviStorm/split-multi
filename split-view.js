@@ -103,19 +103,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         const handleUrlSubmit = async (urlToSubmit) => {
             let newUrlStr = (urlToSubmit || urlInput.value).trim();
-            
-            // On ne transforme en recherche Google que si la saisie ne contient pas de point.
             if (newUrlStr.indexOf('.') === -1 && !/^(https?|ftp):\/\//i.test(newUrlStr)) {
                 newUrlStr = `https://www.google.com/search?q=${encodeURIComponent(newUrlStr)}`;
-            } 
-            // Sinon, si ce n'est pas une recherche, on s'assure qu'il y a un protocole.
-            else if (!/^(https?|ftp):\/\//i.test(newUrlStr)) {
+            } else if (!/^(https?|ftp):\/\//i.test(newUrlStr)) {
                 newUrlStr = `https://${newUrlStr}`;
             }
-
             urlInput.value = newUrlStr;
             while (iframeWrapper.childElementCount > 1) { iframeWrapper.lastChild.remove(); }
-            
             const finalUrl = await browser.runtime.sendMessage({ action: "getFinalUrl", url: newUrlStr });
             const finalUrlObj = new URL(finalUrl);
             const finalCleanUrl = new URL(finalUrl);
@@ -123,7 +117,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             finalCleanUrl.searchParams.delete('svd_domain');
             iframeWrapper.dataset.urlId = finalCleanUrl.href;
             urlInput.value = finalCleanUrl.href;
-            
             if (finalUrlObj.searchParams.get('svd_forced') === 'true' && !authorizedDomains.has(finalUrlObj.hostname)) {
                 showWarningOverlay(iframeWrapper, finalUrlObj.searchParams.get('svd_domain'), finalCleanUrl.href);
                 const placeholder = document.createElement('div');
@@ -148,45 +141,52 @@ document.addEventListener('DOMContentLoaded', async () => {
             loadPage(iframeWrapper, url);
         }
 
+        // Fonction pour vider la datalist de manière sécurisée
+        const clearDatalist = () => {
+            while (datalist.firstChild) {
+                datalist.removeChild(datalist.firstChild);
+            }
+        };
+
         urlInput.addEventListener('input', (e) => {
             const query = e.target.value.trim().toLowerCase();
-            
-            // Si la valeur de l'input est une URL complète issue d'une sélection, on soumet.
             if (history.some(item => item.url === e.target.value)) {
                 handleUrlSubmit(e.target.value);
                 return;
             }
-
             if (query.length < 2) {
-                datalist.innerHTML = '';
+                clearDatalist(); // Utilisation de la fonction sécurisée
                 return;
             }
-
-            // ===== LOGIQUE DE RECHERCHE SIMPLE ET FIABLE =====
-            // On ne filtre que sur l'URL. Pas de recherche Google ici.
-            const filteredResults = history
-                .filter(item => item.url.toLowerCase().includes(query))
-                .slice(0, 10);
+            const filteredResults = history.filter(item => item.url.toLowerCase().includes(query)).slice(0, 10);
             
-            // La `value` de l'option EST l'URL. Le navigateur filtre sur cette valeur.
-            // Le texte visible est le titre, pour l'ergonomie.
-            datalist.innerHTML = filteredResults.map(item => 
-                `<option value="${item.url}">${item.title}</option>`
-            ).join('');
+            clearDatalist(); // Vider avant de remplir
+            const fragment = document.createDocumentFragment();
+            filteredResults.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.url;
+                option.textContent = item.title;
+                fragment.appendChild(option);
+            });
+            datalist.appendChild(fragment);
         });
 
-        urlInput.addEventListener('blur', () => { setTimeout(() => { datalist.innerHTML = ''; }, 200); });
+        urlInput.addEventListener('blur', () => {
+            setTimeout(() => {
+                clearDatalist(); // Utilisation de la fonction sécurisée
+            }, 200);
+        });
         
         urlInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                handleUrlSubmit(); // Appelle sans argument, utilisera la valeur actuelle de l'input.
+                handleUrlSubmit();
             }
         });
 
         const closePanelButton = document.createElement('button');
         closePanelButton.className = 'close-panel-button';
-        closePanelButton.innerHTML = '×';
+        closePanelButton.textContent = '×';
         closePanelButton.title = 'Remove this panel';
         closePanelButton.onclick = async () => {
             const remainingUrls = await browser.runtime.sendMessage({ action: "removePanelFromView", viewId: viewId, urlToRemove: url });

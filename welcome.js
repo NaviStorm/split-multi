@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     for (const lang of langs) {
         try {
             const response = await fetch(`/_locales/${lang}/messages.json`);
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             const messages = await response.json();
             allTranslations[lang] = messages;
         } catch (e) {
@@ -25,13 +26,34 @@ document.addEventListener('DOMContentLoaded', async () => {
         contentContainer.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
             if (translations[key]) {
-                el.innerHTML = translations[key].message;
+                const message = translations[key].message;
+
+                if (message.includes('<') && message.includes('>')) {
+                    // Pour les messages contenant du HTML (liens, strong, img, code)
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(message, 'text/html');
+                    
+                    // On vide l'élément avant d'ajouter les nouveaux nœuds
+                    while (el.firstChild) {
+                        el.removeChild(el.firstChild);
+                    }
+                    
+                    // On transfère les nœuds du corps du document parsé vers notre élément
+                    Array.from(doc.body.childNodes).forEach(node => {
+                        el.appendChild(node);
+                    });
+
+                } else {
+                    // Pour le texte simple, textContent est la meilleure option
+                    el.textContent = message;
+                }
+                // =======================================================
             }
         });
         
         document.title = translations['welcomeTitle'] ? translations['welcomeTitle'].message : 'Welcome';
         
-        // Gérer les liens vers les options
+        // Gérer les liens vers les options après avoir inséré le HTML
         contentContainer.querySelectorAll('.options-link').forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -42,12 +64,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Fonction pour gérer le changement d'onglet
     function switchLanguage(targetLang) {
-        // Mettre à jour l'UI des onglets
         langTabs.forEach(tab => {
             tab.classList.toggle('active', tab.dataset.lang === targetLang);
         });
         
-        // Appliquer la langue sélectionnée au contenu
         applyLanguage(targetLang);
         
         localStorage.setItem('svd_welcome_lang', targetLang);
@@ -59,17 +79,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
-    // 4. Déterminer et afficher la langue par défaut au chargement
+    // Déterminer et afficher la langue par défaut au chargement
     const lastLang = localStorage.getItem('svd_welcome_lang');
-    let defaultLang = browser.i18n.getUILanguage(); // ex: "fr-FR", "en-US"
+    let defaultLang = browser.i18n.getUILanguage();
+    let initialLang = 'en';
+    const supportedLangs = langs;
 
-    // Essayer de trouver une correspondance exacte ou partielle
-    let initialLang = 'en'; // Langue de secours
-    if (langs.includes(lastLang)) {
+    if (supportedLangs.includes(lastLang)) {
         initialLang = lastLang;
-    } else if (langs.includes(defaultLang)) {
+    } else if (supportedLangs.includes(defaultLang)) {
         initialLang = defaultLang;
-    } else if (langs.includes(defaultLang.split('-')[0])) {
+    } else if (supportedLangs.includes(defaultLang.split('-')[0])) {
         initialLang = defaultLang.split('-')[0];
     }
     
