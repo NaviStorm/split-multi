@@ -1,6 +1,6 @@
 {
   "extensionName": {
-    "message": "Super Vista Divisa"
+    "message": "Multi Split View"
   },
   "extensionDescription": {
     "message": "Visualizza le schede selezionate in una vista divisa, in una nuova scheda o in nuove finestre."
@@ -9,7 +9,7 @@
     "message": "Crea una vista divisa"
   },
   "optionsTitle": {
-    "message": "Opzioni di Super Vista Divisa"
+    "message": "Opzioni di Multi Split View"
   },
   "optionsLegend": {
     "message": "Scegli la modalità operativa:"
@@ -48,7 +48,7 @@
     "message": "Modalità di visualizzazione modificata"
   },
   "dialogMessage": {
-    "message": "Per motivi di sicurezza, uno dei siti web selezionati non consente la visualizzazione raggruppata in una singola scheda. Per questo motivo, Super Vista Divisa ha aperto le pagine in finestre separate."
+    "message": "Per motivi di sicurezza, uno dei siti web selezionati non consente la visualizzazione raggruppata in una singola scheda. Per questo motivo, Multi Split View ha aperto le pagine in finestre separate."
   },
   "dialogCheckboxLabel": {
     "message": "Non mostrare più questo messaggio"
@@ -69,7 +69,7 @@
     "message": "Forzatura della visualizzazione attivata"
   },
   "forceInfoMessage": {
-    "message": "Questo sito (__DOMAIN__) normalmente blocca la visualizzazione in un frame per motivi di sicurezza. Super Vista Divisa ha aggirato questa restrizione per mostrartelo.<br><br>Per disabilitare questa forzatura e aprire sempre questo sito in una finestra separata, aggiungi il seguente dominio all'elenco nelle opzioni dell'estensione:"
+    "message": "Questo sito (__DOMAIN__) normalmente blocca la visualizzazione in un frame per motivi di sicurezza. Multi Split View ha aggirato questa restrizione per mostrartelo.<br><br>Per disabilitare questa forzatura e aprire sempre questo sito in una finestra separata, aggiungi il seguente dominio all'elenco nelle opzioni dell'estensione:"
   },
   "forceInfoButton": {
     "message": "Apri opzioni"
@@ -78,7 +78,7 @@
     "message": "Carica comunque"
   },
   "welcomeTitle": {
-    "message": "Benvenuto in Super Vista Divisa!"
+    "message": "Benvenuto in Multi Split View!"
   },
   "welcomeSubtitle": {
     "message": "Ecco una guida rapida per padroneggiare la produttività multi-scheda."

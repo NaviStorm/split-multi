@@ -1,6 +1,6 @@
 {
     "extensionName": {
-        "message": "Super Visualização Dividida"
+        "message": "Multi Split View"
     },
     "extensionDescription": {
         "message": "Exibe as abas selecionadas em uma visualização dividida, seja em uma nova aba ou em novas janelas."
@@ -9,7 +9,7 @@
         "message": "Criar uma Visualização Dividida"
     },
     "optionsTitle": {
-        "message": "Opções do Super Visualização Dividida"
+        "message": "Opções do Multi Split View"
     },
     "optionsLegend": {
         "message": "Escolha o modo de operação:"
@@ -48,7 +48,7 @@
         "message": "Modo de Visualização Alterado"
     },
     "dialogMessage": {
-        "message": "Por motivos de segurança, um dos sites selecionados não permite ser exibido agrupado em uma única aba. Por esta razão, o Super Visualização Dividida abriu as páginas em janelas separadas."
+        "message": "Por motivos de segurança, um dos sites selecionados não permite ser exibido agrupado em uma única aba. Por esta razão, o Multi Split View abriu as páginas em janelas separadas."
     },
     "dialogCheckboxLabel": {
         "message": "Não mostrar esta mensagem novamente"
@@ -69,7 +69,7 @@
         "message": "Forçamento de Exibição Ativado"
     },
     "forceInfoMessage": {
-        "message": "Este site (__DOMAIN__) normalmente bloqueia a exibição em um frame por motivos de segurança. O Super Visualização Dividida substituiu esta restrição para mostrá-lo a você.<br><br>Para desativar este forçamento и sempre abrir este site em uma janela separada, adicione o seguinte domínio à lista nas opções da extensão:"
+        "message": "Este site (__DOMAIN__) normalmente bloqueia a exibição em um frame por motivos de segurança. O Multi Split View substituiu esta restrição para mostrá-lo a você.<br><br>Para desativar este forçamento и sempre abrir este site em uma janela separada, adicione o seguinte domínio à lista nas opções da extensão:"
     },
     "forceInfoButton": {
         "message": "Abrir Opções"
@@ -78,7 +78,7 @@
         "message": "Carregar Mesmo Assim"
     },
     "welcomeTitle": {
-        "message": "Bem-vindo ao Super Visualização Dividida!"
+        "message": "Bem-vindo ao Multi Split View!"
     },
     "welcomeSubtitle": {
         "message": "Aqui está um guia rápido para dominar a produtividade com múltiplas abas."

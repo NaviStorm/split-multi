@@ -1,6 +1,6 @@
 {
   "extensionName": {
-    "message": "Súper Vista Dividida"
+    "message": "Multi Split View"
   },
   "extensionDescription": {
     "message": "Muestra las pestañas seleccionadas en una vista dividida, ya sea en una nueva pestaña o en nuevas ventanas."
@@ -9,7 +9,7 @@
     "message": "Crear una vista dividida"
   },
   "optionsTitle": {
-    "message": "Opciones de Súper Vista Dividida"
+    "message": "Opciones de Multi Split View"
   },
   "optionsLegend": {
     "message": "Elija el modo de operación:"
@@ -48,7 +48,7 @@
     "message": "Modo de vista cambiado"
   },
   "dialogMessage": {
-    "message": "Por razones de seguridad, uno de los sitios web seleccionados no permite ser mostrado agrupado en una sola pestaña. Por esta razón, Súper Vista Dividida ha abierto las páginas en ventanas separadas."
+    "message": "Por razones de seguridad, uno de los sitios web seleccionados no permite ser mostrado agrupado en una sola pestaña. Por esta razón, Multi Split View ha abierto las páginas en ventanas separadas."
   },
   "dialogCheckboxLabel": {
     "message": "No volver a mostrar este mensaje"
@@ -69,7 +69,7 @@
     "message": "Forzado de visualización activado"
   },
   "forceInfoMessage": {
-    "message": "Este sitio (__DOMAIN__) normalmente bloquea su visualización en un marco por razones de seguridad. Súper Vista Dividida ha anulado esta restricción para mostrárselo.<br><br>Para desactivar este forzado y abrir siempre este sitio en una ventana separada, agregue el siguiente dominio a la lista en las opciones de la extensión:"
+    "message": "Este sitio (__DOMAIN__) normalmente bloquea su visualización en un marco por razones de seguridad. Multi Split View ha anulado esta restricción para mostrárselo.<br><br>Para desactivar este forzado y abrir siempre este sitio en una ventana separada, agregue el siguiente dominio a la lista en las opciones de la extensión:"
   },
   "forceInfoButton": {
     "message": "Abrir opciones"
@@ -78,7 +78,7 @@
     "message": "Cargar de todos modos"
   },
   "welcomeTitle": {
-    "message": "¡Bienvenido a Súper Vista Dividida!"
+    "message": "¡Bienvenido a Multi Split View!"
   },
   "welcomeSubtitle": {
     "message": "Aquí tienes una guía rápida para dominar la productividad con múltiples pestañas."

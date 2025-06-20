@@ -1,6 +1,6 @@
 {
   "extensionName": {
-    "message": "Super Geteilte Ansicht"
+    "message": "Multi Split View"
   },
   "extensionDescription": {
     "message": "Zeigt ausgewählte Tabs in einer geteilten Ansicht an, entweder in einem neuen Tab oder in neuen Fenstern."
@@ -9,7 +9,7 @@
     "message": "Geteilte Ansicht erstellen"
   },
   "optionsTitle": {
-    "message": "Optionen für Super Geteilte Ansicht"
+    "message": "Optionen für Multi Split View"
   },
   "optionsLegend": {
     "message": "Wählen Sie den Betriebsmodus:"
@@ -48,7 +48,7 @@
     "message": "Ansichtsmodus geändert"
   },
   "dialogMessage": {
-    "message": "Aus Sicherheitsgründen erlaubt eine der ausgewählten Websites nicht, in einem einzigen Tab gruppiert angezeigt zu werden. Aus diesem Grund hat Super Geteilte Ansicht die Seiten in separaten Fenstern geöffnet."
+    "message": "Aus Sicherheitsgründen erlaubt eine der ausgewählten Websites nicht, in einem einzigen Tab gruppiert angezeigt zu werden. Aus diesem Grund hat Multi Split View die Seiten in separaten Fenstern geöffnet."
   },
   "dialogCheckboxLabel": {
     "message": "Diese Nachricht nicht erneut anzeigen"
@@ -69,7 +69,7 @@
     "message": "Anzeige-Erzwingung aktiviert"
   },
   "forceInfoMessage": {
-    "message": "Diese Website (__DOMAIN__) blockiert aus Sicherheitsgründen normalerweise die Anzeige in einem Frame. Super Geteilte Ansicht hat diese Einschränkung umgangen, um sie Ihnen anzuzeigen.<br><br>Um dieses Erzwingen zu deaktivieren und diese Website immer in einem separaten Fenster zu öffnen, fügen Sie die folgende Domain zur Liste in den Erweiterungsoptionen hinzu:"
+    "message": "Diese Website (__DOMAIN__) blockiert aus Sicherheitsgründen normalerweise die Anzeige in einem Frame. Multi Split View hat diese Einschränkung umgangen, um sie Ihnen anzuzeigen.<br><br>Um dieses Erzwingen zu deaktivieren und diese Website immer in einem separaten Fenster zu öffnen, fügen Sie die folgende Domain zur Liste in den Erweiterungsoptionen hinzu:"
   },
   "forceInfoButton": {
     "message": "Optionen öffnen"
@@ -78,7 +78,7 @@
     "message": "Trotzdem laden"
   },
   "welcomeTitle": {
-    "message": "Willkommen bei Super Geteilte Ansicht!"
+    "message": "Willkommen bei Multi Split View!"
   },
   "welcomeSubtitle": {
     "message": "Hier ist eine Kurzanleitung, um die Produktivität mit mehreren Tabs zu meistern."

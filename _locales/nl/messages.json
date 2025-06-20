@@ -1,6 +1,6 @@
 {
     "extensionName": {
-        "message": "Super Gesplitste Weergave"
+        "message": "Multi Split View"
     },
     "extensionDescription": {
         "message": "Toont geselecteerde tabbladen in een gesplitste weergave, in een nieuw tabblad of in nieuwe vensters."
@@ -9,7 +9,7 @@
         "message": "Maak een gesplitste weergave"
     },
     "optionsTitle": {
-        "message": "Opties voor Super Gesplitste Weergave"
+        "message": "Opties voor Multi Split View"
     },
     "optionsLegend": {
         "message": "Kies de werkmodus:"
@@ -48,7 +48,7 @@
         "message": "Weergavemodus gewijzigd"
     },
     "dialogMessage": {
-        "message": "Om veiligheidsredenen staat een van de geselecteerde websites niet toe om in één tabblad gegroepeerd te worden. Daarom heeft Super Gesplitste Weergave de pagina's in aparte vensters geopend."
+        "message": "Om veiligheidsredenen staat een van de geselecteerde websites niet toe om in één tabblad gegroepeerd te worden. Daarom heeft Multi Split View de pagina's in aparte vensters geopend."
     },
     "dialogCheckboxLabel": {
         "message": "Toon dit bericht niet opnieuw"
@@ -69,7 +69,7 @@
         "message": "Weergave forceren geactiveerd"
     },
     "forceInfoMessage": {
-        "message": "Deze site (__DOMAIN__) blokkeert normaal gesproken weergave in een frame om veiligheidsredenen. Super Gesplitste Weergave heeft deze beperking omzeild om het u te tonen.<br><br>Om dit forceren uit te schakelen en deze site altijd in een apart venster te openen, voegt u het volgende domein toe aan de lijst in de extensie-opties:"
+        "message": "Deze site (__DOMAIN__) blokkeert normaal gesproken weergave in een frame om veiligheidsredenen. Multi Split View heeft deze beperking omzeild om het u te tonen.<br><br>Om dit forceren uit te schakelen en deze site altijd in een apart venster te openen, voegt u het volgende domein toe aan de lijst in de extensie-opties:"
     },
     "forceInfoButton": {
         "message": "Open opties"
@@ -78,7 +78,7 @@
         "message": "Toch laden"
     },
     "welcomeTitle": {
-        "message": "Welkom bij Super Gesplitste Weergave!"
+        "message": "Welkom bij Multi Split View!"
     },
     "welcomeSubtitle": {
         "message": "Hier is een snelle gids om productiviteit met meerdere tabbladen onder de knie te krijgen."

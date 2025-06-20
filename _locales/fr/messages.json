@@ -1,6 +1,6 @@
 {
     "extensionName": {
-        "message": "Super Vue Partagée"
+        "message": "Multi Split View"
     },
     "extensionDescription": {
         "message": "Affiche les onglets sélectionnés en vue partagée, soit dans un nouvel onglet, soit dans de nouvelles fenêtres."
@@ -9,7 +9,7 @@
         "message": "Créer une vue partagée"
     },
     "optionsTitle": {
-        "message": "Options de Super Vue Partagée"
+        "message": "Options de Multi Split View"
     },
     "optionsLegend": {
         "message": "Choisissez le mode de fonctionnement :"
@@ -48,7 +48,7 @@
         "message": "Mode d'affichage modifié"
     },
     "dialogMessage": {
-        "message": "Pour des raisons de sécurité, l'un des sites web sélectionnés ne permet pas d'être affiché groupé dans un seul onglet. C'est pourquoi Super Vue Partagée a ouvert les pages dans des fenêtres séparées."
+        "message": "Pour des raisons de sécurité, l'un des sites web sélectionnés ne permet pas d'être affiché groupé dans un seul onglet. C'est pourquoi Multi Split View a ouvert les pages dans des fenêtres séparées."
     },
     "dialogCheckboxLabel": {
         "message": "Ne plus afficher ce message"
@@ -69,7 +69,7 @@
         "message": "Forçage d'affichage activé"
     },
     "forceInfoMessage": {
-        "message": "Ce site (__DOMAIN__) interdit normalement son affichage dans un cadre pour des raisons de sécurité. Super Vue Partagée a contourné cette restriction pour vous l'afficher.<br><br>Pour désactiver ce forçage et toujours ouvrir ce site dans une fenêtre séparée, ajoutez le domaine suivant à la liste dans les options de l'extension :"
+        "message": "Ce site (__DOMAIN__) interdit normalement son affichage dans un cadre pour des raisons de sécurité. Multi Split View a contourné cette restriction pour vous l'afficher.<br><br>Pour désactiver ce forçage et toujours ouvrir ce site dans une fenêtre séparée, ajoutez le domaine suivant à la liste dans les options de l'extension :"
     },
     "forceInfoButton": {
         "message": "Ouvrir les options"
@@ -78,7 +78,7 @@
         "message": "Afficher quand même"
     },
     "welcomeTitle": {
-        "message": "Bienvenue dans Super Vue Partagée !"
+        "message": "Bienvenue dans Multi Split View !"
     },
     "welcomeSubtitle": {
         "message": "Voici un guide rapide pour maîtriser la productivité multi-onglets."

@@ -1,6 +1,6 @@
 {
     "extensionName": {
-        "message": "超级分屏视图"
+        "message": "Multi Split View"
     },
     "extensionDescription": {
         "message": "在新标签页或新窗口中，以分屏视图显示选定的标签页。"
@@ -9,7 +9,7 @@
         "message": "创建分屏视图"
     },
     "optionsTitle": {
-        "message": "超级分屏视图选项"
+        "message": "Multi Split View 选项"
     },
     "optionsLegend": {
         "message": "选择操作模式："
@@ -48,7 +48,7 @@
         "message": "视图模式已更改"
     },
     "dialogMessage": {
-        "message": "出于安全原因，所选网站之一不允许在单个标签页中分组显示。因此，超级分屏视图已在单独的窗口中打开了这些页面。"
+        "message": "出于安全原因，所选网站之一不允许在单个标签页中分组显示。因此，Multi Split View已在单独的窗口中打开了这些页面。"
     },
     "dialogCheckboxLabel": {
         "message": "不再显示此消息"
@@ -69,7 +69,7 @@
         "message": "强制显示已激活"
     },
     "forceInfoMessage": {
-        "message": "此网站（__DOMAIN__）通常出于安全原因阻止在框架中显示。超级分屏视图已覆盖此限制以向您显示它。<br><br>要禁用此强制并在单独的窗口中始终打开此网站，请将以下域名添加到扩展选项的列表中："
+        "message": "此网站（__DOMAIN__）通常出于安全原因阻止在框架中显示。Multi Split View已覆盖此限制以向您显示它。<br><br>要禁用此强制并在单独的窗口中始终打开此网站，请将以下域名添加到扩展选项的列表中："
     },
     "forceInfoButton": {
         "message": "打开选项"
@@ -78,7 +78,7 @@
         "message": "仍然加载"
     },
     "welcomeTitle": {
-        "message": "欢迎使用超级分屏视图！"
+        "message": "欢迎使用Multi Split View！"
     },
     "welcomeSubtitle": {
         "message": "这里是掌握多标签页生产力的快速指南。"
