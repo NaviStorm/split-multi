@@ -18,13 +18,13 @@
     "message": "Fenster-Kachel-Modus (Empfohlen)"
   },
   "optionsModeWindowDescription": {
-    "message": "Erstellt neue Browser-Fenster. Behält alle Funktionen bei (Adressleiste, Werbeblocker, etc.)."
+    "message": "Erstellt neue Browser-Fenster. Behält alle Funktionen bei (Adressleiste, etc.). Andere Erweiterungen (z.B. Werbeblocker) funktionieren normal."
   },
   "optionsModeTabLayout": {
     "message": "Einzel-Tab-Modus (Iframes)"
   },
   "optionsModeTabDescription": {
-    "message": "Zeigt alles in einem einzigen Tab an. Elegantes Aussehen, aber einige Seiten erfordern ein Erzwingen."
+    "message": "Zeigt alles in einem einzigen Tab an. Elegantes Aussehen, aber einige Seiten erfordern ein Erzwingen. Hinweis: Andere Erweiterungen (z.B. Werbeblocker) funktionieren in diesem Modus nicht."
   },
   "optionsSavedStatus": {
     "message": "Optionen gespeichert."
@@ -69,12 +69,7 @@
     "message": "Anzeige-Erzwingung aktiviert"
   },
   "forceInfoMessage": {
-    "message": "Diese Website (<strong>__DOMAIN__</strong>) blockiert aus Sicherheitsgründen normalerweise die Anzeige in einem Frame. Super Geteilte Ansicht hat diese Einschränkung umgangen, um sie Ihnen anzuzeigen.<br><br>Um dieses Erzwingen zu deaktivieren und diese Website immer in einem separaten Fenster zu öffnen, fügen Sie die folgende Domain zur Liste in den Erweiterungsoptionen hinzu:",
-    "placeholders": {
-      "domain": {
-        "content": "$1"
-      }
-    }
+    "message": "Diese Website (__DOMAIN__) blockiert aus Sicherheitsgründen normalerweise die Anzeige in einem Frame. Super Geteilte Ansicht hat diese Einschränkung umgangen, um sie Ihnen anzuzeigen.<br><br>Um dieses Erzwingen zu deaktivieren und diese Website immer in einem separaten Fenster zu öffnen, fügen Sie die folgende Domain zur Liste in den Erweiterungsoptionen hinzu:"
   },
   "forceInfoButton": {
     "message": "Optionen öffnen"
@@ -127,6 +122,15 @@
   "welcomeStep3_4": {
     "message": "Gehen Sie im Menü zu \"Zu einer bestehenden geteilten Ansicht hinzufügen...\" und wählen Sie Ihre Ansicht nach ihrem Namen aus."
   },
+  "welcomeHeader4": {
+    "message": "4. Einschränkungen"
+  },
+  "welcomeP4_1": {
+    "message": "Aus Sicherheitsgründen, die von Browsern auferlegt werden, können andere Erweiterungen (wie Werbeblocker, Passwort-Manager usw.) nicht mit dem Inhalt der geteilten Panels interagieren, wenn Sie den <strong>Einzel-Tab-Modus (Iframes)</strong> verwenden."
+  },
+  "welcomeP4_2": {
+    "message": "Um die volle Funktionalität all Ihrer Erweiterungen zu genießen, empfehlen wir die Verwendung des <strong>Fenster-Kachel-Modus</strong>."
+  },
   "welcomeFooter": {
     "message": "<strong>Tipp:</strong> Bevorzugen Sie, dass Ansichten in separaten Fenstern geöffnet werden? Gehen Sie zu den <a href='#' class='options-link'>Erweiterungsoptionen</a> und wählen Sie den \"Fenster-Kachel-Modus\"."
   },
@@ -135,6 +139,9 @@
   },
   "welcomeWarningP1": {
     "message": "Einige Websites (Banken, soziale Netzwerke, usw.) haben Sicherheitsfunktionen, die verhindern, dass sie innerhalb einer anderen Seite (in einem Iframe) angezeigt werden."
+  },
+  "welcomeWarningImage": {
+    "message": "<img src='need-windows.png' alt='Firefox kann diese Seite nicht öffnen Nachricht'>"
   },
   "welcomeWarningP2": {
     "message": "Wenn Sie versuchen, diese Websites im 'Einzel-Tab-Modus' zu teilen, wird die Erweiterung ihre Anzeige erzwingen. Eine Informationsmeldung wird über dem Inhalt angezeigt."

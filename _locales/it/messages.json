@@ -18,13 +18,13 @@
     "message": "Modalità Finestre Affiancate (Consigliato)"
   },
   "optionsModeWindowDescription": {
-    "message": "Crea nuove finestre del browser. Conserva tutte le funzionalità (barra degli indirizzi, blocco pubblicità, ecc.)."
+    "message": "Crea nuove finestre del browser. Conserva tutte le funzionalità (barra degli indirizzi, ecc.). Le altre estensioni (es. blocco pubblicità) funzionano normalmente."
   },
   "optionsModeTabLayout": {
     "message": "Modalità Scheda Singola (Iframes)"
   },
   "optionsModeTabDescription": {
-    "message": "Visualizza tutto in un'unica scheda. Aspetto elegante, ma alcuni siti richiedono il forzamento."
+    "message": "Visualizza tutto in un'unica scheda. Aspetto elegante, ma alcuni siti richiedono il forzamento. Nota: le altre estensioni (es. blocco pubblicità) non funzioneranno in questa modalità."
   },
   "optionsSavedStatus": {
     "message": "Opzioni salvate."
@@ -69,12 +69,7 @@
     "message": "Forzatura della visualizzazione attivata"
   },
   "forceInfoMessage": {
-    "message": "Questo sito (<strong>__DOMAIN__</strong>) normalmente blocca la visualizzazione in un frame per motivi di sicurezza. Super Vista Divisa ha aggirato questa restrizione per mostrartelo.<br><br>Per disabilitare questa forzatura e aprire sempre questo sito in una finestra separata, aggiungi il seguente dominio all'elenco nelle opzioni dell'estensione:",
-    "placeholders": {
-      "domain": {
-        "content": "$1"
-      }
-    }
+    "message": "Questo sito (__DOMAIN__) normalmente blocca la visualizzazione in un frame per motivi di sicurezza. Super Vista Divisa ha aggirato questa restrizione per mostrartelo.<br><br>Per disabilitare questa forzatura e aprire sempre questo sito in una finestra separata, aggiungi il seguente dominio all'elenco nelle opzioni dell'estensione:"
   },
   "forceInfoButton": {
     "message": "Apri opzioni"
@@ -127,6 +122,15 @@
   "welcomeStep3_4": {
     "message": "Nel menu, vai su \"Aggiungi a una vista divisa esistente...\" e scegli la tua vista per nome."
   },
+  "welcomeHeader4": {
+    "message": "4. Limitazioni"
+  },
+  "welcomeP4_1": {
+    "message": "Per motivi di sicurezza imposti dai browser, quando si utilizza la <strong>Modalità Scheda Singola (Iframes)</strong>, le altre estensioni (come blocco pubblicità, gestori di password, ecc.) non possono interagire con il contenuto dei pannelli divisi."
+  },
+  "welcomeP4_2": {
+    "message": "Per usufruire della piena funzionalità di tutte le tue estensioni, ti consigliamo di utilizzare la <strong>Modalità Finestre Affiancate</strong>."
+  },
   "welcomeFooter": {
     "message": "<strong>Suggerimento:</strong> Preferisci che le viste si aprano in finestre separate? Vai alle <a href='#' class='options-link'>opzioni dell'estensione</a> e scegli \"Modalità Finestre Affiancate\"."
   },
@@ -135,6 +139,9 @@
   },
   "welcomeWarningP1": {
     "message": "Alcuni siti web (banche, social network, ecc.) dispongono di funzionalità di sicurezza che impediscono la loro visualizzazione all'interno di un'altra pagina (in un iframe)."
+  },
+  "welcomeWarningImage": {
+    "message": "<img src='need-windows.png' alt='Messaggio Firefox non può aprire questa pagina'>"
   },
   "welcomeWarningP2": {
     "message": "Quando si tenta di dividere questi siti in 'Modalità Scheda Singola', l'estensione forzerà la loro visualizzazione. Un messaggio informativo apparirà sopra il contenuto."

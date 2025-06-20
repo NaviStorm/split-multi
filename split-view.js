@@ -2,7 +2,7 @@
 
 let viewId = null;
 let authorizedDomains = new Set();
-let history = []; // Cache local de l'historique pour l'autocomplétion
+let history = [];
 
 // Écouteur pour répondre aux demandes du background script
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -101,13 +101,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             targetWrapper.appendChild(iframe);
         };
         
-        const handleUrlSubmit = async () => {
-            let newUrlStr = urlInput.value.trim();
-            const isLikelySearch = (str) => !/^(https?|ftp):\/\//i.test(str) && str.indexOf('.') === -1;
-
-            if (isLikelySearch(newUrlStr)) {
+        const handleUrlSubmit = async (urlToSubmit) => {
+            let newUrlStr = (urlToSubmit || urlInput.value).trim();
+            
+            // On ne transforme en recherche Google que si la saisie ne contient pas de point.
+            if (newUrlStr.indexOf('.') === -1 && !/^(https?|ftp):\/\//i.test(newUrlStr)) {
                 newUrlStr = `https://www.google.com/search?q=${encodeURIComponent(newUrlStr)}`;
-            } else if (!/^(https?|ftp):\/\//i.test(newUrlStr)) {
+            } 
+            // Sinon, si ce n'est pas une recherche, on s'assure qu'il y a un protocole.
+            else if (!/^(https?|ftp):\/\//i.test(newUrlStr)) {
                 newUrlStr = `https://${newUrlStr}`;
             }
 
@@ -149,53 +151,28 @@ document.addEventListener('DOMContentLoaded', async () => {
         urlInput.addEventListener('input', (e) => {
             const query = e.target.value.trim().toLowerCase();
             
-            const isSelection = Array.from(datalist.options).some(opt => opt.value === e.target.value);
-            if (isSelection) {
-                handleUrlSubmit();
+            // Si la valeur de l'input est une URL complète issue d'une sélection, on soumet.
+            if (history.some(item => item.url === e.target.value)) {
+                handleUrlSubmit(e.target.value);
                 return;
             }
 
-            if (query.length < 2) { datalist.innerHTML = ''; return; }
+            if (query.length < 2) {
+                datalist.innerHTML = '';
+                return;
+            }
 
-            const searchTerms = query.split(' ').filter(Boolean);
+            // ===== LOGIQUE DE RECHERCHE SIMPLE ET FIABLE =====
+            // On ne filtre que sur l'URL. Pas de recherche Google ici.
+            const filteredResults = history
+                .filter(item => item.url.toLowerCase().includes(query))
+                .slice(0, 10);
             
-            let filtered = history.filter(item => {
-                const targetText = (item.title + ' ' + item.url).toLowerCase();
-                return searchTerms.every(term => targetText.includes(term));
-            });
-
-            // Algorithme de tri pour la pertinence
-            filtered.sort((a, b) => {
-                const aUrl = a.url.toLowerCase();
-                const aTitle = a.title.toLowerCase();
-                const bUrl = b.url.toLowerCase();
-                const bTitle = b.title.toLowerCase();
-
-                let scoreA = 0;
-                let scoreB = 0;
-
-                const hostnameA = new URL(a.url).hostname.replace('www.', '');
-                const hostnameB = new URL(b.url).hostname.replace('www.', '');
-                if (hostnameA === query) scoreA += 100;
-                if (hostnameB === query) scoreB += 100;
-
-                if (aTitle.startsWith(query) || aUrl.startsWith(query)) scoreA += 50;
-                if (bTitle.startsWith(query) || bUrl.startsWith(query)) scoreB += 50;
-
-                const pathLengthA = new URL(a.url).pathname.length;
-                const pathLengthB = new URL(b.url).pathname.length;
-                if (pathLengthA < pathLengthB) scoreA += 10;
-                if (pathLengthB < pathLengthA) scoreB += 10;
-                
-                scoreA -= history.indexOf(a) * 0.1;
-                scoreB -= history.indexOf(b) * 0.1;
-
-                return scoreB - scoreA;
-            });
-
-            filtered = filtered.slice(0, 10);
-
-            datalist.innerHTML = filtered.map(item => `<option value="${item.url}">${item.title}</option>`).join('');
+            // La `value` de l'option EST l'URL. Le navigateur filtre sur cette valeur.
+            // Le texte visible est le titre, pour l'ergonomie.
+            datalist.innerHTML = filteredResults.map(item => 
+                `<option value="${item.url}">${item.title}</option>`
+            ).join('');
         });
 
         urlInput.addEventListener('blur', () => { setTimeout(() => { datalist.innerHTML = ''; }, 200); });
@@ -203,7 +180,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         urlInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                handleUrlSubmit();
+                handleUrlSubmit(); // Appelle sans argument, utilisera la valeur actuelle de l'input.
             }
         });
 

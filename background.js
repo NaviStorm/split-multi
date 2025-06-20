@@ -62,12 +62,24 @@ function createContextMenu() {
 
 browser.runtime.onInstalled.addListener((details) => {
     createContextMenu();
+
     if (details.reason === "install") {
         browser.storage.local.set({
             operatingMode: 'tab',
             showFramingWarning: true,
-            forceWindowDomains: []
+            // ===== CORRECTION : Domaines par défaut =====
+            forceWindowDomains: [
+                'accounts.google.com',
+                'facebook.com',
+                'twitter.com',
+                'linkedin.com',
+                'github.com',
+                'addons.mozilla.org',
+                'www.paypal.com',
+                'paypal.com'
+            ]
         });
+
         browser.tabs.create({ url: 'welcome.html' });
     }
 });

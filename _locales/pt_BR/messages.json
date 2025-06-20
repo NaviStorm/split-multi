@@ -1,0 +1,152 @@
+{
+    "extensionName": {
+        "message": "Super Visualização Dividida"
+    },
+    "extensionDescription": {
+        "message": "Exibe as abas selecionadas em uma visualização dividida, seja em uma nova aba ou em novas janelas."
+    },
+    "browserActionTitle": {
+        "message": "Criar uma Visualização Dividida"
+    },
+    "optionsTitle": {
+        "message": "Opções do Super Visualização Dividida"
+    },
+    "optionsLegend": {
+        "message": "Escolha o modo de operação:"
+    },
+    "optionsModeWindowLabel": {
+        "message": "Modo de Mosaico de Janelas (Recomendado)"
+    },
+    "optionsModeWindowDescription": {
+        "message": "Cria novas janelas do navegador. Preserva todos os recursos (barra de endereço, etc.). Outras extensões (ex: bloqueadores de anúncios) funcionam normalmente."
+    },
+    "optionsModeTabLayout": {
+        "message": "Modo de Aba Única (Iframes)"
+    },
+    "optionsModeTabDescription": {
+        "message": "Exibe tudo em uma única aba. Visual elegante, mas alguns sites exigem forçamento. Nota: Outras extensões (ex: bloqueadores de anúncios) não funcionarão neste modo."
+    },
+    "optionsSavedStatus": {
+        "message": "Opções salvas."
+    },
+    "alertSelectTabs": {
+        "message": "Por favor, selecione pelo menos duas abas com páginas da web carregadas."
+    },
+    "optionsLanguageWarning": {
+        "message": "Nota: É necessário reiniciar o navegador para que as alterações de idioma tenham efeito total na extensão."
+    },
+    "contextMenuTitle": {
+        "message": "Adicionar a uma visualização dividida existente..."
+    },
+    "maxTabsAlert": {
+        "message": "Máximo de 4 abas atingido. Você не pode adicionar mais a esta visualização."
+    },
+    "optionsHelpLink": {
+        "message": "❓ Ver o Guia do Usuário"
+    },
+    "dialogTitle": {
+        "message": "Modo de Visualização Alterado"
+    },
+    "dialogMessage": {
+        "message": "Por motivos de segurança, um dos sites selecionados não permite ser exibido agrupado em uma única aba. Por esta razão, o Super Visualização Dividida abriu as páginas em janelas separadas."
+    },
+    "dialogCheckboxLabel": {
+        "message": "Não mostrar esta mensagem novamente"
+    },
+    "dialogConfirmButton": {
+        "message": "OK"
+    },
+    "optionsShowDialogLabel": {
+        "message": "Mostrar aviso quando um site força o Modo Janela"
+    },
+    "optionsForceWindowLabel": {
+        "message": "Sites para Sempre Abrir no Modo Janela"
+    },
+    "optionsForceWindowDescription": {
+        "message": "Digite um domínio por linha (ex: mozilla.org). Estes sites sempre ignorarão a configuração do Modo de Aba Única."
+    },
+    "forceInfoTitle": {
+        "message": "Forçamento de Exibição Ativado"
+    },
+    "forceInfoMessage": {
+        "message": "Este site (__DOMAIN__) normalmente bloqueia a exibição em um frame por motivos de segurança. O Super Visualização Dividida substituiu esta restrição para mostrá-lo a você.<br><br>Para desativar este forçamento и sempre abrir este site em uma janela separada, adicione o seguinte domínio à lista nas opções da extensão:"
+    },
+    "forceInfoButton": {
+        "message": "Abrir Opções"
+    },
+    "forceShowPage": {
+        "message": "Carregar Mesmo Assim"
+    },
+    "welcomeTitle": {
+        "message": "Bem-vindo ao Super Visualização Dividida!"
+    },
+    "welcomeSubtitle": {
+        "message": "Aqui está um guia rápido para dominar a produtividade com múltiplas abas."
+    },
+    "welcomeHeader1": {
+        "message": "1. Crie Sua Primeira Visualização Dividida (Modo Aba)"
+    },
+    "welcomeStep1_1": {
+        "message": "Selecione de 2 a 4 abas segurando <code>Cmd</code> (Mac) ou <code>Ctrl</code> (Windows) e clicando nelas."
+    },
+    "welcomeStep1_2": {
+        "message": "Clique no ícone da extensão <img src='icons/icon-48.png' class='inline-icon'> na sua barra de ferramentas."
+    },
+    "welcomeStep1_3": {
+        "message": "É isso! Uma nova aba se abrirá com suas páginas lado a lado."
+    },
+    "welcomeHeader2": {
+        "message": "2. Gerencie Sua Visualização"
+    },
+    "welcomeStep2_1": {
+        "message": "<strong>Nomeie Sua Visualização:</strong> Clique no campo na parte superior da visualização dividida (ex: \"Split - 123...\") e dê um nome claro como \"Pesquisa Projeto X\"."
+    },
+    "welcomeStep2_2": {
+        "message": "<strong>Remova um Painel:</strong> Clique no pequeno botão <code>×</code> à direita da barra de endereço de um painel para removê-lo."
+    },
+    "welcomeStep2_3": {
+        "message": "<strong>Feche a Visualização Inteira:</strong> Clique no grande botão <code>X</code> no canto superior direito."
+    },
+    "welcomeHeader3": {
+        "message": "3. Adicione uma Aba a uma Visualização Existente"
+    },
+    "welcomeStep3_1": {
+        "message": "Crie uma visualização dividida (veja o passo 1)."
+    },
+    "welcomeStep3_2": {
+        "message": "Vá para outra aba que deseja adicionar."
+    },
+    "welcomeStep3_3": {
+        "message": "<strong>Clique com o botão direito</strong> nessa aba."
+    },
+    "welcomeStep3_4": {
+        "message": "No menu, vá para \"Adicionar a uma visualização dividida existente...\" e escolha sua visualização pelo nome."
+    },
+    "welcomeHeader4": {
+        "message": "4. Limitações"
+    },
+    "welcomeP4_1": {
+        "message": "Por razões de segurança impostas pelos navegadores, ao usar o <strong>Modo de Aba Única (Iframes)</strong>, outras extensões (como bloqueadores de anúncios, gerenciadores de senha, etc.) não podem interagir com o conteúdo dos painéis divididos."
+    },
+    "welcomeP4_2": {
+        "message": "Para desfrutar da funcionalidade completa de todas as suas extensões, recomendamos o uso do <strong>Modo de Mosaico de Janelas</strong>."
+    },
+    "welcomeFooter": {
+        "message": "<strong>Dica:</strong> Prefere que as visualizações abram em janelas separadas? Vá para as <a href='#' class='options-link'>opções da extensão</a> e escolha \"Modo de Mosaico de Janelas\"."
+    },
+    "welcomeWarningTitle": {
+        "message": "AVISO"
+    },
+    "welcomeWarningP1": {
+        "message": "Alguns sites (bancos, redes sociais, etc.) possuem recursos de segurança que impedem sua exibição dentro de outra página (em um iframe)."
+    },
+    "welcomeWarningImage": {
+        "message": "<img src='need-windows.png' alt='Mensagem Firefox não pode abrir esta página'>"
+    },
+    "welcomeWarningP2": {
+        "message": "Quando você tentar dividir esses sites no 'Modo de Aba Única', a extensão forçará sua exibição. Uma mensagem informativa aparecerá sobre o conteúdo."
+    },
+    "welcomeWarningP3": {
+        "message": "Para evitar este forçamento, você pode adicionar os domínios relevantes a uma lista na <a href='#' class='options-link'>página de opções</a> da extensão. Isso fará com que eles sempre abram no 'Modo de Mosaico de Janelas'."
+    }
+}

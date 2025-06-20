@@ -1,0 +1,152 @@
+{
+    "extensionName": {
+        "message": "Super Gesplitste Weergave"
+    },
+    "extensionDescription": {
+        "message": "Toont geselecteerde tabbladen in een gesplitste weergave, in een nieuw tabblad of in nieuwe vensters."
+    },
+    "browserActionTitle": {
+        "message": "Maak een gesplitste weergave"
+    },
+    "optionsTitle": {
+        "message": "Opties voor Super Gesplitste Weergave"
+    },
+    "optionsLegend": {
+        "message": "Kies de werkmodus:"
+    },
+    "optionsModeWindowLabel": {
+        "message": "Venster-tegelmodus (Aanbevolen)"
+    },
+    "optionsModeWindowDescription": {
+        "message": "Maakt nieuwe browservensters. Behoudt alle functies (adresbalk, etc.). Andere extensies (bv. adblockers) werken normaal."
+    },
+    "optionsModeTabLayout": {
+        "message": "Enkel-tabbladmodus (Iframes)"
+    },
+    "optionsModeTabDescription": {
+        "message": "Toont alles in één tabblad. Elegant uiterlijk, maar sommige sites vereisen forceren. Let op: andere extensies (bv. adblockers) werken niet in deze modus."
+    },
+    "optionsSavedStatus": {
+        "message": "Opties opgeslagen."
+    },
+    "alertSelectTabs": {
+        "message": "Selecteer ten minste twee tabbladen met geladen webpagina's."
+    },
+    "optionsLanguageWarning": {
+        "message": "Opmerking: een herstart van de browser is vereist om taalwijzigingen volledig door te voeren in de extensie."
+    },
+    "contextMenuTitle": {
+        "message": "Toevoegen aan een bestaande gesplitste weergave..."
+    },
+    "maxTabsAlert": {
+        "message": "Maximum van 4 tabbladen bereikt. U kunt niet meer aan deze weergave toevoegen."
+    },
+    "optionsHelpLink": {
+        "message": "❓ Bekijk de gebruikershandleiding"
+    },
+    "dialogTitle": {
+        "message": "Weergavemodus gewijzigd"
+    },
+    "dialogMessage": {
+        "message": "Om veiligheidsredenen staat een van de geselecteerde websites niet toe om in één tabblad gegroepeerd te worden. Daarom heeft Super Gesplitste Weergave de pagina's in aparte vensters geopend."
+    },
+    "dialogCheckboxLabel": {
+        "message": "Toon dit bericht niet opnieuw"
+    },
+    "dialogConfirmButton": {
+        "message": "OK"
+    },
+    "optionsShowDialogLabel": {
+        "message": "Toon waarschuwing wanneer een website de venstermodus forceert"
+    },
+    "optionsForceWindowLabel": {
+        "message": "Sites die altijd in venstermodus moeten worden geopend"
+    },
+    "optionsForceWindowDescription": {
+        "message": "Voer één domein per regel in (bijv. mozilla.org). Deze sites negeren altijd de instelling Enkel-tabbladmodus."
+    },
+    "forceInfoTitle": {
+        "message": "Weergave forceren geactiveerd"
+    },
+    "forceInfoMessage": {
+        "message": "Deze site (__DOMAIN__) blokkeert normaal gesproken weergave in een frame om veiligheidsredenen. Super Gesplitste Weergave heeft deze beperking omzeild om het u te tonen.<br><br>Om dit forceren uit te schakelen en deze site altijd in een apart venster te openen, voegt u het volgende domein toe aan de lijst in de extensie-opties:"
+    },
+    "forceInfoButton": {
+        "message": "Open opties"
+    },
+    "forceShowPage": {
+        "message": "Toch laden"
+    },
+    "welcomeTitle": {
+        "message": "Welkom bij Super Gesplitste Weergave!"
+    },
+    "welcomeSubtitle": {
+        "message": "Hier is een snelle gids om productiviteit met meerdere tabbladen onder de knie te krijgen."
+    },
+    "welcomeHeader1": {
+        "message": "1. Maak uw eerste gesplitste weergave (Tabbladmodus)"
+    },
+    "welcomeStep1_1": {
+        "message": "Selecteer 2 tot 4 tabbladen door <code>Cmd</code> (Mac) of <code>Ctrl</code> (Windows) ingedrukt te houden en erop te klikken."
+    },
+    "welcomeStep1_2": {
+        "message": "Klik op het extensiepictogram <img src='icons/icon-48.png' class='inline-icon'> in uw werkbalk."
+    },
+    "welcomeStep1_3": {
+        "message": "Dat is alles! Er wordt een nieuw tabblad geopend met uw pagina's naast elkaar."
+    },
+    "welcomeHeader2": {
+        "message": "2. Beheer uw weergave"
+    },
+    "welcomeStep2_1": {
+        "message": "<strong>Geef uw weergave een naam:</strong> Klik op het veld bovenaan de gesplitste weergave (bijv. \"Split - 123...\") en geef het een duidelijke naam zoals \"Project X Onderzoek\"."
+    },
+    "welcomeStep2_2": {
+        "message": "<strong>Verwijder een paneel:</strong> Klik op de kleine <code>×</code>-knop rechts van de adresbalk van een paneel om het te verwijderen."
+    },
+    "welcomeStep2_3": {
+        "message": "<strong>Sluit de hele weergave:</strong> Klik op de grote <code>X</code>-knop rechtsboven."
+    },
+    "welcomeHeader3": {
+        "message": "3. Voeg een tabblad toe aan een bestaande weergave"
+    },
+    "welcomeStep3_1": {
+        "message": "Maak een gesplitste weergave (zie stap 1)."
+    },
+    "welcomeStep3_2": {
+        "message": "Ga naar een ander tabblad dat u wilt toevoegen."
+    },
+    "welcomeStep3_3": {
+        "message": "<strong>Rechtsklik</strong> op dat tabblad."
+    },
+    "welcomeStep3_4": {
+        "message": "Ga in het menu naar \"Toevoegen aan een bestaande gesplitste weergave...\" en kies uw weergave op naam."
+    },
+    "welcomeHeader4": {
+        "message": "4. Beperkingen"
+    },
+    "welcomeP4_1": {
+        "message": "Om veiligheidsredenen die door browsers worden opgelegd, kunnen andere extensies (zoals adblockers, wachtwoordbeheerders, etc.) niet interageren met de inhoud van de gesplitste panelen wanneer u de <strong>Enkel-tabbladmodus (Iframes)</strong> gebruikt."
+    },
+    "welcomeP4_2": {
+        "message": "Om te genieten van de volledige functionaliteit van al uw extensies, raden wij aan de <strong>Venster-tegelmodus</strong> te gebruiken."
+    },
+    "welcomeFooter": {
+        "message": "<strong>Tip:</strong> Liever dat weergaven in aparte vensters openen? Ga naar de <a href='#' class='options-link'>extensie-opties</a> en kies \"Venster-tegelmodus\"."
+    },
+    "welcomeWarningTitle": {
+        "message": "WAARSCHUWING"
+    },
+    "welcomeWarningP1": {
+        "message": "Sommige websites (banken, sociale netwerken, etc.) hebben beveiligingsfuncties die voorkomen dat ze binnen een andere pagina (in een iframe) worden weergegeven."
+    },
+    "welcomeWarningImage": {
+        "message": "<img src='need-windows.png' alt='Firefox kan deze pagina niet openen bericht'>"
+    },
+    "welcomeWarningP2": {
+        "message": "Wanneer u probeert deze sites in 'Enkel-tabbladmodus' te splitsen, zal de extensie de weergave forceren. Er verschijnt een informatief bericht boven de inhoud."
+    },
+    "welcomeWarningP3": {
+        "message": "Om dit forceren te vermijden, kunt u de relevante domeinen toevoegen aan een lijst op de <a href='#' class='options-link'>optiepagina</a> van de extensie. Hierdoor worden ze altijd in 'Venster-tegelmodus' geopend."
+    }
+}

@@ -57,7 +57,18 @@ function i18n() {
 // Événements
 document.addEventListener('DOMContentLoaded', () => {
     i18n();
-    restoreOptions(); // Appeler la restauration au chargement
+    restoreOptions(); 
+
+    const helpLink = document.getElementById('help-link');
+    if (helpLink) {
+        helpLink.addEventListener('click', (e) => {
+            e.preventDefault(); // Empêche le comportement par défaut du lien
+            browser.tabs.create({ url: 'welcome.html' });
+        });
+    }
+
+    // Sauvegarder automatiquement lors d'un changement
+    document.getElementById('options-form').addEventListener('change', saveOptions);
 });
 
 // Sauvegarder automatiquement lors d'un changement

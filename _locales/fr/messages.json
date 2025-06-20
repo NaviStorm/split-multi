@@ -3,7 +3,7 @@
         "message": "Super Vue Partagée"
     },
     "extensionDescription": {
-        "message": "Affiche les onglets en vue partagée, soit dans un nouvel onglet, soit dans de nouvelles fenêtres."
+        "message": "Affiche les onglets sélectionnés en vue partagée, soit dans un nouvel onglet, soit dans de nouvelles fenêtres."
     },
     "browserActionTitle": {
         "message": "Créer une vue partagée"
@@ -18,13 +18,13 @@
         "message": "Mode Mosaïque de Fenêtres (Recommandé)"
     },
     "optionsModeWindowDescription": {
-        "message": "Crée de nouvelles fenêtres de navigateur. Conserve toutes les fonctionnalités (barre d'adresse, bloqueurs de pubs, etc.)."
+        "message": "Crée de nouvelles fenêtres de navigateur. Conserve toutes les fonctionnalités (barre d'adresse, etc.). Les autres extensions (ex: bloqueurs de pubs) fonctionnent normalement."
     },
     "optionsModeTabLayout": {
         "message": "Mode Onglet Unique (Iframes)"
     },
     "optionsModeTabDescription": {
-        "message": "Affiche tout dans un seul onglet. Look élégant, mais certains sites nécessitent un forçage."
+        "message": "Affiche tout dans un seul onglet. Look élégant, mais certains sites nécessitent un forçage. Note : Les autres extensions (ex: bloqueurs de pubs) ne fonctionneront pas dans ce mode."
     },
     "optionsSavedStatus": {
         "message": "Options sauvegardées."
@@ -69,12 +69,7 @@
         "message": "Forçage d'affichage activé"
     },
     "forceInfoMessage": {
-        "message": "Ce site (<strong>__DOMAIN__</strong>) interdit normalement son affichage dans un cadre pour des raisons de sécurité. Super Vue Partagée a contourné cette restriction pour vous l'afficher.<br><br>Pour désactiver ce forçage et toujours ouvrir ce site dans une fenêtre séparée, ajoutez le domaine suivant à la liste dans les options de l'extension :",
-        "placeholders": {
-            "domain": {
-                "content": "$1"
-            }
-        }
+        "message": "Ce site (__DOMAIN__) interdit normalement son affichage dans un cadre pour des raisons de sécurité. Super Vue Partagée a contourné cette restriction pour vous l'afficher.<br><br>Pour désactiver ce forçage et toujours ouvrir ce site dans une fenêtre séparée, ajoutez le domaine suivant à la liste dans les options de l'extension :"
     },
     "forceInfoButton": {
         "message": "Ouvrir les options"
@@ -127,6 +122,15 @@
     "welcomeStep3_4": {
         "message": "Dans le menu, allez sur \"Ajouter à une vue partagée existante...\" et choisissez votre vue par son nom."
     },
+    "welcomeHeader4": {
+        "message": "4. Limitations"
+    },
+    "welcomeP4_1": {
+        "message": "Pour des raisons de sécurité imposées par les navigateurs, lorsque vous utilisez le <strong>Mode Onglet Unique (Iframes)</strong>, les autres extensions (bloqueurs de pubs, gestionnaires de mots de passe, etc.) ne peuvent pas interagir avec le contenu des panneaux."
+    },
+    "welcomeP4_2": {
+        "message": "Pour profiter de toutes les fonctionnalités de vos autres extensions, nous vous recommandons d'utiliser le <strong>Mode Mosaïque de Fenêtres</strong>."
+    },
     "welcomeFooter": {
         "message": "<strong>Astuce :</strong> Vous préférez que les vues s'ouvrent dans des fenêtres séparées ? Allez dans les <a href='#' class='options-link'>options de l'extension</a> et choisissez le \"Mode Mosaïque de Fenêtres\"."
     },
@@ -135,6 +139,9 @@
     },
     "welcomeWarningP1": {
         "message": "Certains sites web (banques, réseaux sociaux, etc.) possèdent des sécurités qui les empêchent de s'afficher à l'intérieur d'une autre page (dans un iframe)."
+    },
+    "welcomeWarningImage": {
+        "message": "<img src='need-windows.png' alt='Message Firefox ne peut pas ouvrir cette page'>"
     },
     "welcomeWarningP2": {
         "message": "Quand vous essaierez de diviser ces sites en 'Mode Onglet Unique', l'extension les forcera à s'afficher. Un message d'information apparaîtra par-dessus le contenu."
